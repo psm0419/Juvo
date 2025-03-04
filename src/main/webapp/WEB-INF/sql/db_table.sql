@@ -1,13 +1,13 @@
 -- users 테이블
 CREATE TABLE users (
-    user_id VARCHAR2(32) PRIMARY KEY,
-    username VARCHAR2(32) NOT NULL,
-    nickname VARCHAR2(48) NOT NULL UNIQUE,
-    pw VARCHAR2(32) NOT NULL,
-    email VARCHAR2(64) NOT NULL UNIQUE,
-    tel VARCHAR2(24) NOT NULL UNIQUE,
-    jumin VARCHAR2(16) NOT NULL UNIQUE,
-    user_type VARCHAR2(16) NOT NULL,
+    id VARCHAR2(32) PRIMARY KEY,
+    username VARCHAR2(32) ,
+    nickname VARCHAR2(48)  UNIQUE,
+    pw VARCHAR2(32) ,
+    email VARCHAR2(64)  UNIQUE,
+    tel VARCHAR2(24)  UNIQUE,
+    jumin VARCHAR2(16)  UNIQUE,
+    user_type VARCHAR2(16) ,
     membership NUMBER
 );
 
