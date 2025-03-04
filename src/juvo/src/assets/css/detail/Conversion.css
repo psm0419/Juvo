@@ -1,0 +1,151 @@
+/* 전체 스타일 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+/* 컨테이너 스타일 */
+.conversion-container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.header-container {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 10px; /* 간격 조정 */
+    margin-top: 100px;
+    border-bottom: 2px solid black; /* 연한 회색 밑줄 */
+    padding-bottom: 5px; /* 글씨와 밑줄 사이 여백 */
+}
+
+
+.header-container h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.header-container h4 {
+    font-size: 14px;
+    color: gray;
+    margin: 0;
+}
+
+/* 탭 스타일 */
+.tabs {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-right: 679px;
+}
+
+.tabs button {
+    width: 150px; /* 버튼의 고정된 너비 */
+    padding: 15px 0px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    background: #f4f4f4;
+    margin: 0; /* 간격 조정 */
+    text-align: center;
+    flex-shrink: 0; /* 화면 줄여도 크기 유지 */
+
+}
+
+/* 클릭된 버튼 초록색 스타일 */
+.tabs button.active {
+    background: #01787c; /* 초록색 */
+    color: white;
+    font-weight: bold;
+    position: relative; /* 화살표 위치 조정을 위해 추가 */
+}
+
+.tabs button.active::after {
+    content: ""; /* 내용 없음 */
+    position: absolute;
+    bottom: -8px; /* 버튼 아래에 배치 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; 
+    height: 0; 
+    border-left: 8px solid transparent; /* 왼쪽 삼각형 */
+    border-right: 8px solid transparent; /* 오른쪽 삼각형 */
+    border-top: 8px solid #01787c; /* 위쪽 삼각형 (버튼 색과 맞춤) */
+}
+
+/* 입력 폼 스타일 */
+.conversion-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 20px; /* 내부 여백 */
+    border: 2px solid #ddd; /* 테두리 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    background-color: #f9f9f9; /* 연한 배경색 */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* 살짝 그림자 */
+}
+
+
+.conversion-form label {
+    font-weight: bold;
+}
+
+.conversion-form input, 
+
+.conversion-form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.conversion-form button {
+    background-color: #ff6600; /* 주황색 */
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.conversion-form button:hover {
+    background-color: #e65c00; /* 약간 어두운 주황 */
+}
+
+/* 테이블 스타일 */
+.conversion-table {
+    width: 100%;
+    border-collapse: collapse;
+    
+}
+
+/* 테이블 헤더 중앙 정렬 */
+.conversion-table thead {
+    background-color: #d8d8d8; /* 흐릿한 회색 */
+    text-align: center;
+}
+
+/* 셀 스타일 */
+.conversion-table th, .conversion-table td {
+    padding: 10px;
+    border: 2px solid #ddd;
+}
+
+.conversion-table sup {
+    font-size: 0.75em;
+    vertical-align: super;
+}
+
+/*변환하기 버튼 눌렀을 때 나오는 결과 칸*/
+.result-container {
+    padding: 15px;
+    margin: 20px auto;
+    max-width: 1000px;
+    background-color: #dad9d9;
+    color: #ff723e;
+    font-weight: bold;
+}
