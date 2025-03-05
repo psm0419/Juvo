@@ -60,16 +60,16 @@ export default function Blackjuyuso() {
     const types = [...new Set(allData.map((item) => item.type))];
 
     return (
-        <div className="container">
-            <div className="header-container">
-                <h3 className="title">불법,적발 주유소</h3>
-                <p className="description">
+        <div className="bj-container">
+            <div className="bj-header-container">
+                <h3 className="bj-title">불법,적발 주유소</h3>
+                <p className="bj-description">
                     본 내용은 각 지방자치단체에서 직접 게시한 사항이오니, <br/>
                     공표와 관련한 자세한 내용은 해당 기관에 문의하시기 바랍니다.
                 </p>
             </div>
-            <div className="filter-container">
-                <div className="filter-item">
+            <div className="bj-filter-container">
+                <div className="bj-filter-item">
                     <label>지역</label>
                     <select name="region" value={filters.region} onChange={handleFilterChange}>
                         <option value="">전체</option>
@@ -78,7 +78,7 @@ export default function Blackjuyuso() {
                         ))}
                     </select>
                 </div>
-                <div className="filter-item">
+                <div className="bj-filter-item">
                     <label>업종</label>
                     <select name="industry" value={filters.industry} onChange={handleFilterChange}>
                         <option value="">전체</option>
@@ -87,7 +87,7 @@ export default function Blackjuyuso() {
                         ))}
                     </select>
                 </div>
-                <div className="filter-item">
+                <div className="bj-filter-item">
                     <label>업체명</label>
                     <input
                         type="text"
@@ -97,7 +97,7 @@ export default function Blackjuyuso() {
                         placeholder="업체명 입력"
                     />
                 </div>
-                <div className="filter-item">
+                <div className="bj-filter-item">
                     <label>대표자</label>
                     <input
                         type="text"
@@ -107,7 +107,7 @@ export default function Blackjuyuso() {
                         placeholder="대표자 입력"
                     />
                 </div>
-                <div className="filter-item">
+                <div className="bj-filter-item">
                     <label>위반유형</label>
                     <select name="type" value={filters.type} onChange={handleFilterChange}>
                         <option value="">전체</option>
@@ -117,45 +117,45 @@ export default function Blackjuyuso() {
                     </select>
                 </div>
                 <button
-                    className="reset-btn"
+                    className="bj-reset-btn"
                     onClick={() => setFilters({ region: '', industry: '', name: '', owner: '', type: '' })}
                 >
                     초기화
                 </button>
             </div>
-            <div className="table-container">
-                <table className="data-table">
+            <div className="bj-table-container">
+                <table className="bj-data-table">
                     <thead>
                         <tr>
-                            <th className="table-header">위반유형</th>
-                            <th className="table-header">업종</th>
-                            <th className="table-header">업체명</th>
-                            <th className="table-header">주소</th>
-                            <th className="table-header">대표자</th>
+                            <th className="bj-table-header">위반유형</th>
+                            <th className="bj-table-header">업종</th>
+                            <th className="bj-table-header">업체명</th>
+                            <th className="bj-table-header">주소</th>
+                            <th className="bj-table-header">대표자</th>
                         </tr>
                     </thead>
                     <tbody>
                         {visibleData.length > 0 ? (
                             visibleData.map((item, index) => (
-                                <tr key={index} className="table-row">
-                                    <td className="table-cell">{item.type}</td>
-                                    <td className="table-cell">{item.industry}</td>
-                                    <td className="table-cell">{item.name}</td>
-                                    <td className="table-cell">{item.address}</td>
-                                    <td className="table-cell">{item.owner}</td>
+                                <tr key={index} className="bj-table-row">
+                                    <td className="bj-table-cell">{item.type}</td>
+                                    <td className="bj-table-cell">{item.industry}</td>
+                                    <td className="bj-table-cell">{item.name}</td>
+                                    <td className="bj-table-cell">{item.address}</td>
+                                    <td className="bj-table-cell">{item.owner}</td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="5" className="table-cell no-data">검색 결과가 없습니다.</td>
+                                <td colSpan="5" className="bj-table-cell bj-no-data">검색 결과가 없습니다.</td>
                             </tr>
                         )}
                     </tbody>
                 </table>
             </div>
-            <div className="pagination">
+            <div className="bj-pagination">
                 <button
-                    className="page-btn"
+                    className="bj-page-btn"
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                 >
@@ -164,14 +164,14 @@ export default function Blackjuyuso() {
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <button
                         key={page}
-                        className={`page-btn ${currentPage === page ? 'active' : ''}`}
+                        className={`bj-page-btn ${currentPage === page ? 'bj-active' : ''}`}
                         onClick={() => handlePageChange(page)}
                     >
                         {page}
                     </button>
                 ))}
                 <button
-                    className="page-btn"
+                    className="bj-page-btn"
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
                 >
