@@ -24,4 +24,10 @@
 		)
 	</insert>
 	
+	<select id="checkDupId" resultType="User" parameterType="String">
+		select *
+		FROM users
+		WHERE id = #{id}	
+	</select>
+	
 	</mapper>

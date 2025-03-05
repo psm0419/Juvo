@@ -26,4 +26,15 @@ public class UserServiceImpl implements UserService{
 		return result;
 	}
 
+	@Override
+	public boolean checkDupId(String id) {
+		User checkDupId = userDAO.checkDupId(id);
+		System.out.println(checkDupId);
+		if(checkDupId == null) {	//객체가 없다 -> 중복X
+			return false;
+		} else { //해당 아이디와 동일한 객체가 있다 -> 중복O
+			return true;
+		}
+	}
+
 }

@@ -19,7 +19,7 @@ public class UserController {
 	@Autowired
 	UserService userService ;
 	
-	@PostMapping("/user/loginJWT")
+	@PostMapping("/user/loginJWT") //로그인 시 토큰 발급
 	public String loginJWT(@RequestBody User user, HttpServletRequest request) {
 		//member 값 DB 비교
 		System.out.println("requestbody" + user);
@@ -42,7 +42,7 @@ public class UserController {
 		} 		
 	}
 	
-	@PostMapping("/user/signup")
+	@PostMapping("/user/signup") // 회원가입 요청
 	public String signup(@RequestBody User user, HttpServletRequest request) {
 		System.out.println(user);
 		int result = userService.signupUser(user);
@@ -55,4 +55,16 @@ public class UserController {
 		}
 		
 	}
+	
+	@PostMapping("/user/checkDupId")// ID 중복 확인
+	public boolean checkDupId(@RequestBody User user, HttpServletRequest request) {
+		 System.out.println(user.getId());
+		boolean checkDupId = userService.checkDupId(user.getId()); // 중복 체크 -> DB
+		if(checkDupId == true) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 }

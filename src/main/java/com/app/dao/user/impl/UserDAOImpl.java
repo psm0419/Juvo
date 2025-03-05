@@ -24,4 +24,11 @@ public class UserDAOImpl implements UserDAO {
 		return result;
 	}
 
+	@Override
+	public User checkDupId(String id) {
+		User checkDupId = sqlSessionTemplate.selectOne("user_mapper.checkDupId", id);
+		System.out.println(checkDupId);
+		return checkDupId;
+	}
+
 }
