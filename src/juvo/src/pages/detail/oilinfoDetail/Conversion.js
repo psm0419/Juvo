@@ -6,8 +6,8 @@ export default function ConversionForm() {
     const [selectedUnit, setSelectedUnit] = useState("일반석유제품($/배럴) → (원/리터)");
     const [result, setResult] = useState("");
     const [activeTab, setActiveTab] = useState('volume'); // 기본 탭: 부피
-    const [exchangeRate, setExchangeRate] = useState(1300);
-    const [barrelToLiter, setBarrelToLiter] = useState(158.987);
+    const [exchangeRate, setExchangeRate] = useState(1455); //원달러 환율
+    const [barrelToLiter, setBarrelToLiter] = useState(158.987);    //
     const [literToKg, setLiterToKg] = useState(0.5);
 
     useEffect(() => {
