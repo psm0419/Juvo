@@ -4,27 +4,27 @@ import FuelStationList from "../../components/map/FuelStationList";
 
 const Map = ({ fetchFuelStations, stations, loading }) => {
     const mapContainer = useRef(null);
-    const mapRef = useRef(null); // 맵 객체를 저장하기 위한 ref 추가
-    const [lat, setLat] = useState(37.5665);
-    const [lng, setLng] = useState(126.9780);
+    const mapRef = useRef(null);
+    const [lat, setLat] = useState(36.807317819607775); // 초기 좌표 고정
+    const [lng, setLng] = useState(127.14715449120254);
     const [marker, setMarker] = useState(null);
-    const [fuelMarkers, setFuelMarkers] = useState([]); // 주유소 마커들을 별도로 관리
+    const [fuelMarkers, setFuelMarkers] = useState([]);
 
+    // 맵 초기화
     useEffect(() => {
-        // EPSG:5186 정의
-        proj4.defs("EPSG:5186", "+proj=tmerc +lat_0=38 +lon_0=127.0028902777778 +k=0.9999 +x_0=200000 +y_0=500000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+        // 현재 위치에서 북쪽 150m, 동쪽 50m 이동
+        proj4.defs("CUSTOM", "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=310910 +y_0=600050 +ellps=GRS80 +units=m +no_defs");
 
         const kakao = window.kakao;
         kakao.maps.load(() => {
             const mapOptions = {
                 center: new kakao.maps.LatLng(lat, lng),
-                level: 5,
+                level: 3, // 5km 범위에 적합한 줌 레벨
             };
 
             const map = new kakao.maps.Map(mapContainer.current, mapOptions);
-            mapRef.current = map; // 맵 객체 저장
+            mapRef.current = map;
 
-            // 사용자 마커
             const userMarker = new kakao.maps.Marker({
                 position: new kakao.maps.LatLng(lat, lng),
                 map: map,
@@ -32,14 +32,12 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             });
             setMarker(userMarker);
 
-            // 드래그 종료 이벤트
             kakao.maps.event.addListener(userMarker, "dragend", function () {
                 const position = userMarker.getPosition();
                 setLat(position.getLat());
                 setLng(position.getLng());
             });
 
-            // 맵 클릭 이벤트
             kakao.maps.event.addListener(map, "click", function (mouseEvent) {
                 const latLng = mouseEvent.latLng;
                 userMarker.setPosition(latLng);
@@ -47,40 +45,46 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 setLng(latLng.getLng());
             });
         });
-    }, []); // 초기 렌더링 시에만 실행
+    }, []);
 
-    // 주유소 마커를 위한 별도의 useEffect
+    // 주유소 마커 업데이트
     useEffect(() => {
         if (!mapRef.current || !stations?.length) return;
 
         const kakao = window.kakao;
-        // 기존 주유소 마커 제거
         fuelMarkers.forEach(marker => marker?.setMap(null));
 
-        const newMarkers = stations.map((station) => {
+        const newMarkers = stations.map((station, index) => {
             const stationX = parseFloat(station.GIS_X_COOR);
             const stationY = parseFloat(station.GIS_Y_COOR);
 
+            console.log(`Station ${index} Raw:`, { stationX, stationY });
+
             if (!isNaN(stationX) && !isNaN(stationY)) {
                 try {
-                    // KATEC -> WGS84 변환
-                    const wgs84Coords = proj4('EPSG:5186', 'EPSG:4326', [stationX, stationY]);
+                    const wgs84Coords = proj4('CUSTOM', 'EPSG:4326', [stationX, stationY]);
                     const stationLat = wgs84Coords[1];
                     const stationLng = wgs84Coords[0];
 
-                    if (isNaN(stationLat) || isNaN(stationLng)) {
-                        console.error('Invalid coordinates after conversion:', station);
+                    console.log(`Station ${index} Converted:`, { stationLat, stationLng });
+
+                    const distance = getDistance(lat, lng, stationLat, stationLng);
+                    if (distance > 5000) {
+                        console.log(`Station ${index} out of 5km range: ${distance}m`);
                         return null;
                     }
 
-                    // 주유소 마커 생성
+                    if (stationLat < 33 || stationLat > 43 || stationLng < 124 || stationLng > 132) {
+                        console.error(`Out of range for station ${index}:`, { stationLat, stationLng });
+                        return null;
+                    }
+
                     const stationMarker = new kakao.maps.Marker({
                         position: new kakao.maps.LatLng(stationLat, stationLng),
                         map: mapRef.current,
-                        title: station.OS_NM
+                        title: station.OS_NM,
                     });
 
-                    // 인포윈도우
                     const infoWindow = new kakao.maps.InfoWindow({
                         content: `<div style="padding:5px;">${station.OS_NM}</div>`,
                     });
@@ -91,7 +95,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
                     return stationMarker;
                 } catch (error) {
-                    console.error('Error converting coordinates:', error, station);
+                    console.error(`Conversion error for station ${index}:`, error);
                     return null;
                 }
             }
@@ -99,10 +103,23 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         }).filter(marker => marker !== null);
 
         setFuelMarkers(newMarkers);
-    }, [stations]); // stations 변경 시에만 실행
+        console.log(`Total markers created: ${newMarkers.length}`);
+    }, [stations]);
+
+    // 거리 계산 함수 (단위: 미터)
+    const getDistance = (lat1, lng1, lat2, lng2) => {
+        const R = 6371000; // 지구 반지름 (미터)
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLng = (lng2 - lng1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // 거리 (미터)
+    };
 
     const handleFetchStations = () => {
-        fetchFuelStations(lat, lng);
+        fetchFuelStations(lat, lng, 5000); // 반경 5000m 명시
     };
 
     return (
