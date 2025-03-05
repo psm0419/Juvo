@@ -1,66 +1,198 @@
+/* 전체 스타일 초기화 */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    margin: 0; /* 모든 요소의 외부 여백을 0으로 설정 */
+    padding: 0; /* 모든 요소의 내부 여백을 0으로 설정 */
+    box-sizing: border-box; /* 요소의 크기 계산 시 padding과 border를 포함하도록 설정 */
 }
 
+/* 헤더 전체 컨테이너 스타일 */
 .containerHD {
-    /* position: fixed;
-    top: 0;
-    left: 0; */
-    width: 100%;
-    height: 90px;
-    z-index: 10000;
-    min-width: 1200px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    background: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 40px;
+    width: 100%; /* 헤더 너비를 화면 전체로 설정 */
+    height: 90px; /* 헤더 높이를 90px로 고정 */
+    z-index: 10000; /* 헤더가 다른 요소 위에 표시되도록 z-index 설정 (겹침 우선순위) */
+    min-width: 1200px; /* 헤더의 최소 너비를 1200px로 설정 (화면이 작아져도 최소 크기 유지) */
+    font-size: 1.1rem; /* 헤더 내 텍스트 기본 크기 설정 */
+    font-weight: 600; /* 텍스트 굵기를 700에서 600으로 조정 (살짝 부드럽게) */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 더 세련된 폰트 사용 */
+    background: linear-gradient(180deg, #ffffff, #f8f9fa); /* 부드러운 그라디언트 배경 추가 */
+    display: flex; /* 내부 요소를 가로로 배치하기 위해 flexbox 사용 */
+    justify-content: space-between; /* 내부 요소를 좌우 끝으로 분산 배치 (로고-네비-버튼) */
+    align-items: center; /* 내부 요소를 수직 중앙 정렬 */
+    padding: 10px 40px; /* 상하 10px, 좌우 40px 내부 여백 설정 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* 그림자를 조금 더 강화 */
 }
 
+/* 로고 영역 스타일 */
 .logo {
-    width: 15%;
-    cursor: pointer;
+    width: 15%; /* 로고 영역 너비를 헤더의 15%로 설정 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 (클릭 가능 표시) */
 }
 
+/* 로고 이미지 스타일 */
 .logo img {
-    width: 90%;
+    width: 90%; /* 로고 이미지를 로고 영역의 90% 크기로 설정 */
+    transition: transform 0.3s ease, filter 0.3s ease; /* transform과 filter에 부드러운 전환 효과 추가 */
 }
 
+/* 로고 이미지 호버 시 효과 */
+.logo img:hover {
+    transform: scale(1.05); /* 호버 시 로고 이미지를 1.05배 확대 */
+    filter: brightness(1.1); /* 호버 시 로고 밝기를 살짝 높임 */
+}
+
+/* 네비게이션 메뉴 영역 스타일 */
 .nav {
-    width: 70%;
-    list-style: none;
-    display: flex;
-    justify-content: space-around;
+    width: 70%; /* 네비게이션 영역 너비를 헤더의 70%로 설정 */
+    list-style: none; /* 리스트 스타일(기본 점 등)을 제거 */
+    display: flex; /* 메뉴 항목을 가로로 배치하기 위해 flexbox 사용 */
+    justify-content: space-around; /* 메뉴 항목을 균등하게 분산 배치 */
+    align-items: center; /* 메뉴 항목을 수직 중앙 정렬 */
+    position: relative; /* 드롭다운 메뉴의 위치 기준점 설정 (absolute 자식 요소를 위해) */
 }
 
+/* 네비게이션 메뉴 링크 스타일 */
 .nav a {
-    text-decoration: none;
-    cursor: pointer;
+    text-decoration: none; /* 링크의 기본 밑줄 제거 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 (클릭 가능 표시) */
+    color: #1e2a44; /* 더 깊고 세련된 다크 톤 색상 */
+    transition: color 0.3s ease, transform 0.2s ease; /* 색상과 transform에 부드러운 전환 효과 */
+    padding: 8px 12px; /* 살짝 넓은 클릭 영역을 위해 패딩 추가 */
+    border-radius: 5px; /* 부드러운 모서리 */
 }
 
+/* 네비게이션 메뉴 링크 호버 시 효과 */
+.nav a:hover {
+    color: #1a73e8; /* 호버 시 더 생기 있는 파란색 */
+    background: rgba(26, 115, 232, 0.05); /* 호버 시 아주 연한 파란 배경 */
+    transform: translateY(-2px); /* 호버 시 살짝 위로 이동 */
+}
+
+/* 네비게이션 메뉴 각 항목 스타일 */
+.nav-item {
+    padding: 10px 0; /* 상하 10px 패딩으로 항목 간 간격 조정 */
+}
+
+/* 드롭다운 메뉴 전체 컨테이너 스타일 */
+.dropdown-container {
+    position: absolute; /* 부모(.nav) 기준으로 절대 위치 설정 */
+    top: 100%; /* 부모 요소 바로 아래에 위치 */
+    left: 50%; /* 부모 요소의 중앙으로 이동 */
+    transform: translateX(-50%); /* 정확히 중앙에 정렬 (50% 왼쪽으로 이동한 것을 다시 조정) */
+    width: 900px; /* 드롭다운 박스 너비를 900px로 설정 */
+    background: linear-gradient(145deg, #ffffff, #f0f4f8); /* 부드러운 그라디언트 배경 추가 */
+    border: 1px solid #e8ecef; /* 아주 연한 테두리 추가 */
+    border-radius: 12px; /* 모서리를 더 둥글게 (10px -> 12px) */
+    display: flex; /* 내부 열을 가로로 배치하기 위해 flexbox 사용 */
+    justify-content: space-around; /* 열을 균등하게 분산 배치 */
+    padding: 25px; /* 내부 여백을 조금 더 넉넉히 (20px -> 25px) */
+    z-index: 1000; /* 다른 요소 위에 표시되도록 z-index 설정 */
+    opacity: 0; /* 기본적으로 투명 (숨김 상태) */
+    visibility: hidden; /* 기본적으로 보이지 않음 */
+    max-height: 0; /* 기본 높이를 0으로 설정 (애니메이션 시작점) */
+    overflow: hidden; /* 높이 변화 중 콘텐츠가 넘치지 않도록 숨김 */
+    transition: opacity 0.4s ease, max-height 0.5s ease, transform 0.4s ease; /* 전환 효과를 더 부드럽게 */
+    transform: translateX(-50%) translateY(15px); /* 처음엔 더 아래에서 시작 (10px -> 15px) */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12); /* 더 입체적인 그림자 추가 */
+}
+
+/* 네비게이션에 호버 시 드롭다운 표시 */
+.nav:hover .dropdown-container {
+    opacity: 1; /* 완전히 보이도록 투명도 1로 설정 */
+    visibility: visible; /* 보이도록 설정 */
+    max-height: 400px; /* 드롭다운이 열릴 때 최대 높이를 400px로 설정 (필요 시 조정) */
+    transform: translateX(-50%) translateY(0); /* 중앙에서 위로 이동 */
+}
+
+/* 드롭다운 메뉴의 각 열 스타일 */
+.dropdown-column {
+    display: flex; /* 하위 항목을 세로로 배치하기 위해 flexbox 사용 */
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    min-width: 150px; /* 각 열의 최소 너비를 150px로 설정 */
+    padding: 10px 15px; /* 상하 10px, 좌우 15px 여백으로 더 넉넉하게 */
+    position: relative; /* 구분선 위치를 위한 기준점 설정 */
+    background: rgba(255, 255, 255, 0.5); /* 아주 연한 흰색 배경 추가 */
+    border-radius: 8px; /* 열 자체에도 부드러운 모서리 */
+    transition: transform 0.3s ease; /* 열 자체에 이동 애니메이션 추가 */
+}
+
+/* 드롭다운 열 호버 시 효과 */
+.dropdown-column:hover {
+    transform: translateY(-3px); /* 호버 시 열이 살짝 위로 이동 */
+    background: rgba(255, 255, 255, 0.9); /* 호버 시 배경을 더 선명하게 */
+}
+
+/* 드롭다운 열 사이에 세로 구분선 추가 */
+.dropdown-column:not(:last-child)::after {
+    content: ''; /* 가상 요소로 구분선 생성 */
+    position: absolute; /* 열의 오른쪽 끝에 절대 위치로 배치 */
+    right: 0; /* 열의 오른쪽 끝에 붙임 */
+    top: 15px; /* 상단 여백과 맞추기 위해 15px 아래로 이동 */
+    bottom: 15px; /* 하단 여백과 맞추기 위해 15px 위로 이동 */
+    width: 1px; /* 구분선 두께를 1px로 설정 */
+    background: linear-gradient(to bottom, transparent, #d1d9e6 20%, #d1d9e6 80%, transparent); /* 구분선에 그라디언트 효과 추가 */
+    opacity: 0.7; /* 구분선 투명도를 낮춰 부드럽게 */
+}
+
+/* 드롭다운 메뉴의 각 항목 스타일 */
+.dropdown-item {
+    padding: 10px 15px; /* 상하 10px, 좌우 15px로 패딩을 넉넉히 */
+    text-decoration: none; /* 링크의 기본 밑줄 제거 */
+    color: #2b3a55; /* 더 깊은 색상으로 텍스트 변경 */
+    font-size: 0.92rem; /* 텍스트 크기를 살짝 키움 (0.9rem -> 0.92rem) */
+    font-weight: 400; /* 텍스트 굵기를 500에서 400으로 조정 (더 가볍게) */
+    transition: all 0.3s ease; /* 색상, 배경, transform에 부드러운 전환 효과 */
+    border-radius: 5px; /* 항목 자체에도 둥근 모서리 추가 */
+    display: flex; /* 내부 요소 정렬을 위해 flexbox 사용 */
+    align-items: center; /* 수직 중앙 정렬 */
+}
+
+
+
+/* 드롭다운 항목 호버 시 효과 */
+.dropdown-item:hover {
+    color: #1a73e8; /* 호버 시 텍스트 색상을 밝은 파란색으로 변경 */
+    background: rgba(26, 115, 232, 0.1); /* 호버 시 연한 파란 배경 */
+    transform: translateX(5px); /* 호버 시 오른쪽으로 살짝 이동 */
+}
+
+/* 로그인/회원가입 버튼 영역 스타일 */
 .btns {
-    width: 15%;
-    display: flex;
+    width: 15%; /* 버튼 영역 너비를 헤더의 15%로 설정 */
+    display: flex; /* 버튼을 가로로 배치하기 위해 flexbox 사용 */
+    justify-content: flex-end; /* 버튼을 오른쪽 끝으로 정렬 */
 }
 
-.btns .login, .btns .signup{
-    font-size: 0.9rem;
-    border: 1px solid rgb(224, 224, 224);
-    padding: 10px 15px;
-    cursor: pointer;
+/* 로그인 및 회원가입 버튼 스타일 */
+.btns .login,
+.btns .signup {
+    font-size: 0.9rem; /* 버튼 텍스트 크기를 0.9rem으로 설정 */
+    border: 1px solid #d1d9e6; /* 테두리를 더 부드러운 회색으로 변경 */
+    padding: 10px 10px; /* 좌우 패딩을 조금 더 넓게 (15px -> 20px) */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 (클릭 가능 표시) */
+    border-radius: 8px; /* 더 둥근 모서리 */
+    background: #fff; /* 기본 배경을 흰색으로 */
+    transition: all 0.3s ease; /* 배경, 색상, transform에 부드러운 전환 효과 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 버튼에 약간의 그림자 추가 */
 }
 
+/* 로그인 및 회원가입 버튼 호버 시 효과 */
+.btns .login:hover,
+.btns .signup:hover {
+    background: #1a73e8; /* 호버 시 배경색을 밝은 파란색으로 변경 */
+    color: #fff; /* 호버 시 텍스트 색상을 흰색으로 변경 */
+    border-color: #1a73e8; /* 호버 시 테두리 색상도 파란색으로 변경 */
+    transform: translateY(-2px); /* 호버 시 살짝 위로 이동 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 강화 */
+}
+
+/* 로그인 버튼과 회원가입 버튼 사이 간격 */
 .login {
-    margin-right: 10px;
+    margin-right: 10px; /* 로그인 버튼 오른쪽에 10px 여백 추가 */
 }
 
+/* 추가적인 네비게이션 리스트 (사용하지 않을 경우 제거 가능) */
 .nav_list {
-    /* display: none; */
-    top: 80px;
-    height: 200px;
-    background-color: gray;
+    top: 80px; /* 상단에서 80px 아래에 위치 */
+    height: 200px; /* 높이를 200px로 설정 */
+    background-color: gray; /* 배경색을 회색으로 설정 */
 }
