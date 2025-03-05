@@ -1,0 +1,147 @@
+/* 전체 스타일 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    line-height: 1.6;
+}
+
+/* 컨테이너 */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 제목과 설명을 감싸는 박스 */
+.header-container {
+    max-width: 800px;
+    margin-bottom: 40px;
+}
+
+/* 제목 */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: left;
+    padding-bottom: 10px;
+    width: 200px;
+}
+
+/* 설명 */
+.description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* 탭 컨테이너 */
+.tab-container {
+    display: flex;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 20px;
+}
+
+/* 탭 버튼 */
+.tab-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #666;
+    background-color: #f8f9fa;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab-button:hover {
+    color: #333;
+    background-color: #e9ecef;
+}
+
+.tab-button.active {
+    color: #007bff;
+    background-color: #fff;
+    border-bottom: 2px solid #007bff;
+}
+
+/* 탭 콘텐츠 */
+.tab-content {
+    margin-top: 20px;
+}
+
+/* 테이블 컨테이너 */
+.table-container {
+    margin-top: 20px;
+    overflow-x: auto;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+/* 테이블 스타일 */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+.table-header {
+    background-color: #e9ecef;
+    color: #333;
+    font-weight: bold;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.table-row:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.table-cell {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+/* 부가세(VAT) 행 스타일 */
+.vat-row {
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    padding: 12px;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ccc;
+}
+
+/* 유의사항 */
+.note-container {
+    margin-top: 20px;
+    max-width: 800px;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.note-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.note-text {
+    font-size: 14px;
+    color: #666;
+}
