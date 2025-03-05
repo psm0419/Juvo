@@ -1,7 +1,6 @@
 import '../../assets/css/main/Main.css';
 
-function Main() {
-	let navigate = useNavigate();
+function Main() {	
 	return (
 		<>
 			<div className='containerM'>

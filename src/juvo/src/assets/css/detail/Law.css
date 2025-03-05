@@ -1,9 +1,5 @@
 /* 전체 스타일 초기화 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+
 
 /* 컨테이너 */
 .law-container {

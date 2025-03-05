@@ -12,14 +12,16 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
     // 맵 초기화
     useEffect(() => {
-        // 현재 위치에서 북쪽 150m, 동쪽 50m 이동
-        proj4.defs("CUSTOM", "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=310910 +y_0=600050 +ellps=GRS80 +units=m +no_defs");
+        // 천안용 변환식
+        proj4.defs("CHEONAN", "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=310960 +y_0=600050 +ellps=GRS80 +units=m +no_defs");
+        // 서울용 변환식 (서울 데이터 기준으로 조정)
+        proj4.defs("SEOUL", "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=313500 +y_0=597000 +ellps=GRS80 +units=m +no_defs");
 
         const kakao = window.kakao;
         kakao.maps.load(() => {
             const mapOptions = {
                 center: new kakao.maps.LatLng(lat, lng),
-                level: 3, // 5km 범위에 적합한 줌 레벨
+                level: 3,
             };
 
             const map = new kakao.maps.Map(mapContainer.current, mapOptions);
@@ -62,9 +64,23 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
             if (!isNaN(stationX) && !isNaN(stationY)) {
                 try {
-                    const wgs84Coords = proj4('CUSTOM', 'EPSG:4326', [stationX, stationY]);
-                    const stationLat = wgs84Coords[1];
-                    const stationLng = wgs84Coords[0];
+                    // Y 값에 따라 변환식 선택
+                    let wgs84Coords;
+                    if (stationY < 500000) { // 천안 범위 (Y < 500000)
+                        wgs84Coords = proj4('CHEONAN', 'EPSG:4326', [stationX, stationY]);
+                    } else { // 서울 범위 (Y >= 500000)
+                        wgs84Coords = proj4('SEOUL', 'EPSG:4326', [stationX, stationY]);
+                    }
+                    let stationLat = wgs84Coords[1];
+                    let stationLng = wgs84Coords[0];
+
+                    // 천안 지역 경도 보정 (북쪽 치우침 보정)
+                    if (stationY < 500000) {
+                        const yIncrease = stationY - 467170.43937;
+                        const maxYIncrease = 5000;
+                        const longitudeCorrection = (yIncrease / maxYIncrease) * -0.00114;
+                        stationLng += longitudeCorrection;
+                    }
 
                     console.log(`Station ${index} Converted:`, { stationLat, stationLng });
 

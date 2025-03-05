@@ -6,11 +6,7 @@
 }
 
 /* 전체 스타일 초기화 */
-* {
-    margin: 0;
-    padding: 0;
-    border: 0;
-}
+
 
 /* 컨테이너 스타일 */
 .conversion-container {

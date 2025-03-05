@@ -1,9 +1,5 @@
 /* 전체 스타일 초기화 */
-* {
-    margin: 0; /* 모든 요소의 외부 여백을 0으로 설정 */
-    padding: 0; /* 모든 요소의 내부 여백을 0으로 설정 */
-    box-sizing: border-box; /* 요소의 크기 계산 시 padding과 border를 포함하도록 설정 */
-}
+
 
 /* 헤더 전체 컨테이너 스타일 */
 .containerHD {
