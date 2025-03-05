@@ -5,27 +5,21 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    line-height: 1.6;
-}
-
 /* 컨테이너 */
-.container {
+.law-container {
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 /* 제목과 설명을 감싸는 박스 */
-.header-container {
+.law-header-container {
     max-width: 800px;
     margin-bottom: 40px;
 }
 
 /* 제목 */
-.title {
+.law-title {
     font-size: 24px;
     font-weight: bold;
     color: #333;
@@ -34,10 +28,11 @@ body {
     border-bottom: 2px solid #000000;
     padding-bottom: 10px;
     width: 200px;
+    margin-top: 200px;
 }
 
 /* 설명 */
-.description {
+.law-description {
     font-size: 14px;
     color: #666;
     margin-bottom: 20px;
@@ -45,12 +40,12 @@ body {
 }
 
 /* 콘텐츠 영역 */
-.content-container {
+.law-content-container {
     max-width: 800px;
 }
 
 /* 소제목 (법률 제목) */
-.subtitle {
+.law-subtitle {
     font-size: 18px;
     font-weight: bold;
     color: #333;
@@ -59,7 +54,7 @@ body {
 }
 
 /* 법률 조항 제목 */
-.law-title {
+.law-law-title {
     font-size: 16px;
     font-weight: bold;
     color: #333;
@@ -68,13 +63,13 @@ body {
 }
 
 /* 리스트 */
-.list {
+.law-list {
     list-style-type: none;
     padding-left: 0;
     margin-bottom: 20px;
 }
 
-.list li {
+.law-list li {
     font-size: 14px;
     color: #333;
     margin-bottom: 8px;
@@ -83,18 +78,18 @@ body {
 }
 
 /* 서브리스트 */
-.sublist {
+.law-sublist {
     list-style-type: none;
     padding-left: 20px;
     margin-top: 5px;
 }
 
-.sublist li {
+.law-sublist li {
     padding-left: 20px;
     position: relative;
 }
 
-.sublist li:before {
+.law-sublist li:before {
     content: "•";
     color: #666;
     position: absolute;
@@ -103,18 +98,18 @@ body {
 }
 
 /* 서브서브리스트 */
-.subsublist {
+.law-subsublist {
     list-style-type: none;
     padding-left: 20px;
     margin-top: 5px;
 }
 
-.subsublist li {
+.law-subsublist li {
     padding-left: 20px;
     position: relative;
 }
 
-.subsublist li:before {
+.law-subsublist li:before {
     content: "-";
     color: #999;
     position: absolute;
