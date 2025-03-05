@@ -16,29 +16,38 @@ function Main() {
 					<div className="middleContainer">
 						<div className="lmiddle middle">
 							<div className="lmiddlet">
-								<p className="point_text">오늘의 유가 <span>(평균)</span> </p>
+								<div className="todaySelect">
+									<p className="point_text2">오늘의 유가 <span>(평균)</span> </p>
+									<select className="region">
+											<option value="option1">휘발유</option>
+											<option value="option2">경유</option>
+											<option value="option3">전기차</option>
+									</select>
+								</div>
 								<div className="todayContrainer">
-									<div className="box cursor">
+									<div className="box">
 										<h4>휘발유</h4>
 										<p>12.34</p>
 									</div>
-									<div className="box cursor">
+									<div className="box">
 										<h4>경유</h4>
 										<p>56.78</p>
 									</div>
-									<div className="box noBorder cursor">
+									<div className="box noBorder">
 										<h4>전기차</h4>
 										<p>91.01</p>
 									</div>
 								</div>
 							</div>
 							<div className="lmiddleb">
-								<p className="point_text">저렴한 주유소 Top 5</p>
-								<select className="region">
-									<option value="option1">천안</option>
-									<option value="option2">서울</option>
-									<option value="option3">경기</option>
-								</select>
+								<div className="cheapSelect">
+									<p className="point_text">저렴한 주유소 Top 5</p>
+									<select className="region">
+										<option value="option1">천안</option>
+										<option value="option2">서울</option>
+										<option value="option3">경기</option>
+									</select>
+								</div>
 								<div className="chedapList">
 
 								</div>

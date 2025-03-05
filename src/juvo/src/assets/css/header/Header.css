@@ -4,6 +4,7 @@
     box-sizing: border-box;
 }
 
+/* navbar */
 .containerHD {
     /* position: fixed;
     top: 0;
@@ -21,6 +22,7 @@
     padding: 10px 40px;
 }
 
+/* 로고 */
 .logo {
     width: 15%;
     cursor: pointer;
@@ -30,6 +32,7 @@
     width: 90%;
 }
 
+/* nav */
 .nav {
     width: 70%;
     list-style: none;
@@ -42,6 +45,11 @@
     cursor: pointer;
 }
 
+.nav a:hover {
+    color: #f3841c;
+}
+
+/* 로그인 회언가입 버튼 */
 .btns {
     width: 15%;
     display: flex;
@@ -58,9 +66,41 @@
     margin-right: 10px;
 }
 
+/* navList */
 .nav_list {
-    /* display: none; */
-    top: 80px;
+    display: none; 
+    top: 90px;
+    width: 100%;
     height: 200px;
-    background-color: gray;
+    background-color: white;
+    z-index: 100;
+    position: absolute;
+}
+
+/* visible 클래스가 추가되었을 때 display 변경 */
+.nav_list.visible {
+    display: block;
+}
+
+.navListContainer {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.navListContainer .list {
+    height: 100%;
+    border: 1px solid lightgrey;
+}
+
+.list_logo {
+    width: 18%;
+}
+
+.list_cheap, .list_info, .list_black, .list_juvo {
+    width: 16.3%;
+}
+
+.list_login {
+    width: 17%;
 }
