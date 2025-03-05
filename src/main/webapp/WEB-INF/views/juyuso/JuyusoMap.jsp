@@ -5,7 +5,9 @@
 <head>
 <title>주유소 찾기</title>
 <script type="text/javascript"
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=07d2faa0d2999cbe5c196e0b7f2d35bf&libraries=services"></script>
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY&libraries=services&autoload=false"></script>
+
+<script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.2/proj4.js"></script>
@@ -232,66 +234,57 @@
 
 		// 주유소 마커 표시 함수
 		function displayJuyusoMarkers(stations) {
-			$('#station-list').empty();
-			if (!stations || stations.length === 0) {
-				$('#station-list').html('<div>주변에 주유소가 없습니다.</div>');
-				return;
-			}
+    $('#station-list').empty();
+    if (!stations || stations.length === 0) {
+        $('#station-list').html('<div>주변에 주유소가 없습니다.</div>');
+        return;
+    }
 
-			var markerImage = new kakao.maps.MarkerImage(
-					'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
-					new kakao.maps.Size(24, 35));
+    var markerImage = new kakao.maps.MarkerImage(
+        'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
+        new kakao.maps.Size(24, 35)
+    );
 
-			stations
-					.forEach(function(station, index) {
-						var name = station.OS_NM || '이름 없음';
-						var price = station.PRICE ? station.PRICE + '원'
-								: '가격 정보 없음';
-						var distance = station.DISTANCE ? station.DISTANCE
-								+ 'm' : '거리 정보 없음';
-						var brand = getBrandName(station.POLL_DIV_CD);
+    stations.forEach(function(station, index) {
+        var name = station.OS_NM || '이름 없음';
+        var price = station.PRICE ? station.PRICE + '원' : '가격 정보 없음';
+        var distance = station.DISTANCE ? station.DISTANCE + 'm' : '거리 정보 없음';
+        var brand = getBrandName(station.POLL_DIV_CD);
 
-						var katecX = parseFloat(station.GIS_X_COOR);
-						var katecY = parseFloat(station.GIS_Y_COOR);
-						var wgs84Coords = convertKATECtoWGS84(katecX, katecY);
-						var lat = wgs84Coords[1];
-						var lng = wgs84Coords[0];
+        var katecX = parseFloat(station.GIS_X_COOR);
+        var katecY = parseFloat(station.GIS_Y_COOR);
+        
+        var wgs84Coords = convertKATECtoWGS84(katecX, katecY);
+        var lat = wgs84Coords[0];
+        var lng = wgs84Coords[1];
 
-						var coords = new kakao.maps.LatLng(lat, lng);
-						var stationMarker = new kakao.maps.Marker({
-							position : coords,
-							map : map,
-							title : name,
-							image : markerImage
-						});
-						stationMarkers.push(stationMarker);
+        var coords = new kakao.maps.LatLng(lat, lng);
+        var stationMarker = new kakao.maps.Marker({
+            position: coords,
+            map: map,
+            title: name,
+            image: markerImage
+        });
+        stationMarkers.push(stationMarker);
 
-						var content = '<div class="info-window">' + '<h4>'
-								+ name + '</h4>' + '<p><strong>브랜드:</strong> '
-								+ brand + '</p>' + '<p><strong>가격:</strong> '
-								+ price + '</p>' + '<p><strong>거리:</strong> '
-								+ distance + '</p>' + '</div>';
+        var content = '<div class="info-window">' + '<h4>' + name + '</h4>' +
+            '<p><strong>브랜드:</strong> ' + brand + '</p>' +
+            '<p><strong>가격:</strong> ' + price + '</p>' +
+            '<p><strong>거리:</strong> ' + distance + '</p>' + '</div>';
 
-						kakao.maps.event.addListener(stationMarker, 'click',
-								function() {
-									infowindow.setContent(content);
-									infowindow.open(map, stationMarker);
-								});
+        kakao.maps.event.addListener(stationMarker, 'click', function() {
+            infowindow.setContent(content);
+            infowindow.open(map, stationMarker);
+        });
 
-						var stationItem = '<div class="station-item" data-index="' + index + '">'
-								+ '<strong>'
-								+ name
-								+ '</strong><br>'
-								+ '브랜드: '
-								+ brand
-								+ '<br>'
-								+ '가격: '
-								+ price
-								+ '<br>'
-								+ '거리: ' + distance + '</div>';
-						$('#station-list').append(stationItem);
-					});
-		}
+        var stationItem = '<div class="station-item" data-index="' + index + '">' +
+            '<strong>' + name + '</strong><br>' +
+            '브랜드: ' + brand + '<br>' +
+            '가격: ' + price + '<br>' +
+            '거리: ' + distance + '</div>';
+        $('#station-list').append(stationItem);
+    });
+}
 
 		function getBrandName(code) {
 			var brands = {
@@ -311,19 +304,29 @@
 
 		// KATEC -> WGS84 변환 함수 (수정된 버전)
 		function convertKATECtoWGS84(katecX, katecY) {
-			// Opinet API에서 받은 KATEC 좌표를 WGS84로 변환
-			// 앞서 Java에서 사용한 변환의 역변환
+    // KATEC 좌표계 정의 (한국의 TM좌표계)
+    var katecProj = '+proj=tmerc +lat_0=38 +lon_0=128 +k=1.0 +x_0=200000 +y_0=500000 +datum=WGS84 +units=m +no_defs';
+    
+    // WGS84 좌표계 정의
+    var wgs84Proj = '+proj=longlat +datum=WGS84 +no_defs';
 
-			// 조정 계수 적용 (Java의 변환과 일치하도록 조정)
-			katecX = katecX / 100 + 4571;
-			katecY = katecY / 100 + 1352;
+    // KATEC 좌표를 WGS84 좌표로 변환
+    var transformed = proj4(katecProj, wgs84Proj, [katecX, katecY]);
 
-			// WGS84 좌표로 변환
-			var lng = katecX / 36;
-			var lat = katecY / 36;
+    // 변환된 경도와 위도를 반환
+    var lng = transformed[0];
+    var lat = transformed[1];
 
-			return [ lng, lat ];
-		}
+    return [lat, lng];
+	}
+		 // SDK 로딩이 완료된 후에 실행되는 함수
+		  window.onload = function() {
+		    kakao.maps.load(function() {
+		      // 이제 kakao.maps.LatLng 사용 가능
+		      var latLng = new kakao.maps.LatLng(37.5665, 126.9780); // 서울의 위도, 경도
+		      console.log(latLng);
+		    });
+		  }
 	</script>
 </body>
 </html>

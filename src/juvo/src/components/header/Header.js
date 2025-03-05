@@ -6,9 +6,9 @@ function Header(){
     return(
         <>
             <div className='containerHD'>
-                <h1 className="logo"><img src={Logo} alt="로고"/></h1>
+            <h1 className="logo"><a href='/'><img src={Logo} alt="로고"/></a></h1>
                 <div className="nav">
-                    <a>싼주유소찾기</a>
+                    <a href='/Juyuso'>싼주유소찾기</a>
                     <a>유가관련정보</a>
                     <a>불법행위공표</a>
                     <a>이용안내</a>

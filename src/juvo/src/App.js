@@ -18,7 +18,7 @@ function App() {
 			<Route path="/detail/blackjuyusoDetail/Blackjuyuso" element={<Blackjuyuso/>} />
 			<Route path="/detail/guideDetail/Guide" element={<Guide/>} />
 			<Route path="/detail/guideDetail/Law" element={<Law/>} />
-			<Route path="/juyuso" element={<Juyusouyuso/>} />
+			<Route path="/juyuso" element={<Juyuso/>} />
 
 
 		</Routes>
