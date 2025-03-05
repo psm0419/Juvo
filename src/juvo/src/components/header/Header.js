@@ -1,9 +1,11 @@
 import '../../assets/css/header/Header.css';
 import Logo from '../../assets/image/Logo.png';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Header() {
     const [isNavHovered, setIsNavHovered] = useState(false);
+    const navigate = useNavigate ();
 
     const menuItems = {
         '주유소찾기': [
@@ -64,8 +66,12 @@ function Header() {
                 )}
             </div>
             <div className="btns">
-                <div className="login">로그인</div>
-                <div className="signup">회원가입</div>
+                <div className="login" onClick={()=>{
+                    navigate("/user/login");
+                }}>로그인</div>
+                <div className="signup" onClick={()=>{
+                    navigate("/user/signup");
+                }}>회원가입</div>
             </div>
         </div>
     );

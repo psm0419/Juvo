@@ -72,7 +72,7 @@
 .dropdown-container {
     position: absolute; /* 부모(.nav) 기준으로 절대 위치 설정 */
     top: 100%; /* 부모 요소 바로 아래에 위치 */
-    left: 50%; /* 부모 요소의 중앙으로 이동 */
+    left: 52%; /* 부모 요소의 중앙으로 이동 */
     transform: translateX(-50%); /* 정확히 중앙에 정렬 (50% 왼쪽으로 이동한 것을 다시 조정) */
     width: 900px; /* 드롭다운 박스 너비를 900px로 설정 */
     background: linear-gradient(145deg, #ffffff, #f0f4f8); /* 부드러운 그라디언트 배경 추가 */
