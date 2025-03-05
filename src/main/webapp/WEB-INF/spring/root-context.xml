@@ -13,7 +13,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context.xsd">
 
-	
+
 	<bean class="org.apache.commons.dbcp2.BasicDataSource"
 		id="data_source">
 		<property name="driverClassName"
@@ -45,5 +45,24 @@ http://www.springframework.org/schema/context/spring-context.xsd">
 	<task:executor id="mainTaskExecutor" pool-size="10" />
 	<task:annotation-driven
 		executor="mainTaskExecutor" scheduler="mainScheduler" />
-
+	<!-- 이메일 인증 관련 등록 -->
+	<bean id="mailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="cording1kyu@gmail.com" />
+		<property name="password" value="ruok chmu ttfx nqtp" />
+		<!-- 보안연결 SSL과 관련된 설정 -->
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtp.checkserveridentity">true</prop>
+				<prop key="mail.smtp.ssl.trust">*</prop>
+				<prop key="mail.debug">true</prop>
+				<prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+				<prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
+			</props>
+		</property>
+	</bean>
 </beans>

@@ -11,6 +11,8 @@ import Juyuso from './pages/juyuso/Juyuso';
 import LocationServiceTerms from './pages/detail/guideDetail/LocationServiceTerms';
 import PrivacyPolicy from './pages/detail/guideDetail/PrivacyPolicy';
 import RefundPolicy from './pages/detail/guideDetail/RefundPolicy';
+import Login from './pages/login/Login';
+import Signup from './pages/login/Signup';
 
 
 
@@ -27,7 +29,9 @@ function App() {
 			<Route path="/detail/guideDetail/LocationServiceTerms" element={<LocationServiceTerms/>} />
 			<Route path="/detail/guideDetail/PrivacyPolicy" element={<PrivacyPolicy/>} />
 			<Route path="/detail/guideDetail/RefundPolicy" element={<RefundPolicy/>} />
-		</Routes>
+			<Route path='/user/login' element={<Login/>}/>
+			<Route path='/user/signup' element={<Signup/>}/>
+		</Routes>		
 	);
 }
 
