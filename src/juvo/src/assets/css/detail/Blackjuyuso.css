@@ -10,7 +10,6 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'BookkMyungjo-Bd';
-
 }
 
 body {
@@ -20,20 +19,20 @@ body {
 }
 
 /* 컨테이너 */
-.container {
+.bj-container {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 /* 제목과 설명을 감싸는 박스 */
-.header-container {
+.bj-header-container {
     max-width: 800px;
     margin-bottom: 20px;
 }
 
 /* 제목 */
-.title {
+.bj-title {
     font-size: 24px;
     font-weight: bold;
     color: #333;
@@ -44,7 +43,7 @@ body {
 }
 
 /* 설명 */
-.description {
+.bj-description {
     font-size: 14px;
     color: #666;
     margin-bottom: 20px;
@@ -52,7 +51,7 @@ body {
 }
 
 /* 필터 컨테이너 */
-.filter-container {
+.bj-filter-container {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
@@ -63,20 +62,20 @@ body {
     margin-bottom: 20px;
 }
 
-.filter-item {
+.bj-filter-item {
     display: flex;
     flex-direction: column;
     min-width: 150px;
 }
 
-.filter-item label {
+.bj-filter-item label {
     font-size: 14px;
     color: #333;
     margin-bottom: 5px;
 }
 
-.filter-item select,
-.filter-item input {
+.bj-filter-item select,
+.bj-filter-item input {
     padding: 8px;
     font-size: 14px;
     border: 1px solid #ccc;
@@ -85,12 +84,12 @@ body {
     transition: border-color 0.3s;
 }
 
-.filter-item select:focus,
-.filter-item input:focus {
+.bj-filter-item select:focus,
+.bj-filter-item input:focus {
     border-color: #007bff;
 }
 
-.reset-btn {
+.bj-reset-btn {
     padding: 8px 12px;
     background-color: #dc3545;
     color: white;
@@ -100,24 +99,24 @@ body {
     align-self: flex-end;
 }
 
-.reset-btn:hover {
+.bj-reset-btn:hover {
     background-color: #c82333;
 }
 
 /* 테이블 컨테이너 */
-.table-container {
+.bj-table-container {
     margin-top: 20px;
     overflow-x: auto;
 }
 
 /* 테이블 스타일 */
-.data-table {
+.bj-data-table {
     width: 100%;
     border-collapse: collapse;
     background-color: #fff;
 }
 
-.table-header {
+.bj-table-header {
     background-color: #f4f4f4;
     color: #333;
     font-weight: bold;
@@ -126,23 +125,23 @@ body {
     border-bottom: 2px solid #ddd;
 }
 
-.table-row:nth-child(even) {
+.bj-table-row:nth-child(even) {
     background-color: #fafafa;
 }
 
-.table-cell {
+.bj-table-cell {
     padding: 10px;
     text-align: center;
     border-bottom: 1px solid #eee;
 }
 
-.no-data {
+.bj-no-data {
     color: #888;
     font-style: italic;
 }
 
 /* 페이지네이션 */
-.pagination {
+.bj-pagination {
     margin-top: 20px;
     text-align: center;
     display: flex;
@@ -150,7 +149,7 @@ body {
     gap: 5px;
 }
 
-.page-btn {
+.bj-page-btn {
     padding: 8px 12px;
     background-color: #007bff;
     color: white;
@@ -160,16 +159,16 @@ body {
     transition: background-color 0.3s;
 }
 
-.page-btn:hover:not(:disabled) {
+.bj-page-btn:hover:not(:disabled) {
     background-color: #0056b3;
 }
 
-.page-btn:disabled {
+.bj-page-btn:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
 
-.page-btn.active {
+.bj-page-btn.bj-active {
     background-color: #ff5722;
     font-weight: bold;
 }
