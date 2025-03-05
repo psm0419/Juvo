@@ -9,13 +9,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'BookkMyungjo-Bd';
-}
-
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    line-height: 1.6;
 }
 
 /* 컨테이너 */
@@ -23,6 +16,8 @@ body {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+        font-family: 'BookkMyungjo-Bd';
+
 }
 
 /* 제목과 설명을 감싸는 박스 */
