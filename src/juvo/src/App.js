@@ -7,6 +7,11 @@ import Tax from './pages/detail/oilinfoDetail/Tax';
 import Blackjuyuso from './pages/detail/blackjuyusoDetail/Blackjuyuso';
 import Guide from './pages/detail/guideDetail/Guide';
 import Law from './pages/detail/guideDetail/Law';
+import LocationServiceTerms from './pages/detail/guideDetail/LocationServiceTerms';
+import PrivacyPolicy from './pages/detail/guideDetail/PrivacyPolicy';
+import RefundPolicy from './pages/detail/guideDetail/RefundPolicy';
+
+
 
 function App() {
 	return (
@@ -17,8 +22,9 @@ function App() {
 			<Route path="/detail/blackjuyusoDetail/Blackjuyuso" element={<Blackjuyuso/>} />
 			<Route path="/detail/guideDetail/Guide" element={<Guide/>} />
 			<Route path="/detail/guideDetail/Law" element={<Law/>} />
-
-
+			<Route path="/detail/guideDetail/LocationServiceTerms" element={<LocationServiceTerms/>} />
+			<Route path="/detail/guideDetail/PrivacyPolicy" element={<PrivacyPolicy/>} />
+			<Route path="/detail/guideDetail/RefundPolicy" element={<RefundPolicy/>} />
 		</Routes>
 	);
 }
