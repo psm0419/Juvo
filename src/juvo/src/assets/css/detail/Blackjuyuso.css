@@ -16,8 +16,7 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-        font-family: 'BookkMyungjo-Bd';
-
+    font-family: 'BookkMyungjo-Bd';
 }
 
 /* 제목과 설명을 감싸는 박스 */
@@ -35,6 +34,9 @@
     text-align: left;
     padding-bottom: 10px;
     width: 300px; /* 구분선 길이 */
+    border-bottom: 1px solid black;
+    margin-top: 60px;
+
 }
 
 /* 설명 */
