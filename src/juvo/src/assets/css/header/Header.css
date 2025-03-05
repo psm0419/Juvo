@@ -10,7 +10,6 @@
     font-size: 1.1rem; /* 헤더 내 텍스트 기본 크기 설정 */
     font-weight: 600; /* 텍스트 굵기를 700에서 600으로 조정 (살짝 부드럽게) */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 더 세련된 폰트 사용 */
-    background: linear-gradient(180deg, #ffffff, #f8f9fa); /* 부드러운 그라디언트 배경 추가 */
     display: flex; /* 내부 요소를 가로로 배치하기 위해 flexbox 사용 */
     justify-content: space-between; /* 내부 요소를 좌우 끝으로 분산 배치 (로고-네비-버튼) */
     align-items: center; /* 내부 요소를 수직 중앙 정렬 */
