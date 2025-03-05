@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Map from "../../components/map/Map";
-import FuelStationList from "../../components/map/FuelStationList";
+
 
 const Juyuso = () => {
     const [stations, setStations] = useState([]);  // 기본값을 빈 배열로 설정
@@ -21,8 +21,7 @@ const Juyuso = () => {
     };
 
     return (
-        <div>
-            <h1>주변 주유소 찾기</h1>
+        <div>            
             <Map fetchFuelStations={fetchFuelStations} stations={stations} loading={loading}/>
         </div>
     );
