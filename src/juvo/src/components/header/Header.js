@@ -40,7 +40,6 @@ function Header() {
             <div
                 className="nav"
                 onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
             >
                 {Object.keys(menuItems).map((menu) => (
                     <div key={menu} className="nav-item">
@@ -48,7 +47,7 @@ function Header() {
                     </div>
                 ))}
                 {isNavHovered && (
-                    <div className="dropdown-container">
+                    <div className="dropdown-container" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                         {Object.keys(menuItems).map((menu) => (
                             <div key={menu} className="dropdown-column">
                                 {menuItems[menu].map((item) => (
