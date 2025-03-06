@@ -11,5 +11,7 @@ public interface UserDAO {
 	
 	public int signupUser(User user);
 	
-	User checkDupId(String id);
+	public User checkDupId(String id);
+
+	public User checkDupNickname(String nickname);
 }

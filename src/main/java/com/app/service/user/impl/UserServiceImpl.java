@@ -37,4 +37,15 @@ public class UserServiceImpl implements UserService{
 		}
 	}
 
+	@Override
+	public boolean checkDupNickname(String nickname) {
+		User checkDupNickname = userDAO.checkDupNickname(nickname);
+		System.out.println(checkDupNickname);
+		if(checkDupNickname == null) {	//객체가 없다 -> 중복X
+			return false;
+		} else { //해당 아이디와 동일한 객체가 있다 -> 중복O
+			return true;
+		}
+	}
+
 }

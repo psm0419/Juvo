@@ -31,4 +31,11 @@ public class UserDAOImpl implements UserDAO {
 		return checkDupId;
 	}
 
+	@Override
+	public User checkDupNickname(String nickname) {
+		User checkDupNickname = sqlSessionTemplate.selectOne("user_mapper.checkDupNickname", nickname);
+		System.out.println(checkDupNickname);
+		return checkDupNickname;
+	}
+
 }
