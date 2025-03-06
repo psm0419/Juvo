@@ -11,4 +11,8 @@ public interface JuyusoDAO {
     List<Juyuso> getAllJuyuso();
     boolean updateJuyuso(Juyuso juyuso);
     boolean deleteJuyuso(String uniId);
+    
+    boolean existsById(String uniId);    
+    boolean updateJuyusoDetail(Juyuso juyuso);
+    boolean existsDetailById(String uniId);
 }

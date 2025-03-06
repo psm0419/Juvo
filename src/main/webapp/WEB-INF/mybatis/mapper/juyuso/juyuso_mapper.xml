@@ -3,17 +3,19 @@
 
 <mapper namespace="juyuso_mapper">
 
-	<!-- 데이터 삽입 (UNI_ID가 존재하면 삽입 안 함) -->
+    <!-- 데이터 삽입 (UNI_ID가 존재하면 삽입 안 함) -->
     <insert id="insertJuyuso" parameterType="Juyuso">
         INSERT INTO juyuso (
             UNI_ID, POLL_DIV_CD, OS_NM, VAN_ADR, NEW_ADR, TEL, SIGUNCD,
-            LPG_YN, MAINT_YN, CAR_WASH_YN, KPETRO_YN, CVS_YN, GIS_X_COOR, GIS_Y_COOR,
-            H_OIL_PRICE, G_OIL_PRICE, OPERATATION
+            LPG_YN, MAINT_YN, CAR_WASH_YN, KPETRO_YN, CVS_YN, 
+            GIS_X_COOR, GIS_Y_COOR, H_OIL_PRICE, G_OIL_PRICE, D_OIL_PRICE, I_OIL_PRICE, 
+            OPERATATION
         )
         SELECT 
             #{uniId}, #{pollDivCd}, #{osNm}, #{vanAdr}, #{newAdr}, #{tel}, #{siguncd},
-            #{lpgYn}, #{maintYn}, #{carWashYn}, #{kpetroYn}, #{cvsYn}, #{gisXCoor}, #{gisYCoor},
-            #{hOilPrice}, #{gOilPrice}, #{operatation}
+            #{lpgYn}, #{maintYn}, #{carWashYn}, #{kpetroYn}, #{cvsYn}, 
+            #{gisXCoor}, #{gisYCoor}, #{hOilPrice}, #{gOilPrice}, #{dOilPrice}, #{iOilPrice}, 
+            #{operatation}
         FROM DUAL
         WHERE NOT EXISTS (
             SELECT 1 FROM juyuso WHERE UNI_ID = #{uniId}
@@ -36,9 +38,11 @@
         SET POLL_DIV_CD = #{pollDivCd}, OS_NM = #{osNm}, VAN_ADR = #{vanAdr},
             NEW_ADR = #{newAdr}, TEL = #{tel}, SIGUNCD = #{siguncd}, 
             LPG_YN = #{lpgYn}, MAINT_YN = #{maintYn}, CAR_WASH_YN = #{carWashYn},
-            KPETRO_YN = #{kpetroYn}, CVS_YN = #{cvsYn}, GIS_X_COOR = #{gisXCoor}, 
-            GIS_Y_COOR = #{gisYCoor}, H_OIL_PRICE = #{hOilPrice}, 
-            G_OIL_PRICE = #{gOilPrice}, OPERATATION = #{operatation}
+            KPETRO_YN = #{kpetroYn}, CVS_YN = #{cvsYn}, 
+            GIS_X_COOR = #{gisXCoor}, GIS_Y_COOR = #{gisYCoor}, 
+            H_OIL_PRICE = #{hOilPrice}, G_OIL_PRICE = #{gOilPrice}, 
+            D_OIL_PRICE = #{dOilPrice}, I_OIL_PRICE = #{iOilPrice}, 
+            OPERATATION = #{operatation}
         WHERE UNI_ID = #{uniId}
     </update>
 
@@ -46,4 +50,43 @@
     <delete id="deleteJuyuso" parameterType="string">
         DELETE FROM juyuso WHERE UNI_ID = #{uniId}
     </delete>
+    
+    <!-- 중복 확인 -->
+    <select id="existsById" resultType="int">
+        SELECT COUNT(*) FROM juyuso WHERE UNI_ID = #{uniId}
+    </select>
+    
+    <!-- 상세 정보 업데이트 -->
+    <update id="updateJuyusoDetail" parameterType="Juyuso">
+        UPDATE juyuso 
+        SET POLL_DIV_CD = #{pollDivCd},
+            LPG_YN = #{lpgYn}, 
+            MAINT_YN = #{maintYn}, 
+            CAR_WASH_YN = #{carWashYn}, 
+            KPETRO_YN = #{kpetroYn}, 
+            CVS_YN = #{cvsYn}, 
+            NEW_ADR = #{newAdr}, 
+            VAN_ADR = #{vanAdr},  -- 추가
+            TEL = #{tel},         -- 추가
+            SIGUNCD = #{siguncd}, -- 추가
+            GIS_X_COOR = #{gisXCoor}, 
+            GIS_Y_COOR = #{gisYCoor},
+            H_OIL_PRICE = #{hOilPrice}, 
+            G_OIL_PRICE = #{gOilPrice}, 
+            D_OIL_PRICE = #{dOilPrice}, 
+            I_OIL_PRICE = #{iOilPrice}
+        WHERE UNI_ID = #{uniId}
+    </update>
+
+    <!-- 상세 정보 존재 여부 확인 (필요 시 사용, 현재 코드에서는 사용 안 함) -->
+    <select id="existsDetailById" resultType="int">
+        SELECT COUNT(*) 
+        FROM juyuso 
+        WHERE UNI_ID = #{uniId}
+        AND (LPG_YN IS NOT NULL 
+             OR MAINT_YN IS NOT NULL 
+             OR CAR_WASH_YN IS NOT NULL 
+             OR KPETRO_YN IS NOT NULL 
+             OR CVS_YN IS NOT NULL)
+    </select>
 </mapper>

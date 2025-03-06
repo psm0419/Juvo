@@ -25,11 +25,13 @@ CREATE TABLE juyuso (
     CAR_WASH_YN VARCHAR2(2),
     KPETRO_YN VARCHAR2(2),
     CVS_YN VARCHAR2(2),
-    GIS_X_COOR NUMBER(10,6),
-    GIS_Y_COOR NUMBER(10,6),
-    H_OIL_PRICE NUMBER(10,2),
-    G_OIL_PRICE NUMBER(10,2),
-    operatation NUMBER
+    GIS_X_COOR NUMBER(12,6),
+    GIS_Y_COOR NUMBER(12,6),
+    H_OIL_PRICE NUMBER(10,2), -- B027: 휘발유 가격
+    G_OIL_PRICE NUMBER(10,2), -- B034: 고급휘발유 가격
+    D_OIL_PRICE NUMBER(10,2), -- D047: 경유 가격
+    I_OIL_PRICE NUMBER(10,2), -- C004: 실내등유 가격
+    OPERATATION NUMBER default 1
 );
 
 -- 주유소 리뷰 테이블

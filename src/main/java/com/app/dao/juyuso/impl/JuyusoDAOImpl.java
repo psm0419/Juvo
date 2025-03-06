@@ -1,7 +1,6 @@
 package com.app.dao.juyuso.impl;
 
 import java.util.List;
-
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -10,12 +9,12 @@ import com.app.dao.juyuso.JuyusoDAO;
 import com.app.dto.juyuso.Juyuso;
 
 @Repository
-public class JuyusoDAOImpl implements JuyusoDAO{
+public class JuyusoDAOImpl implements JuyusoDAO {
 
-	@Autowired
+    @Autowired
     SqlSessionTemplate sqlSessionTemplate;
 
-	private static final String NAMESPACE = "juyuso_mapper.";
+    private static final String NAMESPACE = "juyuso_mapper.";
 
     @Override
     public boolean insertJuyuso(Juyuso juyuso) {
@@ -42,4 +41,20 @@ public class JuyusoDAOImpl implements JuyusoDAO{
         return sqlSessionTemplate.delete(NAMESPACE + "deleteJuyuso", uniId) > 0;
     }
 
+    @Override
+    public boolean existsById(String uniId) {
+        Integer count = sqlSessionTemplate.selectOne(NAMESPACE + "existsById", uniId);
+        return count != null && count > 0;
+    }
+
+    @Override
+    public boolean updateJuyusoDetail(Juyuso juyuso) {
+        return sqlSessionTemplate.update(NAMESPACE + "updateJuyusoDetail", juyuso) > 0;
+    }
+
+    @Override
+    public boolean existsDetailById(String uniId) {
+        Integer count = sqlSessionTemplate.selectOne(NAMESPACE + "existsDetailById", uniId);
+        return count != null && count > 0;
+    }
 }

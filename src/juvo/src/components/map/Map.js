@@ -1,22 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import proj4 from 'proj4';
 import FuelStationList from "../../components/map/FuelStationList";
 
 const Map = ({ fetchFuelStations, stations, loading }) => {
     const mapContainer = useRef(null);
     const mapRef = useRef(null);
-    const [lat, setLat] = useState(36.807317819607775); // 초기 좌표 고정
+    const [lat, setLat] = useState(36.807317819607775);
     const [lng, setLng] = useState(127.14715449120254);
     const [marker, setMarker] = useState(null);
     const [fuelMarkers, setFuelMarkers] = useState([]);
 
-    // 맵 초기화
     useEffect(() => {
-        // 천안용 변환식
-        proj4.defs("CHEONAN", "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=310960 +y_0=600050 +ellps=GRS80 +units=m +no_defs");
-        // 서울용 변환식 (서울 데이터 기준으로 조정)
-        proj4.defs("SEOUL", "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=313500 +y_0=597000 +ellps=GRS80 +units=m +no_defs");
-
         const kakao = window.kakao;
         kakao.maps.load(() => {
             const mapOptions = {
@@ -49,120 +42,106 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         });
     }, []);
 
-    // 주유소 마커 업데이트
     useEffect(() => {
-        if (!mapRef.current || !stations?.length) return;
-
+        if (!mapRef.current || !stations || stations.length === 0) {
+            console.log("No stations to display or map not ready", stations);
+            return;
+        }
+    
+        console.log("Stations received:", stations);
+    
         const kakao = window.kakao;
+        const geocoder = new kakao.maps.services.Geocoder();
+    
         fuelMarkers.forEach(marker => marker?.setMap(null));
-
-        const newMarkers = stations.map((station, index) => {
-            const stationX = parseFloat(station.GIS_X_COOR);
-            const stationY = parseFloat(station.GIS_Y_COOR);
-
-            console.log(`Station ${index} Raw:`, { stationX, stationY });
-
-            if (!isNaN(stationX) && !isNaN(stationY)) {
-                try {
-                    // Y 값에 따라 변환식 선택
-                    let wgs84Coords;
-                    if (stationY < 500000) { // 천안 범위 (Y < 500000)
-                        wgs84Coords = proj4('CHEONAN', 'EPSG:4326', [stationX, stationY]);
-                    } else { // 서울 범위 (Y >= 500000)
-                        wgs84Coords = proj4('SEOUL', 'EPSG:4326', [stationX, stationY]);
+    
+        Promise.all(
+            stations.map((station, index) => {
+                return new Promise((resolve) => {
+                    const address = station.NEW_ADR || station.newAdr || station.VAN_ADR || station.vanAdr;
+                    if (!address) {
+                        console.log(`Station ${index} has no address: ${station.UNI_ID || station.uniId}`);
+                        resolve(null);
+                        return;
                     }
-                    let stationLat = wgs84Coords[1];
-                    let stationLng = wgs84Coords[0];
-
-                    // 천안 지역 경도 보정 (북쪽 치우침 보정)
-                    if (stationY < 500000) {
-                        const yIncrease = stationY - 467170.43937;
-                        const maxYIncrease = 5000;
-                        const longitudeCorrection = (yIncrease / maxYIncrease) * -0.00114;
-                        stationLng += longitudeCorrection;
-                    }
-
-                    console.log(`Station ${index} Converted:`, { stationLat, stationLng });
-
-                    const distance = getDistance(lat, lng, stationLat, stationLng);
-                    if (distance > 5000) {
-                        console.log(`Station ${index} out of 5km range: ${distance}m`);
-                        return null;
-                    }
-
-                    if (stationLat < 33 || stationLat > 43 || stationLng < 124 || stationLng > 132) {
-                        console.error(`Out of range for station ${index}:`, { stationLat, stationLng });
-                        return null;
-                    }
-
-                    const stationMarker = new kakao.maps.Marker({
-                        position: new kakao.maps.LatLng(stationLat, stationLng),
-                        map: mapRef.current,
-                        title: station.OS_NM,
+    
+                    console.log(`Geocoding address for ${station.OS_NM || station.osNm}: ${address}`);
+    
+                    geocoder.addressSearch(address, (result, status) => {
+                        if (status === kakao.maps.services.Status.OK) {
+                            const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                            const distance = getDistance(lat, lng, coords.getLat(), coords.getLng());
+    
+                            if (distance > 5000) {
+                                console.log(`Station ${index} out of 5km range: ${distance}m`);
+                                resolve(null);
+                                return;
+                            }
+    
+                            const stationMarker = new kakao.maps.Marker({
+                                position: coords,
+                                map: mapRef.current,
+                                title: station.OS_NM || station.osNm,
+                            });
+    
+                            const infoWindow = new kakao.maps.InfoWindow({
+                                content: `<div style="padding:5px;">${station.OS_NM || station.osNm}<br>가격: ${station.PRICE || station.hOilPrice || "정보 없음"}</div>`,
+                            });
+    
+                            kakao.maps.event.addListener(stationMarker, "click", () => {
+                                infoWindow.open(mapRef.current, stationMarker);
+                            });
+    
+                            resolve(stationMarker);
+                        } else {
+                            console.error(`Geocoding failed for station ${index} (${station.OS_NM || station.osNm}): ${status}`);
+                            resolve(null);
+                        }
                     });
-
-                    const infoWindow = new kakao.maps.InfoWindow({
-                        content: `<div style="padding:5px;">${station.OS_NM}</div>`,
-                    });
-
-                    kakao.maps.event.addListener(stationMarker, "click", () => {
-                        infoWindow.open(mapRef.current, stationMarker);
-                    });
-
-                    return stationMarker;
-                } catch (error) {
-                    console.error(`Conversion error for station ${index}:`, error);
-                    return null;
-                }
-            }
-            return null;
-        }).filter(marker => marker !== null);
-
-        setFuelMarkers(newMarkers);
-        console.log(`Total markers created: ${newMarkers.length}`);
+                });
+            })
+        ).then(newMarkers => {
+            const validMarkers = newMarkers.filter(marker => marker !== null);
+            setFuelMarkers(validMarkers);
+            console.log(`Total markers created: ${validMarkers.length}`);
+        }).catch(error => {
+            console.error("Error creating markers:", error);
+        });
     }, [stations]);
 
-    // 거리 계산 함수 (단위: 미터)
     const getDistance = (lat1, lng1, lat2, lng2) => {
-        const R = 6371000; // 지구 반지름 (미터)
+        const R = 6371000;
         const dLat = (lat2 - lat1) * Math.PI / 180;
         const dLng = (lng2 - lng1) * Math.PI / 180;
         const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                   Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                   Math.sin(dLng / 2) * Math.sin(dLng / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c; // 거리 (미터)
+        return R * c;
     };
 
     const handleFetchStations = () => {
-        fetchFuelStations(lat, lng, 5000); // 반경 5000m 명시
+        fetchFuelStations(lat, lng);
     };
 
     return (
         <div style={{ position: "relative" }}>
-            <div
-                ref={mapContainer}
-                style={{ width: "100%", height: "700px", marginBottom: "20px" }}
-            ></div>            
-            <div
-                style={{
-                    position: "absolute",
-                    top: "20px",
-                    left: "20px",
-                    backgroundColor: "white",
-                    padding: "15px",
-                    borderRadius: "8px",
-                    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.2)",
-                    zIndex: "10",
-                    width: "250px",
-                    height: "650px",
-                    maxHeight: "90vh",
-                    overflowY: "auto",
-                }}
-            >
-                <button onClick={handleFetchStations} style={{ marginTop: "10px" }}>
-                    조회
-                </button>
+            <div ref={mapContainer} style={{ width: "100%", height: "700px", marginBottom: "20px" }}></div>
+            <div style={{
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                backgroundColor: "white",
+                padding: "15px",
+                borderRadius: "8px",
+                boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.2)",
+                zIndex: "10",
+                width: "250px",
+                height: "650px",
+                maxHeight: "90vh",
+                overflowY: "auto",
+            }}>
+                <button onClick={handleFetchStations} style={{ marginTop: "10px" }}>조회</button>
                 <FuelStationList stations={stations} loading={loading} />
             </div>
         </div>
