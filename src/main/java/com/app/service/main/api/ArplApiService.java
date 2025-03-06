@@ -23,7 +23,7 @@ public class ArplApiService {
         // 공공 API URL 구성
         StringBuilder urlBuilder = new StringBuilder("http://www.opinet.co.kr/api/lowTop10.do");
         urlBuilder.append("?" + URLEncoder.encode("out","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("code","UTF-8") + "=F250306157");
+        urlBuilder.append("&" + URLEncoder.encode("code","UTF-8") + "=F250306159");
         urlBuilder.append("&" + URLEncoder.encode("prodcd","UTF-8") + "=" + URLEncoder.encode(prodcd, "UTF-8")); // 제품구분
         urlBuilder.append("&" + URLEncoder.encode("area","UTF-8") + "=" + URLEncoder.encode(area, "UTF-8")); // 지역구분
         urlBuilder.append("&" + URLEncoder.encode("cnt","UTF-8") + "=" + URLEncoder.encode("5", "UTF-8")); //최저가순 결과 건수
@@ -61,12 +61,12 @@ public class ArplApiService {
         return response;
     } 
     
-    public static List<CheapJuyuso> cheapJuyusoList(String area, String prodcd) throws Exception {
+    public static List<CheapJuyuso> cheapJuyusoList(String prodcd, String area) throws Exception {
     	
     	List<CheapJuyuso> cheapJuyusoList = new ArrayList<CheapJuyuso>();
     	
     	try {
-            String jsonText = juyuso(area, prodcd); 
+            String jsonText = juyuso(prodcd, area); 
             System.out.println("파싱할 JSON 데이터: " + jsonText);
             
             JSONParser jsonParser = new JSONParser();

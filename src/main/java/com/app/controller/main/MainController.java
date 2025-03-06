@@ -24,13 +24,15 @@ public class MainController {
 
 	@GetMapping("/api/cheapJuyuso")
 	@ResponseBody
-	public List<CheapJuyuso> CheapJuyuso(@RequestParam(required = false) String area) {
+	public List<CheapJuyuso> CheapJuyuso(@RequestParam(required = false) String prodcd, @RequestParam(required = false) String area) {
 		
 		if (area == null || area.isEmpty()) {
 	        area="";
 	    }
-
-		String prodcd = "B027"; //휘발유
+		
+		if (prodcd == null || prodcd.isEmpty()) {
+			prodcd="B027";
+	    }
 		
 		List<CheapJuyuso> cheapJuyusoList = null;
 

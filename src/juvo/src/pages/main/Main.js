@@ -6,7 +6,16 @@ import CheapJuyuso from "../../components/main/CheapJuyuso";
 function Main() {	
 
 	const [cheapJuyusoList, setCheapJuyusoList] = useState([]);
+	const [selectedProduct, setSelectedProduct] = useState("휘발유");
 	const [selectedArea, setSelectedArea] = useState("");
+
+	const productCodes = {
+		"휘발유": "B027",
+		"경유": "D047",
+		"고급휘발유": "B034",
+		"실내등유": "C004"
+	};
+
 	const areaCodes = {
 		"서울": "01",
 		"경기": "02",
@@ -26,6 +35,14 @@ function Main() {
 		"울산": "18",
 		"세종": "19"
     };
+
+	const handleProductChange = (event) => {
+		setSelectedProduct(event.target.value); // 제품 선택 시 상태 업데이트
+	};
+
+	const handleAreaChange = (event) => {
+        setSelectedArea(event.target.value); // 지역 선택 시 상태 업데이트
+    };
     
     useEffect(() => {
 		axios.get('/api/cheapJuyuso')
@@ -44,13 +61,11 @@ function Main() {
 	}, []);
 
 	useEffect(() => {
-		// 기본적으로 전국 데이터를 요청 (selectedArea가 비어있을 때)
 		const areaCode = selectedArea ? areaCodes[selectedArea] : ""; 
-		console.log(`API 호출 지역 코드: ${areaCode}`); // 디버깅 로그 추가
-		axios.get(`/api/cheapJuyuso?area=${areaCode}`)
+		const prodcd = productCodes[selectedProduct] || "B027";  
+	
+		axios.get(`/api/cheapJuyuso?prodcd=${prodcd}&area=${areaCode}`)
 			.then(response => {
-				console.log(response.data);
-				// 배열인지 확인하고 배열로 변환
 				if (Array.isArray(response.data)) {
 					setCheapJuyusoList(response.data);
 				} else {
@@ -60,12 +75,8 @@ function Main() {
 			.catch(error => {
 				console.error('API 호출 중 오류 발생:', error);
 			});
-	}, [selectedArea]); // selectedArea가 변경될 때마다 호출
-
-
-	const handleAreaChange = (event) => {
-        setSelectedArea(event.target.value); // 지역 선택 시 상태 업데이트
-    };
+	}, [selectedProduct, selectedArea]);
+	
 
 	return (
 		<>
@@ -84,10 +95,11 @@ function Main() {
 							<div className="lmiddlet">
 								<div className="todaySelect">
 									<p className="point_text2">오늘의 유가 <span>(평균)</span> </p>
-									<select className="region">
-											<option value="option1">휘발유</option>
-											<option value="option2">경유</option>
-											<option value="option3">전기차</option>
+									<select className="region" onChange={handleProductChange} value={selectedProduct}>
+										<option value="휘발유">휘발유</option>
+										<option value="경유">경유</option>
+										<option value="고급휘발유">고급휘발유</option>
+										<option value="실내등유">실내등유</option>
 									</select>
 								</div>
 								<div className="todayContrainer">
@@ -99,9 +111,13 @@ function Main() {
 										<h4>경유</h4>
 										<p>56.78</p>
 									</div>
+									<div className="box">
+										<h4>고급휘발유</h4>
+										<p>99.10</p>
+									</div>
 									<div className="box noBorder">
-										<h4>전기차</h4>
-										<p>91.01</p>
+										<h4>등유</h4>
+										<p>11.12</p>
 									</div>
 								</div>
 							</div>
