@@ -35,8 +35,7 @@ const Juyuso = () => {
 
     return (
         <div>
-            <Map fetchFuelStations={fetchFuelStations} stations={stations} loading={loading} />
-            <button onClick={handleFetchStations} style={{ marginTop: "10px" }}>조회</button>
+            <Map fetchFuelStations={fetchFuelStations} stations={stations} loading={loading} />            
         </div>
     );
 };

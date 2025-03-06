@@ -67,37 +67,43 @@ public class JuyusoServiceImpl implements JuyusoService {
             System.out.println("Found " + stations.size() + " stations in response");
 
             for (JsonNode stationNode : stations) {
-                Juyuso newJuyuso = new Juyuso();
-                newJuyuso.setUniId(stationNode.path("UNI_ID").asText());
-                newJuyuso.setOsNm(stationNode.path("OS_NM").asText());
-                newJuyuso.setHOilPrice(stationNode.path("PRICE").asDouble());
-                newJuyuso.setNewAdr(stationNode.path("NEW_ADR").asText(""));
-                newJuyuso.setPollDivCd(stationNode.path("POLL_DIV_CO").asText(""));
+                String uniId = stationNode.path("UNI_ID").asText();
+                Double apiPrice = stationNode.path("PRICE").isMissingNode() ? null : stationNode.path("PRICE").asDouble();
 
-                Juyuso existingJuyuso = juyusoDAO.getJuyusoById(newJuyuso.getUniId());
+                Juyuso existingJuyuso = juyusoDAO.getJuyusoById(uniId);
                 boolean needsUpdate = false;
 
                 if (existingJuyuso == null) {
-                    System.out.println("Inserting new station: " + newJuyuso.getUniId());
+                    // DB에 없으면 새로 삽입
+                    Juyuso newJuyuso = new Juyuso();
+                    newJuyuso.setUniId(uniId);
+                    newJuyuso.setOsNm(stationNode.path("OS_NM").asText());
+                    newJuyuso.setHOilPrice(apiPrice);
+                    newJuyuso.setNewAdr(stationNode.path("NEW_ADR").asText(""));
+                    newJuyuso.setPollDivCd(stationNode.path("POLL_DIV_CO").asText(""));
+
+                    System.out.println("Inserting new station: " + uniId);
                     juyusoDAO.insertJuyuso(newJuyuso);
-                    needsUpdate = true;
-                } else if (!isJuyusoEqual(existingJuyuso, newJuyuso)) {
-                    System.out.println("Updating existing station with new data: " + newJuyuso.getUniId());
-                    juyusoDAO.updateJuyuso(newJuyuso);
-                    needsUpdate = true;
+                    needsUpdate = true; // 상세 정보 업데이트 필요
                 } else {
-                    System.out.println("Station data unchanged: " + newJuyuso.getUniId());
+                    // DB에 존재하면 가격 비교
+                    Double dbHOilPrice = existingJuyuso.getHOilPrice();
+                    if (!nullSafeEquals(dbHOilPrice, apiPrice)) {
+                        // 가격이 다르면 업데이트
+                        existingJuyuso.setHOilPrice(apiPrice);
+                        System.out.println("Updating station price for: " + uniId + " from " + dbHOilPrice + " to " + apiPrice);
+                        juyusoDAO.updateJuyuso(existingJuyuso);
+                        needsUpdate = true; // 상세 정보 업데이트 필요
+                    } else {
+                        System.out.println("Price unchanged for station: " + uniId + ", skipping update");
+                    }
                 }
 
+                // 가격이 변경되었거나 새로 삽입된 경우에만 상세 정보 업데이트
                 if (needsUpdate) {
-                    updateJuyusoDetail(newJuyuso.getUniId());
+                    updateJuyusoDetail(uniId);
                 } else {
-                    Juyuso detailData = fetchDetailData(newJuyuso.getUniId());
-                    if (detailData != null && !isJuyusoDetailEqual(existingJuyuso, detailData)) {
-                        updateJuyusoDetail(newJuyuso.getUniId());
-                    } else {
-                        System.out.println("Detail data unchanged for: " + newJuyuso.getUniId() + ", skipping update");
-                    }
+                    System.out.println("No price change for: " + uniId + ", skipping detail API request");
                 }
             }
             return true;
