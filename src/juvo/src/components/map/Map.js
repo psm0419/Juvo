@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import FuelStationList from "../../components/map/FuelStationList";
+import "../../assets/css/map/Map.css";
 
 const Map = ({ fetchFuelStations, stations, loading }) => {
     const mapContainer = useRef(null);
@@ -9,6 +10,30 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const [marker, setMarker] = useState(null);
     const [fuelMarkers, setFuelMarkers] = useState([]);
 
+    // 필터링 상태 관리
+    const [searchMethod, setSearchMethod] = useState({
+        subway: false,
+        map: false,
+        currentLocation: false,
+        route: false,
+    });
+    const [brands, setBrands] = useState({
+        cheap: false,
+        skEnergy: false,
+        gsCaltex: false,
+        hyundaiOilbank: false,
+        sOil: false,
+        nOil: false,
+    });
+    const [additionalInfo, setAdditionalInfo] = useState({
+        carWash: false,
+        maintenance: false,
+        convenience: false,
+        self: false,
+        alwaysOpen: false,
+    });
+    // 탭 선택 상태 관리
+    const [activeTab, setActiveTab] = useState("주유소"); // 초기값을 "주유소"로 설정
     useEffect(() => {
         const kakao = window.kakao;
         kakao.maps.load(() => {
@@ -47,14 +72,14 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             console.log("No stations to display or map not ready", stations);
             return;
         }
-    
+
         console.log("Stations received:", stations);
-    
+
         const kakao = window.kakao;
         const geocoder = new kakao.maps.services.Geocoder();
-    
+
         fuelMarkers.forEach(marker => marker?.setMap(null));
-    
+
         Promise.all(
             stations.map((station, index) => {
                 return new Promise((resolve) => {
@@ -64,34 +89,34 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                         resolve(null);
                         return;
                     }
-    
+
                     console.log(`Geocoding address for ${station.OS_NM || station.osNm}: ${address}`);
-    
+
                     geocoder.addressSearch(address, (result, status) => {
                         if (status === kakao.maps.services.Status.OK) {
                             const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
                             const distance = getDistance(lat, lng, coords.getLat(), coords.getLng());
-    
+
                             if (distance > 5000) {
                                 console.log(`Station ${index} out of 5km range: ${distance}m`);
                                 resolve(null);
                                 return;
                             }
-    
+
                             const stationMarker = new kakao.maps.Marker({
                                 position: coords,
                                 map: mapRef.current,
                                 title: station.OS_NM || station.osNm,
                             });
-    
+
                             const infoWindow = new kakao.maps.InfoWindow({
-                                content: `<div style="padding:5px;">${station.OS_NM || station.osNm}<br>가격: ${station.PRICE || station.hOilPrice || "정보 없음"}</div>`,
+                                content: `<div style="padding:5px;">${station.OS_NM || station.osNm}<br>가격: ${station.PRICE || station.hoilPrice || "정보 없음"}</div>`,
                             });
-    
+
                             kakao.maps.event.addListener(stationMarker, "click", () => {
                                 infoWindow.open(mapRef.current, stationMarker);
                             });
-    
+
                             resolve(stationMarker);
                         } else {
                             console.error(`Geocoding failed for station ${index} (${station.OS_NM || station.osNm}): ${status}`);
@@ -114,8 +139,8 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         const dLat = (lat2 - lat1) * Math.PI / 180;
         const dLng = (lng2 - lng1) * Math.PI / 180;
         const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                  Math.sin(dLng / 2) * Math.sin(dLng / 2);
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLng / 2) * Math.sin(dLng / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
     };
@@ -124,25 +149,118 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         fetchFuelStations(lat, lng);
     };
 
+    const handleSearchMethodChange = (key) => {
+        setSearchMethod((prev) => ({
+            subway: key === "subway" ? !prev.subway : false,
+            map: key === "map" ? !prev.map : false,
+            currentLocation: key === "currentLocation" ? !prev.currentLocation : false,
+            route: key === "route" ? !prev.route : false,
+        }));
+    };
+
+    const handleBrandChange = (key) => {
+        setBrands((prev) => ({
+            ...prev,
+            [key]: !prev[key],
+        }));
+    };
+
+    const handleAdditionalInfoChange = (key) => {
+        setAdditionalInfo((prev) => ({
+            ...prev,
+            [key]: !prev[key],
+        }));
+    };
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        // 탭 변경 시 필터링 상태 초기화 (필요 시)
+        setSearchMethod({ subway: false, map: false, currentLocation: false, route: false });
+        setBrands({ cheap: false, skEnergy: false, gsCaltex: false, hyundaiOilbank: false, sOil: false, nOil: false });
+        setAdditionalInfo({ carWash: false, maintenance: false, convenience: false, self: false, alwaysOpen: false });
+    };
     return (
-        <div style={{ position: "relative" }}>
-            <div ref={mapContainer} style={{ width: "100%", height: "700px", marginBottom: "20px" }}></div>
-            <div style={{
-                position: "absolute",
-                top: "20px",
-                left: "20px",
-                backgroundColor: "white",
-                padding: "15px",
-                borderRadius: "8px",
-                boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.2)",
-                zIndex: "10",
-                width: "250px",
-                height: "650px",
-                maxHeight: "90vh",
-                overflowY: "auto",
-            }}>
-                <button onClick={handleFetchStations} style={{ marginTop: "10px" }}>조회</button>
-                <FuelStationList stations={stations} loading={loading} />
+        <div className="mp-container">
+            <div ref={mapContainer} className="mp"></div>
+            <div className="mp-sidebar">
+                {/* 탭 영역 */}
+                <div className="mp-tabs">
+                <div
+                            className={`mp-tab ${activeTab === "주유소" ? "mp-tab-active" : "mp-tab-inactive"}`}
+                            onClick={() => handleTabChange("주유소")}
+                        >
+                            주유소
+                        </div>
+                        <div
+                            className={`mp-tab ${activeTab === "충전소" ? "mp-tab-active" : "mp-tab-inactive"}`}
+                            onClick={() => handleTabChange("충전소")}
+                        >
+                            충전소
+                        </div>
+                </div>
+
+                
+
+                {/* 상표 선택 */}
+                <div className="mp-section">
+                    <div className="mp-section-title">상표</div>
+                    <div className="mp-options">
+                        {[
+                            { key: "cheap", label: "알뜰" },
+                            { key: "skEnergy", label: "SK에너지" },
+                            { key: "gsCaltex", label: "GS칼텍스" },
+                            { key: "hyundaiOilbank", label: "현대오일뱅크" },
+                            { key: "sOil", label: "S-OIL" },
+                            { key: "nOil", label: "농협" },
+                        ].map(({ key, label }) => (
+                            <label key={key} className="mp-option-label">
+                                <input
+                                    type="checkbox"
+                                    checked={brands[key]}
+                                    onChange={() => handleBrandChange(key)}
+                                />
+                                <span>{label}</span>
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                {/* 부가정보 선택 */}
+                <div className="mp-section">
+                    <div className="mp-section-title">부가정보</div>
+                    <div className="mp-options">
+                        {[
+                            { key: "carWash", label: "세차장" },
+                            { key: "maintenance", label: "경정비" },
+                            { key: "convenience", label: "편의점" },
+                            { key: "self", label: "셀프" },
+                            { key: "alwaysOpen", label: "24시간" },
+                        ].map(({ key, label }) => (
+                            <label key={key} className="mp-option-label">
+                                <input
+                                    type="checkbox"
+                                    checked={additionalInfo[key]}
+                                    onChange={() => handleAdditionalInfoChange(key)}
+                                />
+                                <span>{label}</span>
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                {/* 조회 버튼 */}
+                <div className="mp-button-container">
+                    <button
+                        onClick={handleFetchStations}
+                        className="mp-search-button"
+                    >
+                        조회
+                    </button>
+                </div>
+
+                {/* 주유소 목록 */}
+                <div className="mp-station-list">
+                    <FuelStationList stations={stations} loading={loading} />
+                </div>
             </div>
         </div>
     );

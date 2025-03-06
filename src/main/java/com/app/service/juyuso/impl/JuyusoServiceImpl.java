@@ -1,5 +1,6 @@
 package com.app.service.juyuso.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,45 +67,26 @@ public class JuyusoServiceImpl implements JuyusoService {
 
             System.out.println("Found " + stations.size() + " stations in response");
 
+            // enrichedStations 선언 및 초기화
+            List<JsonNode> enrichedStations = new ArrayList<>();
             for (JsonNode stationNode : stations) {
                 String uniId = stationNode.path("UNI_ID").asText();
-                Double apiPrice = stationNode.path("PRICE").isMissingNode() ? null : stationNode.path("PRICE").asDouble();
-
                 Juyuso existingJuyuso = juyusoDAO.getJuyusoById(uniId);
-                boolean needsUpdate = false;
-
-                if (existingJuyuso == null) {
-                    // DB에 없으면 새로 삽입
-                    Juyuso newJuyuso = new Juyuso();
-                    newJuyuso.setUniId(uniId);
-                    newJuyuso.setOsNm(stationNode.path("OS_NM").asText());
-                    newJuyuso.setHOilPrice(apiPrice);
-                    newJuyuso.setNewAdr(stationNode.path("NEW_ADR").asText(""));
-                    newJuyuso.setPollDivCd(stationNode.path("POLL_DIV_CO").asText(""));
-
-                    System.out.println("Inserting new station: " + uniId);
-                    juyusoDAO.insertJuyuso(newJuyuso);
-                    needsUpdate = true; // 상세 정보 업데이트 필요
+                Juyuso detailData;
+                if (existingJuyuso != null && isJuyusoDetailComplete(existingJuyuso)) {
+                    System.out.println("Using cached detail data for: " + uniId);
+                    detailData = existingJuyuso;
                 } else {
-                    // DB에 존재하면 가격 비교
-                    Double dbHOilPrice = existingJuyuso.getHOilPrice();
-                    if (!nullSafeEquals(dbHOilPrice, apiPrice)) {
-                        // 가격이 다르면 업데이트
-                        existingJuyuso.setHOilPrice(apiPrice);
-                        System.out.println("Updating station price for: " + uniId + " from " + dbHOilPrice + " to " + apiPrice);
-                        juyusoDAO.updateJuyuso(existingJuyuso);
-                        needsUpdate = true; // 상세 정보 업데이트 필요
-                    } else {
-                        System.out.println("Price unchanged for station: " + uniId + ", skipping update");
+                    detailData = fetchDetailData(uniId);
+                    if (detailData != null) {
+                        juyusoDAO.updateJuyusoDetail(detailData); // DB 업데이트
                     }
                 }
-
-                // 가격이 변경되었거나 새로 삽입된 경우에만 상세 정보 업데이트
-                if (needsUpdate) {
-                    updateJuyusoDetail(uniId);
-                } else {
-                    System.out.println("No price change for: " + uniId + ", skipping detail API request");
+                if (detailData != null) {
+                    JsonNode detailNode = objectMapper.valueToTree(detailData);
+                    ((ObjectNode) stationNode).setAll((ObjectNode) detailNode);
                 }
+                enrichedStations.add(stationNode);
             }
             return true;
         } catch (Exception e) {
@@ -112,7 +94,11 @@ public class JuyusoServiceImpl implements JuyusoService {
             return false;
         }
     }
-
+    private boolean isJuyusoDetailComplete(Juyuso juyuso) {
+        return juyuso.getTel() != null && !juyuso.getTel().isEmpty() &&
+               juyuso.getVanAdr() != null && !juyuso.getVanAdr().isEmpty() &&
+               juyuso.getGisXCoor() != null && juyuso.getGisYCoor() != null;
+    }
     private Juyuso fetchDetailData(String uniId) throws Exception {
         String detailResponse = ArplApiService.juyusoDetail(uniId);
         JsonNode root = objectMapper.readTree(detailResponse);
@@ -247,10 +233,21 @@ public class JuyusoServiceImpl implements JuyusoService {
                 return objectMapper.writeValueAsString(new ResponseWrapper("OIL", objectMapper.createArrayNode()));
             }
 
-            // API 응답을 그대로 사용하며, 상세 정보를 추가
-            List<JsonNode> enrichedStations = new java.util.ArrayList<>();
+            // enrichedStations 선언 및 초기화
+            List<JsonNode> enrichedStations = new ArrayList<>();
             for (JsonNode stationNode : stations) {
-                Juyuso detailData = fetchDetailData(stationNode.path("UNI_ID").asText());
+                String uniId = stationNode.path("UNI_ID").asText();
+                Juyuso existingJuyuso = juyusoDAO.getJuyusoById(uniId);
+                Juyuso detailData;
+                if (existingJuyuso != null && isJuyusoDetailComplete(existingJuyuso)) {
+                    System.out.println("Using cached detail data for: " + uniId);
+                    detailData = existingJuyuso;
+                } else {
+                    detailData = fetchDetailData(uniId);
+                    if (detailData != null) {
+                        juyusoDAO.updateJuyusoDetail(detailData); // DB 업데이트
+                    }
+                }
                 if (detailData != null) {
                     JsonNode detailNode = objectMapper.valueToTree(detailData);
                     ((ObjectNode) stationNode).setAll((ObjectNode) detailNode);
