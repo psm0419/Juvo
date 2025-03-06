@@ -91,6 +91,7 @@ function FindId() {
     };
 
     return (
+        <div className="fi-page">
         <div className="fi-container">
             <h1 className="fi-title">아이디 찾기</h1>
 
@@ -151,6 +152,7 @@ function FindId() {
                     </button>
                 </div>
             )}
+        </div>
         </div>
     );
 }

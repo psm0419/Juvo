@@ -1,13 +1,26 @@
+@font-face {
+    font-family: 'BookkMyungjo-Bd';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* 페이지 전체 레이아웃 */
+.mp-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
 /* 컨테이너 */
 .mp-container {
     max-width: 400px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 100%;
+    padding: 40px 20px;
+    box-sizing: border-box;
 }
 
 /* 제목 */

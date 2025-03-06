@@ -105,6 +105,7 @@ function FindPassword() {
     };
 
     return (
+        <div className="fp-page">
         <div className="fp-container">
             <h1 className="fp-title">비밀번호 찾기</h1>
 
@@ -186,6 +187,7 @@ function FindPassword() {
                     </button>
                 </div>
             )}
+        </div>
         </div>
     );
 }

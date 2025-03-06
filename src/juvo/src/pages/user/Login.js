@@ -8,7 +8,7 @@ function Login() {
     const [pw, setPw] = useState('');
     const navigate = useNavigate();
 
-    const isValid = id.trim() && pw.trim(); // 더 간결하게
+    const isValid = id.trim() && pw.trim();
 
     const handleLogin = async () => {
         if (!isValid) {
@@ -42,51 +42,69 @@ function Login() {
         }
     };
 
+    const handleFindId = () => {
+        navigate('/user/findId'); // 아이디 찾기 페이지로 이동
+    };
+
+    const handleFindPw = () => {
+        navigate('/user/findPassword'); // 비밀번호 찾기 페이지로 이동
+    };
+
     return (
-        <div className="login-container">
-            <h1 className="login-title">로그인</h1>
-            <div className="login-form-group">
-                <label className="login-label">ID</label>
-                <input
-                    type="text"
-                    value={id}
-                    className="login-input"
-                    placeholder="아이디"
-                    onChange={(e) => setId(e.target.value)}
-                />
-            </div>
-            <div className="login-form-group">
-                <label className="login-label">Password</label>
-                <input
-                    type="password"
-                    value={pw}
-                    className="login-input"
-                    placeholder="비밀번호"
-                    onChange={(e) => setPw(e.target.value)}
-                />
-            </div>
-            <div className="login-form-group">
-                <button
-                    className="login-submit-btn"
-                    onClick={handleLogin}
-                    disabled={!isValid}
-                >
-                    로그인
-                </button>
-            </div>
-            <div className="login-form-group login-social-group">
-                <button className="login-social-btn naver-login-btn">
-                    <span className="login-social-icon naver-icon" />
-                    <span>네이버로 로그인</span>
-                </button>
-                <button className="login-social-btn google-login-btn">
-                    <span className="login-social-icon google-icon" />
-                    <span>구글로 로그인</span>
-                </button>
-                <button className="login-social-btn kakao-login-btn">
-                    <span className="login-social-icon kakao-icon" />
-                    <span>카카오계정으로 로그인</span>
-                </button>
+        <div className="login-page">
+            <div className="login-container">
+                <h1 className="login-title">로그인</h1>
+                <div className="login-form-group">
+                    <label className="login-label">ID</label>
+                    <input
+                        type="text"
+                        value={id}
+                        className="login-input"
+                        placeholder="아이디"
+                        onChange={(e) => setId(e.target.value)}
+                    />
+                </div>
+                <div className="login-form-group">
+                    <label className="login-label">Password</label>
+                    <input
+                        type="password"
+                        value={pw}
+                        className="login-input"
+                        placeholder="비밀번호"
+                        onChange={(e) => setPw(e.target.value)}
+                    />
+                </div>
+                <div className="login-form-group">
+                    <button
+                        className="login-submit-btn"
+                        onClick={handleLogin}
+                        disabled={!isValid}
+                    >
+                        로그인
+                    </button>
+                </div>
+                <div className="login-form-group find-buttons">
+                    <button className="find-btn find-id-btn" onClick={handleFindId}>
+                        아이디 찾기
+                    </button>
+                    <button className="find-btn find-pw-btn" onClick={handleFindPw}>
+                        비밀번호 찾기
+                    </button>
+                </div>
+                <div className="login-form-group login-social-group">
+                    <button className="login-social-btn naver-login-btn">
+                        <span className="login-social-icon naver-icon" />
+                        <span>네이버로 로그인</span>
+                    </button>
+                    <button className="login-social-btn google-login-btn">
+                        <span className="login-social-icon google-icon" />
+                        <span>구글로 로그인</span>
+                    </button>
+                    <button className="login-social-btn kakao-login-btn">
+                        <span className="login-social-icon kakao-icon" />
+                        <span>카카오계정으로 로그인</span>
+                    </button>
+                </div>
             </div>
         </div>
     );

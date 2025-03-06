@@ -155,6 +155,7 @@ function MyPage() {
     }
 
     return (
+        <div className="mp-page">
         <div className="mp-container">
             <h1 className="mp-title">마이페이지</h1>
 
@@ -281,6 +282,7 @@ function MyPage() {
                     </div>
                 </div>
             )}
+        </div>
         </div>
     );
 }
