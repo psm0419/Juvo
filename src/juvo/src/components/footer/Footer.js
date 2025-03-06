@@ -1,8 +1,29 @@
 import '../../assets/css/footer/Footer.css';
+import { useState, useEffect } from 'react';
 
-function Footer(){
+function Footer() {
+    const [showTopButton, setShowTopButton] = useState(false);
 
-    return(
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 200) {
+                setShowTopButton(true);
+            } else {
+                setShowTopButton(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    return (
         <>
             <div className='containerFT'>
                 <div className='footerTop'>
@@ -23,7 +44,11 @@ function Footer(){
                     <p className="copyright"> COPYRIGHT(C) 2025 BY JUVO. ALL RIGHTS RESERVED. </p>
                 </div>
             </div>
+            {showTopButton && (
+                <button className="topButton" onClick={scrollToTop}>TOP</button>
+            )}
         </>
     );
 }
+
 export default Footer;

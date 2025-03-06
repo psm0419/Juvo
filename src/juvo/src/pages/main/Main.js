@@ -1,6 +1,6 @@
 import '../../assets/css/main/Main.css';
 
-function Main() {
+function Main() {	
 	return (
 		<>
 			<div className='containerM'>

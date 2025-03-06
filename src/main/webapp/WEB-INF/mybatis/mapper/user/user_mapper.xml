@@ -3,5 +3,25 @@
 
 <mapper namespace="user_mapper">	
 
+	<select id="checkUserLogin" resultType="User" parameterType="User">
+		select *
+		from users
+		where id = #{id} AND pw = #{pw}
+	</select>
 	
-</mapper>
+	<insert id="signupUser" parameterType="User">
+	insert into users
+		values (
+			#{id},
+			#{pw},
+			#{username},
+			#{nickname},
+			#{email},
+			#{tel},
+			#{jumin},
+			'CUS',
+			0
+		)
+	</insert>
+	
+	</mapper>

@@ -1,8 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+
 
 .containerFT {
     width: 100%;
@@ -47,4 +43,32 @@
     color: #999;
     font-size: 0.8rem;
     font-weight: 300;
+}
+
+
+/* TOP 버튼 */
+.topButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.topButton:hover {
+    background-color: #ff3300;
+    transform: scale(1.1);
+}
+
+.topButton:active {
+    transform: scale(0.9);
 }
