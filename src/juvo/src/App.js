@@ -16,8 +16,6 @@ import Juyuso from './pages/juyuso/Juyuso';
 import LocationServiceTerms from './pages/detail/guideDetail/LocationServiceTerms';
 import PrivacyPolicy from './pages/detail/guideDetail/PrivacyPolicy';
 import RefundPolicy from './pages/detail/guideDetail/RefundPolicy';
-import Login from './pages/login/Login';
-import Signup from './pages/login/Signup';
 
 
 
