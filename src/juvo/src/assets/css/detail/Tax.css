@@ -1,0 +1,142 @@
+/* 전체 스타일 초기화 */
+
+
+/* 컨테이너 */
+.tax-container {
+    font-family: Arial, sans-serif; /* body에서 옮김 */
+    margin: 20px; /* body에서 옮김 */
+    line-height: 1.6; /* body에서 옮김 */
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 제목과 설명을 감싸는 박스 */
+.tax-header-container {
+    max-width: 800px;
+    margin-bottom: 40px;
+}
+
+/* 제목 */
+.tax-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: left;
+    padding-bottom: 10px;
+    width: 200px;
+    border-bottom: 2px solid #000000;
+    margin-top: 100px;
+}
+
+/* 설명 */
+.tax-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* 탭 컨테이너 */
+.tax-tab-container {
+    display: flex;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 20px;
+}
+
+/* 탭 버튼 */
+.tax-tab-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #666;
+    background-color: #f8f9fa;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tax-tab-button:hover {
+    color: #333;
+    background-color: #e9ecef;
+}
+
+.tax-tab-button.active {
+    color: #007bff;
+    background-color: #fff;
+    border-bottom: 2px solid #007bff;
+}
+
+/* 탭 콘텐츠 */
+.tax-tab-content {
+    margin-top: 20px;
+}
+
+/* 테이블 컨테이너 */
+.tax-table-container {
+    margin-top: 20px;
+    overflow-x: auto;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+/* 테이블 스타일 */
+.tax-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+.tax-table-header {
+    background-color: #e9ecef;
+    color: #333;
+    font-weight: bold;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.tax-table-row:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.tax-table-cell {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+/* 부가세(VAT) 행 스타일 */
+.tax-vat-row {
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    padding: 12px;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ccc;
+}
+
+/* 유의사항 */
+.tax-note-container {
+    margin-top: 20px;
+    max-width: 800px;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.tax-note-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.tax-note-text {
+    font-size: 14px;
+    color: #666;
+}

@@ -1,0 +1,184 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 전체 컨테이너 */
+.containerM {
+
+}
+
+/* 사진부분 */
+.mainTop {
+    position: relative;
+    width: 100%;
+}
+
+.mainTop img {
+    width: 100%;
+    height: 350px;
+}
+
+/* 사진 위 텍스트 */
+.textOverlay {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-size: 1.5rem;
+}
+
+.textOverlay p{
+    margin-bottom: 8px;
+}
+
+/* 유가부분 */
+.mainMiddle {
+    width: 100%;
+    height: 500px;
+    background-color: rgb(236, 234, 234);
+    padding: 0px 30px 50px 30px;
+}
+
+.middleContainer {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    padding: 5px;
+    display: flex;
+}
+
+.middle {
+    width: 33.3%;
+    height: 100%;
+    border-right: 1px solid rgb(199, 199, 199);
+    padding: 20px;
+}
+
+.rmiddle {
+    border: none; /* 유가추이 보더 삭제*/
+}
+
+.lmiddlet{
+    height: 30%;
+}
+
+.todaySelect, .cheapSelect {
+    display: flex;
+    justify-content: space-between;
+}
+
+.point_text2{
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.lmiddlet .point_text2 span {
+    font-size: 1rem;
+    color: rgb(59, 59, 59);
+}
+
+.todaySelect select {
+    width: 30%;
+    height: 20px;
+    margin-right: 5%;
+    border: 1px solid rgb(165, 165, 165);
+}
+
+.todayContrainer {
+    height: 50%;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.todayContrainer .box {
+    width: 30%;
+    height: 100%;
+    /* background-color: rgb(204, 238, 238); */
+    padding-right: 7px;
+    border-right: 1px solid rgb(199, 199, 199);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.todayContrainer .box p {
+    margin-top: 5px;
+    color: rgb(97, 96, 96);
+    font-weight: bold;
+}
+
+.todayContrainer .noBorder {
+    border: none;
+}
+
+.lmiddleb{
+    height: 70%;
+    margin-top: 10px;
+}
+
+.lmiddleb select {
+    width: 30%;
+    height: 20px;
+    margin-right: 5%;
+    border: 1px solid rgb(165, 165, 165);
+}
+
+.cheapList {
+    padding: 10px 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 3%;
+}
+
+.cheapList li {
+    font-size: 0.9rem;
+    list-style: none;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 14px; 
+}
+
+/* 공지사항 멤버십 부분 */
+.mainBottom {
+    width: 100%;
+    height: 500px;
+    background: rgba(26, 115, 232, 0.05);
+    padding: 30px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.lbottom, .rbottom{
+    width: 47%;
+    height: 90%;
+    background-color: white;
+    border-radius: 5%;
+}
+
+.lbottom .point_text, .rbottom .point_text {
+    margin: 25px;
+}
+
+.rbottom:hover {
+    transform: translateY(-5px);
+    box-shadow: 10px 10px 20px rgba(88, 88, 88, 0.2);
+}
+
+
+/* 텍스트 강조 class */
+.point_text{
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+/* cursor */
+.cursor {
+    cursor: pointer;
+}

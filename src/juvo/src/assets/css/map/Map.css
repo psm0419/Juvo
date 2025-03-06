@@ -1,0 +1,153 @@
+/* Map.css */
+.mp-container {
+    position: relative;
+}
+
+.mp {
+    width: 100%;
+    height: 700px;
+    margin-bottom: 20px;
+}
+
+.mp-sidebar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    width: 350px;
+    height: 650px;
+    max-height: 90vh;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+    padding: 0;
+    overflow: hidden; /* 전체 영역에 스크롤 제거 */
+}
+
+.mp-tabs {
+    display: flex;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 10px;
+}
+
+.mp-tab {
+    width: 50%;
+    padding: 8px 16px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+.mp-tab-active {
+    background-color: #4CAF50;
+    color: white;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;    
+}
+
+.mp-tab-inactive {
+    background-color: #f5f5f5;
+    color: #888;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;    
+}
+
+.mp-section {
+    padding: 10px;
+}
+
+.mp-section-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.mp-options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.mp-option-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+}
+
+.mp-option-label input {
+    margin: 0;
+}
+
+.mp-button-container {
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.mp-search-button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
+}
+
+.mp-search-button:hover {
+    background-color: #388E3C;
+}
+
+/* 상단 UI 고정 높이 설정 */
+.mp-top-section {
+    padding-bottom: 10px;
+    max-height: 300px; /* 상단 UI의 최대 높이 제한 */
+    overflow-y: auto; /* 상단 UI가 넘치면 스크롤 가능 */
+}
+
+/* 주유소 목록에만 스크롤 적용 */
+.mp-station-list {
+    overflow-y: auto;    
+    max-height: calc(700px - 310px); /* 상단 UI 최대 높이 + 패딩 고려 */
+    padding: 0 10px 10px; /* 내부 패딩 추가 */
+    padding-bottom: 20px;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.price-header {
+    display: flex;
+    gap: 20px;
+}
+
+.station-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+    align-items: center;
+    font-size: 14px;
+}
+
+.station-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.station-prices {
+    display: flex;
+    gap: 20px;
+    font-weight: bold;
+}
