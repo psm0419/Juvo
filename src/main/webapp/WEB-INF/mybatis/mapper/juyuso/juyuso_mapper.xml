@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="juyuso_mapper">
+
+	<!-- 데이터 삽입 (UNI_ID가 존재하면 삽입 안 함) -->
+    <insert id="insertJuyuso" parameterType="Juyuso">
+        INSERT INTO juyuso (
+            UNI_ID, POLL_DIV_CD, OS_NM, VAN_ADR, NEW_ADR, TEL, SIGUNCD,
+            LPG_YN, MAINT_YN, CAR_WASH_YN, KPETRO_YN, CVS_YN, GIS_X_COOR, GIS_Y_COOR,
+            H_OIL_PRICE, G_OIL_PRICE, OPERATATION
+        )
+        SELECT 
+            #{uniId}, #{pollDivCd}, #{osNm}, #{vanAdr}, #{newAdr}, #{tel}, #{siguncd},
+            #{lpgYn}, #{maintYn}, #{carWashYn}, #{kpetroYn}, #{cvsYn}, #{gisXCoor}, #{gisYCoor},
+            #{hOilPrice}, #{gOilPrice}, #{operatation}
+        FROM DUAL
+        WHERE NOT EXISTS (
+            SELECT 1 FROM juyuso WHERE UNI_ID = #{uniId}
+        )
+    </insert>
+
+    <!-- UNI_ID로 데이터 조회 -->
+    <select id="getJuyusoById" parameterType="string" resultType="Juyuso">
+        SELECT * FROM juyuso WHERE UNI_ID = #{uniId}
+    </select>
+
+    <!-- 모든 데이터 조회 -->
+    <select id="getAllJuyuso" resultType="Juyuso">
+        SELECT * FROM juyuso
+    </select>
+
+    <!-- 주유소 정보 업데이트 -->
+    <update id="updateJuyuso" parameterType="Juyuso">
+        UPDATE juyuso 
+        SET POLL_DIV_CD = #{pollDivCd}, OS_NM = #{osNm}, VAN_ADR = #{vanAdr},
+            NEW_ADR = #{newAdr}, TEL = #{tel}, SIGUNCD = #{siguncd}, 
+            LPG_YN = #{lpgYn}, MAINT_YN = #{maintYn}, CAR_WASH_YN = #{carWashYn},
+            KPETRO_YN = #{kpetroYn}, CVS_YN = #{cvsYn}, GIS_X_COOR = #{gisXCoor}, 
+            GIS_Y_COOR = #{gisYCoor}, H_OIL_PRICE = #{hOilPrice}, 
+            G_OIL_PRICE = #{gOilPrice}, OPERATATION = #{operatation}
+        WHERE UNI_ID = #{uniId}
+    </update>
+
+    <!-- 주유소 삭제 -->
+    <delete id="deleteJuyuso" parameterType="string">
+        DELETE FROM juyuso WHERE UNI_ID = #{uniId}
+    </delete>
+</mapper>
