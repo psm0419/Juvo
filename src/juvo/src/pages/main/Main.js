@@ -1,6 +1,72 @@
 import '../../assets/css/main/Main.css';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import CheapJuyuso from "../../components/main/CheapJuyuso";
 
 function Main() {	
+
+	const [cheapJuyusoList, setCheapJuyusoList] = useState([]);
+	const [selectedArea, setSelectedArea] = useState("");
+	const areaCodes = {
+		"서울": "01",
+		"경기": "02",
+		"강원": "03",
+		"충북": "04",
+		"충남": "05",
+		"전북": "06",
+		"전남": "07",
+		"경북": "08",
+		"경남": "09",
+		"부산": "10",
+		"제주": "11",
+		"대구": "14",
+		"인천": "15",
+		"광주": "16",
+		"대전": "17",
+		"울산": "18",
+		"세종": "19"
+    };
+    
+    useEffect(() => {
+		axios.get('/api/cheapJuyuso')
+			.then(response => {
+				console.log(response.data);
+				// 배열인지 확인하고 배열로 변환
+				if (Array.isArray(response.data)) {
+					setCheapJuyusoList(response.data);
+				} else {
+					console.error('응답 데이터는 배열이 아닙니다.');
+				}
+			})
+			.catch(error => {
+				console.error('API 호출 중 오류 발생:', error);
+			});
+	}, []);
+
+	useEffect(() => {
+		// 기본적으로 전국 데이터를 요청 (selectedArea가 비어있을 때)
+		const areaCode = selectedArea ? areaCodes[selectedArea] : ""; 
+		console.log(`API 호출 지역 코드: ${areaCode}`); // 디버깅 로그 추가
+		axios.get(`/api/cheapJuyuso?area=${areaCode}`)
+			.then(response => {
+				console.log(response.data);
+				// 배열인지 확인하고 배열로 변환
+				if (Array.isArray(response.data)) {
+					setCheapJuyusoList(response.data);
+				} else {
+					console.error('응답 데이터는 배열이 아닙니다.');
+				}
+			})
+			.catch(error => {
+				console.error('API 호출 중 오류 발생:', error);
+			});
+	}, [selectedArea]); // selectedArea가 변경될 때마다 호출
+
+
+	const handleAreaChange = (event) => {
+        setSelectedArea(event.target.value); // 지역 선택 시 상태 업데이트
+    };
+
 	return (
 		<>
 			<div className='containerM'>
@@ -42,14 +108,29 @@ function Main() {
 							<div className="lmiddleb">
 								<div className="cheapSelect">
 									<p className="point_text">저렴한 주유소 Top 5</p>
-									<select className="region">
-										<option value="option1">천안</option>
-										<option value="option2">서울</option>
-										<option value="option3">경기</option>
+									<select className="region" onChange={handleAreaChange} value={selectedArea}>
+										<option value="">지역 선택</option>
+                                        <option value="서울">서울</option>
+										<option value="경기">경기</option>
+										<option value="강원">강원</option>
+										<option value="충북">충북</option>
+										<option value="충남">충남</option>
+										<option value="전북">전북</option>
+										<option value="전남">전남</option>
+										<option value="경북">경북</option>
+										<option value="경남">경남</option>
+										<option value="부산">부산</option>
+										<option value="제주">제주</option>
+										<option value="대구">대구</option>
+										<option value="인천">인천</option>
+										<option value="광주">광주</option>
+										<option value="대전">대전</option>
+										<option value="울산">울산</option>
+										<option value="세종">세종</option>
 									</select>
 								</div>
-								<div className="chedapList">
-
+								<div className="cheapList">
+									<CheapJuyuso cheapJuyusoList={cheapJuyusoList} />
 								</div>
 							</div>
 						</div>
