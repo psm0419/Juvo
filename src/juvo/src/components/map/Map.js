@@ -179,19 +179,19 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         setAdditionalInfo({ carWash: false, maintenance: false, convenience: false, self: false, alwaysOpen: false });
     };
     return (
-        <div className="mp-container">
-            <div ref={mapContainer} className="mp"></div>
-            <div className="mp-sidebar">
+        <div className="map-container">
+            <div ref={mapContainer} className="map"></div>
+            <div className="map-sidebar">
                 {/* 탭 영역 */}
-                <div className="mp-tabs">
+                <div className="map-tabs">
                 <div
-                            className={`mp-tab ${activeTab === "주유소" ? "mp-tab-active" : "mp-tab-inactive"}`}
+                            className={`map-tab ${activeTab === "주유소" ? "map-tab-active" : "map-tab-inactive"}`}
                             onClick={() => handleTabChange("주유소")}
                         >
                             주유소
                         </div>
                         <div
-                            className={`mp-tab ${activeTab === "충전소" ? "mp-tab-active" : "mp-tab-inactive"}`}
+                            className={`map-tab ${activeTab === "충전소" ? "map-tab-active" : "map-tab-inactive"}`}
                             onClick={() => handleTabChange("충전소")}
                         >
                             충전소
@@ -201,9 +201,9 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 
 
                 {/* 상표 선택 */}
-                <div className="mp-section">
-                    <div className="mp-section-title">상표</div>
-                    <div className="mp-options">
+                <div className="map-section">
+                    <div className="map-section-title">상표</div>
+                    <div className="map-options">
                         {[
                             { key: "cheap", label: "알뜰" },
                             { key: "skEnergy", label: "SK에너지" },
@@ -212,7 +212,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                             { key: "sOil", label: "S-OIL" },
                             { key: "nOil", label: "농협" },
                         ].map(({ key, label }) => (
-                            <label key={key} className="mp-option-label">
+                            <label key={key} className="map-option-label">
                                 <input
                                     type="checkbox"
                                     checked={brands[key]}
@@ -225,9 +225,9 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 </div>
 
                 {/* 부가정보 선택 */}
-                <div className="mp-section">
-                    <div className="mp-section-title">부가정보</div>
-                    <div className="mp-options">
+                <div className="map-section">
+                    <div className="map-section-title">부가정보</div>
+                    <div className="map-options">
                         {[
                             { key: "carWash", label: "세차장" },
                             { key: "maintenance", label: "경정비" },
@@ -235,7 +235,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                             { key: "self", label: "셀프" },
                             { key: "alwaysOpen", label: "24시간" },
                         ].map(({ key, label }) => (
-                            <label key={key} className="mp-option-label">
+                            <label key={key} className="map-option-label">
                                 <input
                                     type="checkbox"
                                     checked={additionalInfo[key]}
@@ -248,17 +248,17 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 </div>
 
                 {/* 조회 버튼 */}
-                <div className="mp-button-container">
+                <div className="map-button-container">
                     <button
                         onClick={handleFetchStations}
-                        className="mp-search-button"
+                        className="map-search-button"
                     >
                         조회
                     </button>
                 </div>
 
                 {/* 주유소 목록 */}
-                <div className="mp-station-list">
+                <div className="map-station-list">
                     <FuelStationList stations={stations} loading={loading} />
                 </div>
             </div>
