@@ -17,7 +17,7 @@
 
 .mainTop img {
     width: 100%;
-    height: 400px;
+    height: 350px;
 }
 
 /* 사진 위 텍스트 */
@@ -66,16 +66,33 @@
     height: 30%;
 }
 
-.todayContrainer {
-    height: 50%;
-    margin-top: 20px;
+.todaySelect, .cheapSelect {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
-.lmiddlet .point_text span {
-    font-size: 0.9rem;
+.point_text2{
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.lmiddlet .point_text2 span {
+    font-size: 1rem;
     color: rgb(59, 59, 59);
+}
+
+.todaySelect select {
+    width: 30%;
+    height: 20px;
+    margin-right: 5%;
+    border: 1px solid rgb(165, 165, 165);
+}
+
+.todayContrainer {
+    height: 50%;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-around;
 }
 
 .todayContrainer .box {
@@ -90,7 +107,7 @@
     align-items: center;
 }
 .todayContrainer .box p {
-    margin-top: 7px;
+    margin-top: 5px;
     color: rgb(97, 96, 96);
     font-weight: bold;
 }
@@ -101,20 +118,37 @@
 
 .lmiddleb{
     height: 70%;
+    margin-top: 10px;
 }
 
 .lmiddleb select {
-    width:100%;
-    height: 25px;
+    width: 30%;
+    height: 20px;
+    margin-right: 5%;
     border: 1px solid rgb(165, 165, 165);
-    margin-top: 10px;
+}
+
+.cheapList {
+    padding: 10px 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 3%;
+}
+
+.cheapList li {
+    font-size: 0.9rem;
+    list-style: none;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 14px; 
 }
 
 /* 공지사항 멤버십 부분 */
 .mainBottom {
     width: 100%;
     height: 500px;
-    background-color: rgb(252, 230, 216);
+    background: rgba(26, 115, 232, 0.05);
     padding: 30px;
     display: flex;
     justify-content: space-around;
@@ -130,6 +164,11 @@
 
 .lbottom .point_text, .rbottom .point_text {
     margin: 25px;
+}
+
+.rbottom:hover {
+    transform: translateY(-5px);
+    box-shadow: 10px 10px 20px rgba(88, 88, 88, 0.2);
 }
 
 

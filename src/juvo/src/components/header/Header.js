@@ -1,11 +1,9 @@
 import '../../assets/css/header/Header.css';
 import Logo from '../../assets/image/Logo.png';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Header() {
-    const [isNavHovered, setIsNavHovered] = useState(false);
-    const navigate = useNavigate ();
+    const navigate = useNavigate();
 
     const menuItems = {
         '주유소찾기': [
@@ -27,9 +25,6 @@ function Header() {
         ],
     };
 
-    const handleMouseEnter = () => setIsNavHovered(true);
-    const handleMouseLeave = () => setIsNavHovered(false);
-
     return (
         <div className="containerHD">
             <h1 className="logo">
@@ -37,41 +32,31 @@ function Header() {
                     <img src={Logo} alt="로고" />
                 </a>
             </h1>
-            <div
-                className="nav"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-            >
+            <div className="nav">
                 {Object.keys(menuItems).map((menu) => (
                     <div key={menu} className="nav-item">
                         <a>{menu}</a>
                     </div>
                 ))}
-                {isNavHovered && (
-                    <div className="dropdown-container">
-                        {Object.keys(menuItems).map((menu) => (
-                            <div key={menu} className="dropdown-column">
-                                {menuItems[menu].map((item) => (
-                                    <a
-                                        key={item.name}
-                                        href={item.path}
-                                        className="dropdown-item"
-                                    >
-                                        - {item.label} {/* label 앞에 "- " 추가 */}
-                                    </a>
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-                )}
+                <div className="dropdown-container">
+                    {Object.keys(menuItems).map((menu) => (
+                        <div key={menu} className="dropdown-column">
+                            {menuItems[menu].map((item) => (
+                                <a
+                                    key={item.name}
+                                    href={item.path}
+                                    className="dropdown-item"
+                                >
+                                    - {item.label}
+                                </a>
+                            ))}
+                        </div>
+                    ))}
+                </div>
             </div>
             <div className="btns">
-                <div className="login" onClick={()=>{
-                    navigate("/user/login");
-                }}>로그인</div>
-                <div className="signup" onClick={()=>{
-                    navigate("/user/signup");
-                }}>회원가입</div>
+                <div className="login" onClick={() => navigate("/user/login")}>로그인</div>
+                <div className="signup" onClick={() => navigate("/user/signup")}>회원가입</div>
             </div>
         </div>
     );
