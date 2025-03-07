@@ -18,6 +18,7 @@ function Header() {
         ],
         '이용안내': [
             { name: 'Guide', label: 'JUVO이용안내', path: '/detail/guideDetail/Guide' },
+            { name: 'Faq', label: '자주묻는질문', path: '/detail/guideDetail/Faq' },
         ],
     };
 

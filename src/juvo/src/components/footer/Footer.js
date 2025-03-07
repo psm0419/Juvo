@@ -49,7 +49,7 @@ function Footer() {
                     ))}
                 </div>
                 <div className='footerBottom'>
-                    <p> (31144)충남 천안시 동남구 대흥동 134 3교육실  사업자번호 000-00-00000 대표전화 0000-0000</p>
+                    <p> (31144)충남 천안시 동남구 대흥동 134 3교육실  사업자번호 000-00-00000 대표전화 041-561-1122</p>
                     <p className="copyright"> COPYRIGHT(C) 2025 BY JUVO. ALL RIGHTS RESERVED. </p>
                 </div>
             </div>
