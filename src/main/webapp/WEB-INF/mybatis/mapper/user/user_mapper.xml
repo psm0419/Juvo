@@ -46,4 +46,28 @@
 		WHERE nickname = #{nickname}	
 	</select>
 	
+	<select id="checkUserByToken" resultType="User" parameterType="String">
+		select *
+		FROM users
+		WHERE id = #{id}	
+	</select>
+	
+	<select id="findUserById" resultType="User" parameterType="String">
+		select *
+		FROM users
+		WHERE id = #{id}	
+	</select>
+	
+	<update id="changePassword" parameterType="User">
+		update users
+		SET pw = #{pw}			
+		WHERE id = #{id}
+	</update>
+	
+	<update id="changeNickname" parameterType="User">
+		update users
+		SET nickname = #{nickname}			
+		WHERE id = #{id}
+	</update>
+	
 	</mapper>

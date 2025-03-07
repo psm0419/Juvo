@@ -3,10 +3,10 @@ CREATE TABLE users (
     id VARCHAR2(32) PRIMARY KEY,
     username VARCHAR2(32) ,
     nickname VARCHAR2(48)  UNIQUE,
-    pw VARCHAR2(32) ,
+    pw VARCHAR2(256) ,
     email VARCHAR2(64)  UNIQUE,
     tel VARCHAR2(24)  UNIQUE,
-    jumin VARCHAR2(16)  UNIQUE,
+    jumin VARCHAR2(16) ,
     user_type VARCHAR2(16) ,
     membership NUMBER
 );
