@@ -66,9 +66,9 @@
             KPETRO_YN = #{kpetroYn}, 
             CVS_YN = #{cvsYn}, 
             NEW_ADR = #{newAdr}, 
-            VAN_ADR = #{vanAdr},  -- 추가
-            TEL = #{tel},         -- 추가
-            SIGUNCD = #{siguncd}, -- 추가
+            VAN_ADR = #{vanAdr},
+            TEL = #{tel},
+            SIGUNCD = #{siguncd},
             GIS_X_COOR = #{gisXCoor}, 
             GIS_Y_COOR = #{gisYCoor},
             H_OIL_PRICE = #{hOilPrice}, 

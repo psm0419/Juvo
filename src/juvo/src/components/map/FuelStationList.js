@@ -56,7 +56,7 @@ const FuelStationList = ({ stations, loading, onStationClick }) => { // onStatio
                             style={{ cursor: "pointer", color: "#007bff" }} // 클릭 가능하도록 스타일 추가
                             onClick={() => onStationClick(station)} // 클릭 시 부모로 데이터 전달
                         >
-                            {station.osNm || "이름 없음"}
+                            {station.OS_NM || "이름 없음"}
                         </span>
                     </div>
                     <div style={{ display: "flex", gap: "20px", fontWeight: "bold" }}>

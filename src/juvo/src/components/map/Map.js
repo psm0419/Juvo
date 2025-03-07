@@ -206,7 +206,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                             const infoWindowContent = `
                                 <div style="width: 300px; padding: 15px; background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); font-family: 'Noto Sans KR', sans-serif;">
                                     <div style="font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #333;">
-                                        ${station.osNm || "이름 없음"} <span style="color: #2ecc71;">(${station.pollDivCd || "이름 없음"})</span>
+                                        ${station.OS_NM || "이름 없음"} <span style="color: #2ecc71;">(${station.pollDivCd || "이름 없음"})</span>
                                     </div>
                                     <div style="border-bottom: 1px solid #eee; margin-bottom: 8px;"></div>
                                     <div style="font-size: 12px; color: #666; margin-bottom: 10px;">

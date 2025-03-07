@@ -67,33 +67,53 @@ public class JuyusoServiceImpl implements JuyusoService {
 
             System.out.println("Found " + stations.size() + " stations in response");
 
-            // enrichedStations 선언 및 초기화
-            List<JsonNode> enrichedStations = new ArrayList<>();
+            boolean allSuccess = true;
             for (JsonNode stationNode : stations) {
                 String uniId = stationNode.path("UNI_ID").asText();
                 Juyuso existingJuyuso = juyusoDAO.getJuyusoById(uniId);
-                Juyuso detailData;
-                if (existingJuyuso != null && isJuyusoDetailComplete(existingJuyuso)) {
-                    System.out.println("Using cached detail data for: " + uniId);
-                    detailData = existingJuyuso;
-                } else {
-                    detailData = fetchDetailData(uniId);
+
+                Juyuso juyuso = new Juyuso();
+                juyuso.setUniId(uniId);
+                juyuso.setOsNm(stationNode.path("OS_NM").asText(""));
+                juyuso.setNewAdr(stationNode.path("NEW_ADR").asText(""));
+                juyuso.setPollDivCd(stationNode.path("POLL_DIV_CO").asText(""));
+                Double hOilPrice = stationNode.path("PRICE").isMissingNode() ? null : stationNode.path("PRICE").asDouble();
+                juyuso.setHOilPrice(hOilPrice);
+
+                if (existingJuyuso == null) {
+                    // DB에 없는 경우: 삽입
+                    System.out.println("Inserting new juyuso: " + uniId);
+                    allSuccess &= juyusoDAO.insertJuyuso(juyuso);
+                    
+                    // 상세 정보 가져와서 업데이트
+                    Juyuso detailData = fetchDetailData(uniId);
                     if (detailData != null) {
-                        juyusoDAO.updateJuyusoDetail(detailData); // DB 업데이트
+                        allSuccess &= juyusoDAO.updateJuyusoDetail(detailData);
                     }
-                }
-                if (detailData != null) {
-                    JsonNode detailNode = objectMapper.valueToTree(detailData);
-                    ((ObjectNode) stationNode).setAll((ObjectNode) detailNode);
-                }
-                enrichedStations.add(stationNode);
+                } else {
+                    // DB에 있는 경우: 가격 비교 후 필요 시 업데이트
+                    if (!nullSafeEquals(existingJuyuso.getHOilPrice(), hOilPrice)) {
+                        System.out.println("Price changed for " + uniId + ", fetching details and updating");
+                        Juyuso detailData = fetchDetailData(uniId);
+                        if (detailData != null) {
+                            allSuccess &= juyusoDAO.updateJuyusoDetail(detailData);
+                        }
+                    } else {
+                        System.out.println("Price unchanged for " + uniId + ", skipping update");
+                    }
+                }System.out.println("Inserted juyuso: " + uniId + ", success: " + juyusoDAO.insertJuyuso(juyuso));
             }
-            return true;
+            return allSuccess;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+    
+    
+    
+    
+    
     private boolean isJuyusoDetailComplete(Juyuso juyuso) {
         return juyuso.getTel() != null && !juyuso.getTel().isEmpty() &&
                juyuso.getVanAdr() != null && !juyuso.getVanAdr().isEmpty() &&
