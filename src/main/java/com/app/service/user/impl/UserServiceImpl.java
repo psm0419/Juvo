@@ -48,4 +48,30 @@ public class UserServiceImpl implements UserService{
 		}
 	}
 
+	@Override
+	public User checkUserByToken(String id) {
+		User user = userDAO.checkUserByToken(id);
+		return user;
+	}
+
+	@Override
+	public int changePassword(User user) {
+		int result = userDAO.changePassword(user);
+		return result;
+	}
+
+	@Override
+	public User findUserById(String id) {
+		User user = userDAO.findUserById(id);
+		return user;
+	}
+
+	@Override
+	public int changeNickname(User user) {
+		int result = userDAO.changeNickname(user);
+		return result;
+	}
+
+
+
 }

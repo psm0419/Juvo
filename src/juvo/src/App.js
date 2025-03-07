@@ -5,7 +5,7 @@ import Main from './pages/main/Main';
 import Login from './pages/user/Login';
 import Signup from './pages/user/Signup';
 import FindId from './pages/user/FindId';
-import MyPage from './pages/user/MyPage';
+import MyPageProfile from './pages/user/myPage/MyPageProfile';
 import FindPassword from './pages/user/FindPassword';
 import Conversion from './pages/detail/oilinfoDetail/Conversion';
 import Tax from './pages/detail/oilinfoDetail/Tax';
@@ -28,7 +28,7 @@ function App() {
 				<Route path='/user/signup' element={<Signup />} />
 				<Route path='/user/findPassword' element={<FindPassword />} />
 				<Route path='/user/findId' element={<FindId />} />
-				<Route path='/user/myPage' element={<MyPage />} />
+				<Route path='/user/myPage' element={<MyPageProfile />} />
 				<Route path="/detail/oilinfoDetail/Conversion" element={<Conversion />} />
 				<Route path="/detail/oilinfoDetail/Tax" element={<Tax />} />
 				<Route path="/detail/blackjuyusoDetail/Blackjuyuso" element={<Blackjuyuso />} />
