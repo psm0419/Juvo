@@ -1,4 +1,4 @@
-import '../../assets/css/user/myPage/MyPageProfileModal.css';
+import '../../../assets/css/user/myPage/MyPageProfileModal.css';
 
 function MyPageModal({ isOpen, onClose, title, children, onSubmit }) {
     if (!isOpen) return null;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import '../../assets/css/user/myPage/MyPageProfile.css';
+import '../../../assets/css/user/myPage/MyPageProfile.css';
 import MyPageProfileModal from './MyPageProfileModal';
 
 function MyPage() {
