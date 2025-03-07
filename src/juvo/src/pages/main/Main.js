@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import CheapJuyuso from "../../components/main/CheapJuyuso";
 import AvgByRegion from '../../components/main/AvgByRegion';
 import AvgPriceChart from './AvgPriceChart';
-import Option from '../../components/main/Option';
 
 function Main() {	
 
