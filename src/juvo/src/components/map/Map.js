@@ -10,11 +10,11 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const [lng, setLng] = useState(127.14715449120254);
     const [marker, setMarker] = useState(null);
     const [fuelMarkers, setFuelMarkers] = useState([]);
-    const [selectedStation, setSelectedStation] = useState(null); //선택한 주유소
-    const [routeLine, setRouteLine] = useState(null); //경로 표시 라인
-    const [currentInfoWindow, setCurrentInfoWindow] = useState(null); //현재 열려있는 정보창
-
-    // 필터링 상태 관리
+    const [selectedStation, setSelectedStation] = useState(null);
+    const [routeLine, setRouteLine] = useState(null);
+    const [currentInfoWindow, setCurrentInfoWindow] = useState(null);
+    const [activeInfoWindows, setActiveInfoWindows] = useState([]);
+    const [filteredStations, setFilteredStations] = useState([]);
 
     const [brands, setBrands] = useState({
         cheap: false,
@@ -33,6 +33,51 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     });
     const [activeTab, setActiveTab] = useState("주유소");
 
+    // 필터링 로직
+    const filterStations = () => {
+        if (!stations || stations.length === 0) return [];
+
+        let filtered = [...stations];
+
+        const activeBrands = Object.keys(brands).filter(key => brands[key]);
+        if (activeBrands.length > 0) {
+            filtered = filtered.filter(station => {
+                const brandCode = station.pollDivCd?.toUpperCase();
+                return activeBrands.some(brand => {
+                    switch (brand) {
+                        case "cheap": return brandCode === "RTX";
+                        case "skEnergy": return brandCode === "SKE";
+                        case "gsCaltex": return brandCode === "GSC";
+                        case "hyundaiOilbank": return brandCode === "HDO";
+                        case "sOil": return brandCode === "SOL";
+                        case "nOil": return brandCode === "NHO";
+                        default: return false;
+                    }
+                });
+            });
+        }
+
+        const activeInfo = Object.keys(additionalInfo).filter(key => additionalInfo[key]);
+        if (activeInfo.length > 0) {
+            filtered = filtered.filter(station => {
+                return activeInfo.every(info => {
+                    switch (info) {
+                        case "carWash": return station.carWashYn === "Y";
+                        case "maintenance": return station.maintYn === "Y";
+                        case "convenience": return station.cvsYn === "Y";
+                        case "self": return station.selfYn === "Y";
+                        case "alwaysOpen": return station.alwaysOpenYn === "Y";
+                        default: return false;
+                    }
+                });
+            });
+        }
+
+        console.log("Filtered stations:", filtered); // 필터링 결과 디버깅
+        return filtered;
+    };
+
+    // 지도와 마커 초기화
     useEffect(() => {
         const kakao = window.kakao;
         kakao.maps.load(() => {
@@ -58,45 +103,83 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             });
             setMarker(userMarker);
 
-            kakao.maps.event.addListener(userMarker, "dragend", function () {
-                const position = userMarker.getPosition();
-                setLat(position.getLat());
-                setLng(position.getLng());
-            });
-
-            kakao.maps.event.addListener(map, "click", function (mouseEvent) {
-                const latLng = mouseEvent.latLng;
-                userMarker.setPosition(latLng);
-                setLat(latLng.getLat());
-                setLng(latLng.getLng());
-            });
+            return () => {
+                kakao.maps.event.removeListener(userMarker, "dragend");
+                kakao.maps.event.removeListener(map, "click");
+            };
         });
     }, []);
 
+    // 마커 이동 및 경로 초기화
     useEffect(() => {
-        if (!mapRef.current || !stations || stations.length === 0) return;
+        if (!marker || !mapRef.current) return;
+
+        const kakao = window.kakao;
+
+        const handleMarkerMove = () => {
+            const position = marker.getPosition();
+            setLat(position.getLat());
+            setLng(position.getLng());
+
+            if (routeLine) {
+                routeLine.setMap(null);
+                setRouteLine(null);
+            }
+            setSelectedStation(null);
+            if (currentInfoWindow) {
+                currentInfoWindow.close();
+                setCurrentInfoWindow(null);
+            }
+        };
+
+        kakao.maps.event.addListener(marker, "dragend", handleMarkerMove);
+        kakao.maps.event.addListener(mapRef.current, "click", (mouseEvent) => {
+            const latLng = mouseEvent.latLng;
+            marker.setPosition(latLng);
+            handleMarkerMove();
+        });
+
+        return () => {
+            kakao.maps.event.removeListener(marker, "dragend", handleMarkerMove);
+            kakao.maps.event.removeListener(mapRef.current, "click");
+        };
+    }, [marker, routeLine, currentInfoWindow]);
+
+    // 필터링 및 주유소 마커 업데이트
+    useEffect(() => {
+        const filtered = filterStations();
+        setFilteredStations(filtered);
+
+        if (!mapRef.current || !filtered) {
+            setFuelMarkers([]);
+            return;
+        }
 
         const kakao = window.kakao;
         const geocoder = new kakao.maps.services.Geocoder();
 
-        // 기존 마커 및 정보 창 제거
+        // 기존 마커 완전 제거
         fuelMarkers.forEach(marker => {
             marker?.setMap(null);
-            if (marker.infoWindow) {
-                marker.infoWindow.close();
-            }
+            if (marker.infoWindow) marker.infoWindow.close();
         });
+        setFuelMarkers([]); // 상태 초기화
 
         if (currentInfoWindow) {
             currentInfoWindow.close();
             setCurrentInfoWindow(null);
         }
-        // 전역 변수로 활성화된 정보창 저장
         window.activeInfoWindows = [];
 
         const newFuelMarkers = [];
+        if (filtered.length === 0) {
+            setFuelMarkers([]);
+            console.log("No markers to display after filtering");
+            return;
+        }
+
         Promise.all(
-            stations.map((station, index) => {
+            filtered.map((station) => {
                 return new Promise((resolve) => {
                     const address = station.NEW_ADR || station.newAdr || station.VAN_ADR || station.vanAdr;
                     if (!address) {
@@ -121,28 +204,70 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                             });
 
                             const infoWindowContent = `
-                                <div style="width: 250px; padding: 10px; background-color: white; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
-                                    <div style="font-weight: bold; font-size: 16px; margin-bottom: 5px;">
-                                        ${station.osNm || "이름 없음"} <span style="color: green;">(${station.pollDivCd || "이름 없음"})</span>
+                                <div style="width: 300px; padding: 15px; background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); font-family: 'Noto Sans KR', sans-serif;">
+                                    <div style="font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #333;">
+                                        ${station.osNm || "이름 없음"} <span style="color: #2ecc71;">(${station.pollDivCd || "이름 없음"})</span>
                                     </div>
-                                    <div style="font-size: 12px; margin-bottom: 5px;">
-                                        <span>📞 ${station.tel || "전화번호 없음"}</span><br />
-                                        <span>📍 ${station.newAdr || station.vanAdr || "주소 없음"}</span>
+                                    <div style="border-bottom: 1px solid #eee; margin-bottom: 8px;"></div>
+                                    <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                                        <div style="margin-bottom: 4px;">
+                                            <span style="margin-right: 5px;">📞</span> ${station.tel || "전화번호 없음"}
+                                        </div>
+                                        <div>
+                                            <span style="margin-right: 5px;">📍</span> ${station.newAdr || station.vanAdr || "주소 없음"}
+                                        </div>
                                     </div>
-                                    <div style="margin-bottom: 5px;">
-                                        <span style="font-weight: bold;">휘발유: </span>
-                                        <span style="color: #ff4500;">${station.hoilPrice || "정보 없음"}원</span><br />
-                                        <span style="font-weight: bold;">경유: </span>
-                                        <span style="color: #ff4500;">${station.doilPrice || "정보 없음"}원</span>
+                                    <div style="margin-bottom: 10px;">
+                                        <table style="width: 100%; border-collapse: collapse; font-size: 12px; color: #333;">
+                                            <thead>
+                                                <tr style="border-bottom: 1px solid #ddd;">
+                                                    <th style="text-align: left; padding: 5px; font-weight: bold;">유종</th>
+                                                    <th style="text-align: left; padding: 5px; font-weight: bold;">가격</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr style="border-bottom: 1px solid #eee;">
+                                                    <td style="padding: 5px;">휘발유</td>
+                                                    <td style="padding: 5px; color: #ff4500;">
+                                                        ${station.hoilPrice != null && station.hoilPrice !== undefined && station.hoilPrice !== '' ? station.hoilPrice + '원' : '정보 없음'}
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid #eee;">
+                                                    <td style="padding: 5px;">경유</td>
+                                                    <td style="padding: 5px; color: #ff4500;">
+                                                        ${station.doilPrice != null && station.doilPrice !== undefined && station.doilPrice !== '' ? station.doilPrice + '원' : '정보 없음'}
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid #eee;">
+                                                    <td style="padding: 5px;">고급 휘발유</td>
+                                                    <td style="padding: 5px; color: #ff4500;">
+                                                        ${station.goilPrice != null && station.goilPrice !== undefined && station.goilPrice !== '' ? station.goilPrice + '원' : '정보 없음'}
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid #eee;">
+                                                    <td style="padding: 5px;">실내 등유</td>
+                                                    <td style="padding: 5px; color: #ff4500;">
+                                                        ${station.ioilPrice != null && station.ioilPrice !== undefined && station.ioilPrice !== '' ? station.ioilPrice + '원' : '정보 없음'}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div style="font-size: 12px; color: #555;">
-                                        <span>${station.carWashYn === "Y" ? "세차장 O" : "세차장 X"}</span> | 
-                                        <span>${station.maintYn === "Y" ? "경정비 O" : "경정비 X"}</span> | 
-                                        <span>${station.cvsYn === "Y" ? "편의점 O" : "편의점 X"}</span> | 
-                                        <span>${station.kpetroYn === "Y" ? "품질인증 주유소 O" : "품질인증 주유소 X"}</span>
+                                    <div style="font-size: 12px; color: #555; margin-bottom: 10px; display: flex; align-items: center;">
+                                        <img id="cwsh_yn" src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_01_off.gif" alt="세차장" 
+                                            style="display: ${station.carWashYn === 'Y' ? 'inline-block' : 'none'}; width: 50px; height: 25px; margin-right: 10px;">
+                                        <img id="lpg_yn" src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_02_01_off.gif" alt="충전소" 
+                                            style="display: ${station.lpgYn === 'Y' ? 'inline-block' : 'none'}; width: 50px; height: 25px; margin-right: 10px;">
+                                        <img id="maint_yn" src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_03_off.gif" alt="경정비" 
+                                            style="display: ${station.maintYn === 'Y' ? 'inline-block' : 'none'}; width: 50px; height: 25px; margin-right: 10px;">
+                                        <img id="cvs_yn" src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_04_off.gif" alt="편의점" 
+                                            style="display: ${station.cvsYn === 'Y' ? 'inline-block' : 'none'}; width: 50px; height: 25px; margin-right: 10px;">
+                                    </div>
+                                    <div style="font-size: 12px; color: #555; margin-bottom: 10px;">
+                                        ${station.kpetroYn === "Y" ? "품질인증 주유소 ✅" : "품질인증 주유소 ❌"}
                                     </div>
                                     <button 
-                                        style="margin-top: 5px; padding: 5px 10px; background-color: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;"
+                                        style="margin-top: 5px; padding: 8px 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 14px; font-weight: bold;"
                                         onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})"
                                     >
                                         경로찾기
@@ -154,44 +279,20 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                                 content: infoWindowContent,
                             });
 
-                            // 마커 클릭 이벤트
                             kakao.maps.event.addListener(stationMarker, "click", () => {
-                                // 현재 클릭한 마커의 정보창이 이미 열려있는지 확인
-                                const isInfoWindowOpen = currentInfoWindow === infoWindow;
-
-                                // 전역 변수에 저장된 모든 활성 정보창 닫기
-                                if (window.activeInfoWindows && window.activeInfoWindows.length > 0) {
-                                    window.activeInfoWindows.forEach(activeWindow => {
-                                        if (activeWindow) {
-                                            activeWindow.close();
-                                        }
-                                    });
+                                if (window.activeInfoWindows.length > 0) {
+                                    window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
                                     window.activeInfoWindows = [];
                                 }
+                                if (currentInfoWindow) currentInfoWindow.close();
 
-                                // 현재 정보창 닫기
-                                if (currentInfoWindow) {
-                                    currentInfoWindow.close();
-                                }
-                                // 이미 열려있던 정보창이면 닫은 상태로 두고 상태 초기화
-                                if (isInfoWindowOpen) {
-                                    setCurrentInfoWindow(null);
-                                    setSelectedStation(null);
-                                    return;
-                                }
-                                // 새 정보창 열기
                                 infoWindow.open(mapRef.current, stationMarker);
-
-                                // 상태 업데이트
                                 setCurrentInfoWindow(infoWindow);
                                 window.activeInfoWindows.push(infoWindow);
-
                                 setSelectedStation({ lat: coords.getLat(), lng: coords.getLng() });
                             });
 
-                            // 마커에 infoWindow 연결
                             stationMarker.infoWindow = infoWindow;
-
                             newFuelMarkers.push(stationMarker);
                             resolve(stationMarker);
                         } else {
@@ -202,34 +303,25 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             })
         ).then(newMarkers => {
             const validMarkers = newMarkers.filter(marker => marker !== null);
-            setFuelMarkers(validMarkers.length > 0 ? validMarkers : newFuelMarkers);
+            setFuelMarkers(validMarkers);
+            console.log("Updated fuel markers:", validMarkers); // 마커 업데이트 확인
         });
 
-        // 클린업 함수
         return () => {
             fuelMarkers.forEach(marker => {
-                if (marker) {
-                    kakao.maps.event.removeListener(marker, "click");
-                }
+                if (marker) kakao.maps.event.removeListener(marker, "click");
             });
-
-            // 모든 활성 정보창 닫기
-            if (window.activeInfoWindows && window.activeInfoWindows.length > 0) {
-                window.activeInfoWindows.forEach(activeWindow => {
-                    if (activeWindow) {
-                        activeWindow.close();
-                    }
-                });
+            if (window.activeInfoWindows?.length > 0) {
+                window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
             }
-
-            if (currentInfoWindow) {
-                currentInfoWindow.close();
-            }
+            if (currentInfoWindow) currentInfoWindow.close();
         };
-    }, [stations]);
+    }, [stations, lat, lng, brands, additionalInfo]);
 
     // 주유소 클릭 시 지도 이동 함수
     const handleStationClick = (station) => {
+        if (!mapRef.current) return;
+
         const kakao = window.kakao;
         const geocoder = new kakao.maps.services.Geocoder();
         const address = station.NEW_ADR || station.newAdr || station.VAN_ADR || station.vanAdr;
@@ -240,22 +332,17 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 mapRef.current.setCenter(coords);
                 mapRef.current.setLevel(3);
 
-                // 전역 변수에 저장된 모든 활성 정보창 닫기
                 if (window.activeInfoWindows && window.activeInfoWindows.length > 0) {
                     window.activeInfoWindows.forEach(activeWindow => {
-                        if (activeWindow) {
-                            activeWindow.close();
-                        }
+                        if (activeWindow) activeWindow.close();
                     });
                     window.activeInfoWindows = [];
                 }
 
-                // 현재 정보창 닫기
                 if (currentInfoWindow) {
                     currentInfoWindow.close();
                 }
 
-                // 선택된 마커 찾아서 정보 창 열기
                 const selectedMarker = fuelMarkers.find(marker =>
                     marker.getTitle() === (station.OS_NM || station.osNm)
                 );
@@ -263,13 +350,8 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 if (selectedMarker && selectedMarker.infoWindow) {
                     selectedMarker.infoWindow.open(mapRef.current, selectedMarker);
                     setCurrentInfoWindow(selectedMarker.infoWindow);
-
-                    // 전역 변수에 활성 정보창 추가
-                    if (!window.activeInfoWindows) {
-                        window.activeInfoWindows = [];
-                    }
+                    if (!window.activeInfoWindows) window.activeInfoWindows = [];
                     window.activeInfoWindows.push(selectedMarker.infoWindow);
-
                     setSelectedStation({ lat: coords.getLat(), lng: coords.getLng() });
                 }
             }
@@ -312,10 +394,19 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     };
 
     const handleFindRoute = async (destLat, destLng) => {
-        if (!marker) return;
+        if (!mapRef.current || !marker) return;
 
         const startLat = lat;
         const startLng = lng;
+
+        if (currentInfoWindow) {
+            currentInfoWindow.close();
+            setCurrentInfoWindow(null);
+        }
+        if (activeInfoWindows.length > 0) {
+            activeInfoWindows.forEach(infoWindow => infoWindow.close());
+            setActiveInfoWindows([]);
+        }
 
         const routeData = await fetchRouteFromTmap(startLat, startLng, destLat, destLng);
 
@@ -325,7 +416,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         }
 
         if (routeLine) {
-            routeLine.setMap(null); // 기존 경로 제거
+            routeLine.setMap(null);
         }
 
         const kakao = window.kakao;
@@ -344,9 +435,16 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
         newRouteLine.setMap(mapRef.current);
         setRouteLine(newRouteLine);
+
+        const bounds = new kakao.maps.LatLngBounds();
+        bounds.extend(new kakao.maps.LatLng(startLat, startLng));
+        bounds.extend(new kakao.maps.LatLng(destLat, destLng));
+        mapRef.current.setBounds(bounds);
+
+        setSelectedStation(null);
+        console.log("Route drawn with Tmap data");
     };
 
-    // 전역 함수로 등록 (InfoWindow에서 호출 가능하도록)
     window.handleFindRoute = handleFindRoute;
 
     const getDistance = (lat1, lng1, lat2, lng2) => {
@@ -363,8 +461,6 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const handleFetchStations = () => {
         fetchFuelStations(lat, lng);
     };
-
-
 
     const handleBrandChange = (key) => {
         setBrands((prev) => ({
@@ -458,9 +554,9 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
                 <div className="map-station-list">
                     <FuelStationList
-                        stations={stations}
+                        stations={filteredStations}
                         loading={loading}
-                        onStationClick={handleStationClick} // prop 전달
+                        onStationClick={handleStationClick}
                     />
                 </div>
             </div>
