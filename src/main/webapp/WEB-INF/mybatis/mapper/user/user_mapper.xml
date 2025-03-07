@@ -10,7 +10,17 @@
 	</select>
 	
 	<insert id="signupUser" parameterType="User">
-	insert into users
+	insert into users (
+			id,
+			pw,
+			username,
+			nickname,
+			email,
+			tel,
+			jumin,
+			user_type,
+			membership
+			)
 		values (
 			#{id},
 			#{pw},
@@ -19,9 +29,21 @@
 			#{email},
 			#{tel},
 			#{jumin},
-			'CUS',
+			#{user_type},
 			0
 		)
 	</insert>
+	
+	<select id="checkDupId" resultType="User" parameterType="String">
+		select *
+		FROM users
+		WHERE id = #{id}	
+	</select>
+	
+	<select id="checkDupNickname" resultType="User" parameterType="String">
+		select *
+		FROM users
+		WHERE nickname = #{nickname}	
+	</select>
 	
 	</mapper>

@@ -4,21 +4,23 @@ import lombok.Data;
 
 @Data
 public class Juyuso {
-	private String uniId;
-    private String pollDivCd;
-    private String osNm;
-    private String vanAdr;
-    private String newAdr;
-    private String tel;
-    private String siguncd;
-    private String lpgYn;
-    private String maintYn;
-    private String carWashYn;
-    private String kpetroYn;
-    private String cvsYn;
-    private Double gisXCoor;
-    private Double gisYCoor;
-    private Double hOilPrice;
-    private Double gOilPrice;
-    private Integer operatation;
+	 String uniId;
+     String pollDivCd;
+     String osNm;
+     String vanAdr;
+     String newAdr;
+     String tel;
+     String siguncd;
+     String lpgYn;
+     String maintYn;
+     String carWashYn;
+     String kpetroYn;
+     String cvsYn;
+     Double gisXCoor;
+     Double gisYCoor;
+     Double hOilPrice; // B027: 휘발유
+     Double gOilPrice; // B034: 고급휘발유
+     Double dOilPrice; // D047: 경유
+     Double iOilPrice; // C004: 실내등유
+     Integer operatation;     
 }

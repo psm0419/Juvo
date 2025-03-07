@@ -9,5 +9,7 @@ import com.app.dto.user.User;
 public interface UserService {
 	public User checkUserLogin(User user);
 	public int signupUser(User user); 
+	public boolean checkDupId(String id);
+	public boolean checkDupNickname(String nickname);
 	
 }
