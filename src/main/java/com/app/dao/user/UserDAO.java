@@ -22,5 +22,9 @@ public interface UserDAO {
 	public int changePassword(User user);
 
 	public int changeNickname(User user);
+
+	public User findIdByEmail(User requestUser);
+	
+	public User resetPasswordByEmail(User requestUser);
 	
 }

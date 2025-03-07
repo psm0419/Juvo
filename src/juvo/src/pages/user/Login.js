@@ -43,11 +43,11 @@ function Login() {
     };
 
     const handleFindId = () => {
-        navigate('/user/findId'); // 아이디 찾기 페이지로 이동
+        navigate('/findIdRequest'); // 아이디 찾기 페이지로 이동
     };
 
     const handleFindPw = () => {
-        navigate('/user/findPassword'); // 비밀번호 찾기 페이지로 이동
+        navigate("/findPasswordRequest"); // 비밀번호 찾기 페이지로 이동
     };
 
     return (
