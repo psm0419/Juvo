@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import CheapJuyuso from "../../components/main/CheapJuyuso";
 import AvgByRegion from '../../components/main/AvgByRegion';
 import AvgPriceChart from './AvgPriceChart';
+import Option from '../../components/main/Option';
 
 function Main() {	
 
@@ -12,6 +13,15 @@ function Main() {
 	const [avgList, setAvgList] = useState([]);
 	const [selectedProduct, setSelectedProduct] = useState("휘발유");
 	const [selectedArea, setSelectedArea] = useState("");
+
+	//오늘의 유가
+	const [todayPrices, setTodayPrices] = useState({
+		"휘발유": 0,
+		"경유": 0,
+		"고급휘발유": 0,
+		"실내등유": 0
+	});
+	
 
 	//제품코드
 	const productCodes = {
@@ -37,11 +47,11 @@ function Main() {
 		"대구": "14",
 		"인천": "15",
 		"광주": "16",
-		
 		"대전": "17",
 		"울산": "18",
 		"세종": "19"
     };
+
 	// 제품 선택 시 상태 업데이트
 	const handleProductChange = (event) => {
 		setSelectedProduct(event.target.value); 
@@ -51,7 +61,19 @@ function Main() {
 	const handleAreaChange = (event) => {
         setSelectedArea(event.target.value); 
     };
-	
+
+	//전국평균값
+	useEffect(() => {
+		const nationwideData = avgList.find(item => item.area === "");
+		if (nationwideData) {
+			setTodayPrices({
+				"휘발유": nationwideData["휘발유"] || 0,
+				"경유": nationwideData["경유"] || 0,
+				"고급휘발유": nationwideData["고급휘발유"] || 0,
+				"실내등유": nationwideData["실내등유"] || 0
+			});
+		}
+	}, [avgList]);
 
 	//저렴한 주유소
 	useEffect(() => {
@@ -105,31 +127,25 @@ function Main() {
 						<div className="lmiddle middle">
 							<div className="lmiddlet">
 								<div className="todaySelect">
-									<p className="point_text2">오늘의 유가 <span>(평균)</span> </p>
-									<select className="region" onChange={handleProductChange} value={selectedProduct}>
-										<option value="휘발유">휘발유</option>
-										<option value="경유">경유</option>
-										<option value="고급휘발유">고급휘발유</option>
-										<option value="실내등유">실내등유</option>
-									</select>
+									<p className="point_text2">오늘의 유가 <span>(전국평균)</span> </p>
 								</div>
 								<div className="todayContrainer">
-									<div className="box">
-										<h4>휘발유</h4>
-										<p>12.34</p>
-									</div>
-									<div className="box">
-										<h4>경유</h4>
-										<p>56.78</p>
-									</div>
-									<div className="box">
-										<h4>고급휘발유</h4>
-										<p>99.10</p>
-									</div>
-									<div className="box noBorder">
-										<h4>등유</h4>
-										<p>11.12</p>
-									</div>
+								<div className="box">
+									<h4>휘발유</h4>
+									<p>{todayPrices["휘발유"]}</p>
+								</div>
+								<div className="box">
+									<h4>경유</h4>
+									<p>{todayPrices["경유"]}</p>
+								</div>
+								<div className="box">
+									<h4>고급휘발유</h4>
+									<p>{todayPrices["고급휘발유"]}</p>
+								</div>
+								<div className="box noBorder">
+									<h4>등유</h4>
+									<p>{todayPrices["실내등유"]}</p>
+								</div>
 								</div>
 							</div>
 							<div className="lmiddleb">
@@ -155,6 +171,12 @@ function Main() {
 										<option value="울산">울산</option>
 										<option value="세종">세종</option>
 									</select>
+									<select className="region" onChange={handleProductChange} value={selectedProduct}>
+										<option value="휘발유">휘발유</option>
+										<option value="경유">경유</option>
+										<option value="고급휘발유">고급휘발유</option>
+										<option value="실내등유">실내등유</option>
+									</select>
 								</div>
 								<div className="cheapList">
 									<CheapJuyuso cheapJuyusoList={cheapJuyusoList} />
@@ -162,14 +184,16 @@ function Main() {
 							</div>
 						</div>
 						<div className="mmiddle middle">
+							<p className="point_text">유가추이</p>
+							<div className='chart'>
+								<AvgPriceChart selectedProduct={selectedProduct} selectedArea={selectedArea} />
+							</div>
+						</div>
+						<div className="rmiddle middle noBorder">
 							<p className="point_text">시도별 평균</p>
 							<div className="avgList">
 								<AvgByRegion avgList={avgList} />
 							</div>
-						</div>
-						<div className="rmiddle middle noBorder">
-							<p className="point_text">유가추이</p>
-							<AvgPriceChart selectedProduct={selectedProduct} />
 						</div>
 					</div>
                 </div>
