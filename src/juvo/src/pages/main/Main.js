@@ -64,16 +64,27 @@ function Main() {
 
 	//전국평균값
 	useEffect(() => {
-		const nationwideData = avgList.find(item => item.area === "");
-		if (nationwideData) {
-			setTodayPrices({
-				"휘발유": nationwideData["휘발유"] || 0,
-				"경유": nationwideData["경유"] || 0,
-				"고급휘발유": nationwideData["고급휘발유"] || 0,
-				"실내등유": nationwideData["실내등유"] || 0
-			});
-		}
-	}, [avgList]);
+		const fetchNationwidePrices = async () => {
+			const productKeys = Object.keys(productCodes); // ["휘발유", "경유", "고급휘발유", "실내등유"]
+			const prices = { "휘발유": 0, "경유": 0, "고급휘발유": 0, "실내등유": 0 };
+	
+			try {
+				for (const product of productKeys) {
+					const prodcd = productCodes[product];
+					const response = await axios.get(`/api/avgByRegion?prodcd=${prodcd}`);
+					const nationwideData = response.data.find(item => item.sidocd === "00");
+					if (nationwideData) {
+						prices[product] = nationwideData.price || 0;
+					}
+				}
+				setTodayPrices(prices);
+			} catch (error) {
+				console.error('전국 평균 유가 가져오기 실패:', error);
+			}
+		};
+	
+		fetchNationwidePrices();
+	}, []); // 한 번만 실행되도록 빈 배열 사용
 
 	//저렴한 주유소
 	useEffect(() => {
