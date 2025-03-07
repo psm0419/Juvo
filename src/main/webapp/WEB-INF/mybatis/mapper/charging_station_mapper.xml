@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.dao.chargingstation.ChargingStationDAO">
+
+<insert id="insertChargingStation" parameterType="com.app.dto.chargingstation.ChargingStationDTO">
+        INSERT INTO CHARGING_STATION (
+            INSTALL_YEAR, SIDO, GUNGU, ADDRESS, STATION_NAME,
+            FACILITY_TYPE_LARGE, FACILITY_TYPE_SMALL, MODEL_LARGE, MODEL_SMALL,
+            OPERATOR_LARGE, OPERATOR_SMALL, RAPID_CHARGE_AMOUNT, CHARGER_TYPE,
+            USER_RESTRICTION
+        ) VALUES (
+            #{installYear}, #{sido}, #{gungu}, #{address}, #{stationName},
+            #{facilityTypeLarge}, #{facilityTypeSmall}, #{modelLarge}, #{modelSmall},
+            #{operatorLarge}, #{operatorSmall}, #{rapidChargeAmount}, #{chargerType},
+            #{userRestriction}
+        )
+    </insert>
+
+</mapper>
