@@ -12,7 +12,7 @@ public class ArplApiService {
     public static String juyuso(String lat, String lng) throws IOException {
         System.out.println("주유소 API 요청 시작: lat=" + lat + ", lng=" + lng);
         StringBuilder urlBuilder = new StringBuilder("https://www.opinet.co.kr/api/aroundAll.do");
-        urlBuilder.append("?" + URLEncoder.encode("code", "UTF-8") + "=F250220122");
+        urlBuilder.append("?" + URLEncoder.encode("code", "UTF-8") + "=F250306157");
         urlBuilder.append("&" + URLEncoder.encode("x", "UTF-8") + "=" + URLEncoder.encode(lng, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("y", "UTF-8") + "=" + URLEncoder.encode(lat, "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("radius", "UTF-8") + "=5000");
@@ -52,7 +52,7 @@ public class ArplApiService {
 
     public static String juyusoDetail(String id) throws IOException {        
         StringBuilder urlBuilder = new StringBuilder("https://www.opinet.co.kr/api/detailById.do");
-        urlBuilder.append("?" + URLEncoder.encode("code", "UTF-8") + "=F250220122");
+        urlBuilder.append("?" + URLEncoder.encode("code", "UTF-8") + "=F250306157");
         urlBuilder.append("&" + URLEncoder.encode("id", "UTF-8") + "=" + URLEncoder.encode(id, "UTF-8"));        
         urlBuilder.append("&" + URLEncoder.encode("out", "UTF-8") + "=json");
         System.out.println("요청 URL: " + urlBuilder.toString());

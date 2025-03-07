@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.app.controller.juyuso.GeoTrans;
 import com.app.dao.juyuso.JuyusoDAO;
 import com.app.dto.juyuso.Juyuso;
+import com.app.dto.juyuso.LikeJuyuso;
 import com.app.service.api.ArplApiService;
 import com.app.service.juyuso.JuyusoService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -292,6 +293,27 @@ public class JuyusoServiceImpl implements JuyusoService {
         public ResponseWrapper(String key, JsonNode value) {
             this.key = key;
             this.value = value;
+        }
+    }
+
+    @Override
+    public boolean registerFavoriteStation(String userId, String uniId) {
+        try {
+            // 중복 체크
+            int exists = juyusoDAO.checkFavoriteStationExists(userId, uniId);
+            if (exists > 0) {
+                System.out.println("Already registered: userId=" + userId + ", uniId=" + uniId);
+                return false;
+            }
+
+            LikeJuyuso likeJuyuso = new LikeJuyuso();
+            likeJuyuso.setUserId(userId);
+            likeJuyuso.setUniId(uniId);
+
+            return juyusoDAO.insertFavoriteStation(likeJuyuso);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

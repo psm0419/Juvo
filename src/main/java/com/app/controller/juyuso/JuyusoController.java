@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.app.service.juyuso.JuyusoService;
+import com.app.dto.juyuso.LikeJuyuso;
 
 @Controller
 public class JuyusoController {
@@ -67,5 +70,21 @@ public class JuyusoController {
     @ResponseBody
     public String getJuyusoWithDetails(@RequestParam double lat, @RequestParam double lng) {
         return juyusoService.getJuyusoWithDetails(lat, lng);
+    }
+    
+    @PostMapping("/api/favorite/juyuso")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> registerFavoriteStation(@RequestBody LikeJuyuso likeJuyuso) {
+        try {
+            boolean success = juyusoService.registerFavoriteStation(likeJuyuso.getUserId(), likeJuyuso.getUniId());
+            if (success) {
+                return ResponseEntity.ok(Map.of("status", "success", "message", "관심 주유소로 등록되었습니다."));
+            } else {
+                return ResponseEntity.status(400).body(Map.of("status", "error", "message", "이미 등록된 주유소입니다."));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("status", "error", "message", "등록에 실패했습니다."));
+        }
     }
 }

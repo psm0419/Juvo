@@ -10,5 +10,6 @@
 	<typeAliases>		
 		<typeAlias type="com.app.dto.user.User" alias="User" />
 		<typeAlias type="com.app.dto.juyuso.Juyuso" alias="Juyuso" />
+		<typeAlias type="com.app.dto.juyuso.LikeJuyuso" alias="LikeJuyuso" />
 	</typeAliases>
 </configuration>

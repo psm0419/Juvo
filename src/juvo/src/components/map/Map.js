@@ -29,7 +29,6 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         maintenance: false,
         convenience: false,
         self: false,
-        alwaysOpen: false,
     });
     const [activeTab, setActiveTab] = useState("주유소");
 
@@ -66,7 +65,6 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                         case "maintenance": return station.maintYn === "Y";
                         case "convenience": return station.cvsYn === "Y";
                         case "self": return station.selfYn === "Y";
-                        case "alwaysOpen": return station.alwaysOpenYn === "Y";
                         default: return false;
                     }
                 });
@@ -205,8 +203,11 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
                             const infoWindowContent = `
                                 <div style="width: 300px; padding: 15px; background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); font-family: 'Noto Sans KR', sans-serif;">
-                                    <div style="font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #333;">
+                                    <div style="text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #333;">
                                         ${station.OS_NM || "이름 없음"} <span style="color: #2ecc71;">(${station.pollDivCd || "이름 없음"})</span>
+                                    </div>
+                                    <div style="text-align: right; margin-bottom: 8px;">
+                                        <button onclick="registerFavoriteStation('${station.uniId}')" style="padding: 5px 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">관심 주유소 등록</button>
                                     </div>
                                     <div style="border-bottom: 1px solid #eee; margin-bottom: 8px;"></div>
                                     <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
@@ -274,6 +275,39 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                                     </button>
                                 </div>
                             `;
+
+                            // 관심 주유소 등록 함수 (글로벌 스코프에 정의)
+                            window.registerFavoriteStation = function (uniId) {
+                                const userId = "testUser"; // 실제로는 로그인한 사용자의 ID를 가져와야 함
+                                fetch('/api/favorite/juyuso', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        userId: userId,
+                                        uniId: uniId
+                                    })
+                                })
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error('등록 실패');
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(data => {
+                                        if (data.status === 'success') {
+                                            alert(data.message);
+                                        } else {
+                                            alert(data.message);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        alert('등록에 실패했습니다.');
+                                    });
+                            };
+
 
                             const infoWindow = new kakao.maps.InfoWindow({
                                 content: infoWindowContent,
@@ -479,7 +513,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const handleTabChange = (tab) => {
         setActiveTab(tab);
         setBrands({ cheap: false, skEnergy: false, gsCaltex: false, hyundaiOilbank: false, sOil: false, nOil: false });
-        setAdditionalInfo({ carWash: false, maintenance: false, convenience: false, self: false, alwaysOpen: false });
+        setAdditionalInfo({ carWash: false, maintenance: false, convenience: false, self: false });
     };
 
     return (
@@ -532,7 +566,6 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                             { key: "maintenance", label: "경정비" },
                             { key: "convenience", label: "편의점" },
                             { key: "self", label: "셀프" },
-                            { key: "alwaysOpen", label: "24시간" },
                         ].map(({ key, label }) => (
                             <label key={key} className="map-option-label">
                                 <input

@@ -89,4 +89,18 @@
              OR KPETRO_YN IS NOT NULL 
              OR CVS_YN IS NOT NULL)
     </select>
+    
+    <!-- 관심 주유소 삽입 -->
+<insert id="insertFavoriteStation" parameterType="LikeJuyuso">
+    INSERT INTO like_juyuso (user_id, UNI_ID)
+    VALUES (#{userId}, #{uniId})
+</insert>
+
+<!-- 중복 체크 -->
+<select id="checkFavoriteStationExists" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM like_juyuso
+        WHERE user_id = #{userId}
+        AND UNI_ID = #{uniId}
+    </select>
 </mapper>

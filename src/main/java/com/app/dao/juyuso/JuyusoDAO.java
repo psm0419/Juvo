@@ -3,6 +3,7 @@ package com.app.dao.juyuso;
 import java.util.List;
 
 import com.app.dto.juyuso.Juyuso;
+import com.app.dto.juyuso.LikeJuyuso;
 
 public interface JuyusoDAO {
 
@@ -15,4 +16,6 @@ public interface JuyusoDAO {
     boolean existsById(String uniId);    
     boolean updateJuyusoDetail(Juyuso juyuso);
     boolean existsDetailById(String uniId);
+    boolean insertFavoriteStation(LikeJuyuso likeJuyuso);
+    int checkFavoriteStationExists(String userId, String uniId);
 }
