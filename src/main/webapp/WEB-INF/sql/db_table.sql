@@ -58,15 +58,21 @@ CREATE TABLE lowest_cost (
 );
 
 -- 전기차 충전소 테이블
-CREATE TABLE ev_stations (
-    data NUMBER PRIMARY KEY,
-    metro VARCHAR2(128),
-    city VARCHAR2(128),
-    stnPlace VARCHAR2(255),
-    stnAddr VARCHAR2(255),
-    rapidCnt NUMBER,
-    slowCnt NUMBER,
-    carType VARCHAR2(100)
+CREATE TABLE CHARGING_STATION (
+    install_year INT,
+    sido VARCHAR(50),
+    gungu VARCHAR(50),
+    address VARCHAR(255),
+    station_name VARCHAR(100),
+    facility_type_large VARCHAR(50),
+    facility_type_small VARCHAR(50),
+    model_large VARCHAR(50),
+    model_small VARCHAR(50),
+    operator_large VARCHAR(50),
+    operator_small VARCHAR(50),
+    rapid_charge_amount VARCHAR(50),
+    charger_type VARCHAR(50),
+    user_restriction VARCHAR(50)
 );
 
 -- 사용자 관심 키워드 테이블
