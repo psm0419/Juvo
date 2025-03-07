@@ -142,6 +142,22 @@
     padding: 14px; 
 }
 
+.avgList div{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.avgItem {
+    background: #f5f5f5;
+    padding: 4px;
+    border-radius: 8px;
+    text-align: center;
+    width: 80px;
+    font-size: 0.8rem;
+}
+
 /* 공지사항 멤버십 부분 */
 .mainBottom {
     width: 100%;

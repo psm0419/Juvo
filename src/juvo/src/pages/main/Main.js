@@ -2,13 +2,18 @@ import '../../assets/css/main/Main.css';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import CheapJuyuso from "../../components/main/CheapJuyuso";
+import AvgByRegion from '../../components/main/AvgByRegion';
+import AvgPriceChart from './AvgPriceChart';
 
 function Main() {	
 
+	//저렴한 주유소, 시도별평균
 	const [cheapJuyusoList, setCheapJuyusoList] = useState([]);
+	const [avgList, setAvgList] = useState([]);
 	const [selectedProduct, setSelectedProduct] = useState("휘발유");
 	const [selectedArea, setSelectedArea] = useState("");
 
+	//제품코드
 	const productCodes = {
 		"휘발유": "B027",
 		"경유": "D047",
@@ -16,6 +21,7 @@ function Main() {
 		"실내등유": "C004"
 	};
 
+	//지역코드
 	const areaCodes = {
 		"서울": "01",
 		"경기": "02",
@@ -31,35 +37,23 @@ function Main() {
 		"대구": "14",
 		"인천": "15",
 		"광주": "16",
+		
 		"대전": "17",
 		"울산": "18",
 		"세종": "19"
     };
-
+	// 제품 선택 시 상태 업데이트
 	const handleProductChange = (event) => {
-		setSelectedProduct(event.target.value); // 제품 선택 시 상태 업데이트
+		setSelectedProduct(event.target.value); 
 	};
 
+	// 지역 선택 시 상태 업데이트
 	const handleAreaChange = (event) => {
-        setSelectedArea(event.target.value); // 지역 선택 시 상태 업데이트
+        setSelectedArea(event.target.value); 
     };
-    
-    useEffect(() => {
-		axios.get('/api/cheapJuyuso')
-			.then(response => {
-				console.log(response.data);
-				// 배열인지 확인하고 배열로 변환
-				if (Array.isArray(response.data)) {
-					setCheapJuyusoList(response.data);
-				} else {
-					console.error('응답 데이터는 배열이 아닙니다.');
-				}
-			})
-			.catch(error => {
-				console.error('API 호출 중 오류 발생:', error);
-			});
-	}, []);
+	
 
+	//저렴한 주유소
 	useEffect(() => {
 		const areaCode = selectedArea ? areaCodes[selectedArea] : ""; 
 		const prodcd = productCodes[selectedProduct] || "B027";  
@@ -76,6 +70,23 @@ function Main() {
 				console.error('API 호출 중 오류 발생:', error);
 			});
 	}, [selectedProduct, selectedArea]);
+
+	//시도별 평균
+	useEffect(() => {
+		const prodcd = productCodes[selectedProduct] || "B027";
+
+		axios.get(`/api/avgByRegion?prodcd=${prodcd}`)
+			.then(response => {
+				if (Array.isArray(response.data)) {
+					setAvgList(response.data);
+				} else {
+					console.error('응답 데이터가 배열이 아닙니다.');
+				}
+			})
+			.catch(error => {
+				console.error('API 호출 중 오류 발생:', error);
+			});
+	}, [selectedProduct]);
 	
 
 	return (
@@ -152,15 +163,13 @@ function Main() {
 						</div>
 						<div className="mmiddle middle">
 							<p className="point_text">시도별 평균</p>
-							<div>
-
+							<div className="avgList">
+								<AvgByRegion avgList={avgList} />
 							</div>
 						</div>
 						<div className="rmiddle middle noBorder">
 							<p className="point_text">유가추이</p>
-							<div>
-								
-							</div>
+							<AvgPriceChart selectedProduct={selectedProduct} />
 						</div>
 					</div>
                 </div>
