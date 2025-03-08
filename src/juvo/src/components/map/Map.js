@@ -270,34 +270,39 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
                             // 관심 주유소 등록 함수 (글로벌 스코프에 정의)
                             window.registerFavoriteStation = function (uniId) {
-                                const userId = "testUser"; // 실제로는 로그인한 사용자의 ID를 가져와야 함
+                                const token = localStorage.getItem('accessToken'); // 로그인 시 저장된 토큰 가져오기
+                                if (!token) {
+                                    alert('로그인이 필요합니다.');
+                                    return;
+                                }
+                            
                                 fetch('/api/favorite/juyuso', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${token}` // JWT 토큰을 헤더에 포함
                                     },
                                     body: JSON.stringify({
-                                        userId: userId,
-                                        uniId: uniId
+                                        uniId: uniId // userId는 백엔드에서 추출
                                     })
                                 })
-                                    .then(response => {
-                                        if (!response.ok) {
-                                            throw new Error('등록 실패');
-                                        }
-                                        return response.json();
-                                    })
-                                    .then(data => {
-                                        if (data.status === 'success') {
-                                            alert(data.message);
-                                        } else {
-                                            alert(data.message);
-                                        }
-                                    })
-                                    .catch(error => {
-                                        console.error('Error:', error);
-                                        alert('등록에 실패했습니다.');
-                                    });
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('등록 실패');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data.status === 'success') {
+                                        alert(data.message);
+                                    } else {
+                                        alert(data.message);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    alert('등록에 실패했습니다.');
+                                });
                             };
 
 
