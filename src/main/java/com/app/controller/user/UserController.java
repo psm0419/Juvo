@@ -104,118 +104,101 @@ public class UserController {
 	}
 
 	@PostMapping("/user/checkDupNickname") // 닉네임 중복 확인
-	public boolean checkDupNickname(@RequestBody User changeData, HttpServletRequest request) {
-		
-		//유효성 검증
-				String token = JwtProvider.extractToken(request);
-			    if (token == null || !JwtProvider.isVaildToken(token)) {
-			        System.out.println("유효하지 않은 토큰");
-			        return false; // 또는 예외 던지기
-			    }
-			    
-			    String userId = JwtProvider.getUserIdFromToken(token);
-			    
-			    if (!userId.equals(changeData.getId())) {
-			        System.out.println("토큰의 사용자 ID와 요청 ID가 일치하지 않음");
-			        return false;
-			    }
-			    
-		System.out.println(changeData.getNickname());
-		boolean checkDupId = userService.checkDupNickname(changeData.getNickname()); // 중복 체크 -> DB
-		if (checkDupId == true) {
+	public boolean checkDupNickname(@RequestBody String nickname, HttpServletRequest request) {
+
+		boolean checkDupNickname = userService.checkDupNickname(nickname); // 중복 체크 -> DB
+		if (checkDupNickname == true) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 
-	@GetMapping("/user/checkUserByToken") 
-	public User checkUserByToken(HttpServletRequest request ) {
+	@GetMapping("/user/checkUserByToken")
+	public User checkUserByToken(HttpServletRequest request) {
 		String token = JwtProvider.extractToken(request);
 		String id = JwtProvider.getUserIdFromToken(token);
 		User user = userService.checkUserByToken(id);
 		user.setPw("");// 비밀번호 비워서 보내기
 		return user;
 	}
-	
+
 	@PostMapping("/user/changePassword")
 	public boolean changePassword(@RequestBody User changeData, HttpServletRequest request) {
-		
-		//유효성 검증
-		String token = JwtProvider.extractToken(request);
-	    if (token == null || !JwtProvider.isVaildToken(token)) {
-	        System.out.println("유효하지 않은 토큰");
-	        return false; // 또는 예외 던지기
-	    }
-	    
-	    String userId = JwtProvider.getUserIdFromToken(token);
-	    
-	    if (!userId.equals(changeData.getId())) {
-	        System.out.println("토큰의 사용자 ID와 요청 ID가 일치하지 않음");
-	        return false;
-	    }
 
-	    //기능
-	    
+		// 유효성 검증
+		String token = JwtProvider.extractToken(request);
+		if (token == null || !JwtProvider.isVaildToken(token)) {
+			System.out.println("유효하지 않은 토큰");
+			return false; // 또는 예외 던지기
+		}
+
+		String userId = JwtProvider.getUserIdFromToken(token);
+
+		if (!userId.equals(changeData.getId())) {
+			System.out.println("토큰의 사용자 ID와 요청 ID가 일치하지 않음");
+			return false;
+		}
+
+		// 기능
+
 		String newPw = changeData.getPw(); // 새로운 변수에 변경 할 비밀번호 저장
 		User findUser = userService.findUserById(changeData.getId()); // request 받은 id로 해당 계정 조회
-		
+
 		try {
 			findUser.setPw(SHA256Encryptor.encrypt(newPw)); // 새로운 비밀번호 암호화 후 조회한 계정에 저장
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return false;
 		}
-		
-		int result = userService.changePassword(findUser); // 변경 결과  성공=1
-		
+
+		int result = userService.changePassword(findUser); // 변경 결과 성공=1
+
 		System.out.println(result);
-		if(result == 1) {
+		if (result == 1) {
 			System.out.println("비밀번호 변경 성공");
 			return true;
 		} else {
 			System.out.println("비밀번호 변경 실패");
 			return false;
-			
+
 		}
 	}
-	
+
 	@PostMapping("/user/changeNickname")
 	public boolean changeNickname(@RequestBody User changeData, HttpServletRequest request) {
-		
-		//유효성 검증
-		String token = JwtProvider.extractToken(request);
-	    if (token == null || !JwtProvider.isVaildToken(token)) {
-	        System.out.println("유효하지 않은 토큰");
-	        return false; // 또는 예외 던지기
-	    }
-	    
-	    String userId = JwtProvider.getUserIdFromToken(token);
-	    
-	    if (!userId.equals(changeData.getId())) {
-	        System.out.println("토큰의 사용자 ID와 요청 ID가 일치하지 않음");
-	        return false;
-	    }
 
-	    //기능
-	    
+		// 유효성 검증
+		String token = JwtProvider.extractToken(request);
+		if (token == null || !JwtProvider.isVaildToken(token)) {
+			System.out.println("유효하지 않은 토큰");
+			return false; // 또는 예외 던지기
+		}
+
+		String userId = JwtProvider.getUserIdFromToken(token);
+
+		if (!userId.equals(changeData.getId())) {
+			System.out.println("토큰의 사용자 ID와 요청 ID가 일치하지 않음");
+			return false;
+		}
+
+		// 기능
+
 		String newNickname = changeData.getNickname(); // 새로운 변수에 변경 할 비밀번호 저장
 		User findUser = userService.findUserById(changeData.getId()); // request 받은 id로 해당 계정 조회
-		
-		
-			findUser.setNickname(newNickname); // 새로운 닉네임 조회한 계정에 저장
-		
-		
-		int result = userService.changeNickname(findUser); // 변경 결과  성공=1
-		
+
+		findUser.setNickname(newNickname); // 새로운 닉네임 조회한 계정에 저장
+
+		int result = userService.changeNickname(findUser); // 변경 결과 성공=1
+
 		System.out.println(result);
-		if(result == 1) {
+		if (result == 1) {
 			System.out.println("닉네임 변경 성공");
 			return true;
 		} else {
 			System.out.println("닉네임 변경 실패");
 			return false;
-			
+
 		}
 	}
 }

@@ -4,9 +4,9 @@ import { Routes, Route } from 'react-router-dom';
 import Main from './pages/main/Main';
 import Login from './pages/user/Login';
 import Signup from './pages/user/Signup';
-import FindId from './pages/user/FindId';
+import FindId from './pages/user/FindIdRequest';
 import MyPageProfile from './pages/user/myPage/MyPageProfile';
-import FindPassword from './pages/user/FindPassword';
+import FindPassword from './pages/user/FindPasswordRequest';
 import Conversion from './pages/detail/oilinfoDetail/Conversion';
 import Tax from './pages/detail/oilinfoDetail/Tax';
 import Blackjuyuso from './pages/detail/blackjuyusoDetail/Blackjuyuso';
@@ -18,6 +18,9 @@ import PrivacyPolicy from './pages/detail/guideDetail/PrivacyPolicy';
 import RefundPolicy from './pages/detail/guideDetail/RefundPolicy';
 import Faq from './pages/detail/guideDetail/Faq';
 import FaqDetail from './pages/detail/guideDetail/FaqDetail';
+import FindPasswordRequest from './pages/user/FindPasswordRequest';
+import ResetPassword from './pages/user/ResetPassword';
+
 
 
 
@@ -28,9 +31,15 @@ function App() {
 				<Route path='/' element={<Main />} />
 				<Route path='/user/login' element={<Login />} />
 				<Route path='/user/signup' element={<Signup />} />
-				<Route path='/user/findPassword' element={<FindPassword />} />
-				<Route path='/user/findId' element={<FindId />} />
-				<Route path='/user/myPage' element={<MyPageProfile />} />
+
+				<Route path="/findPasswordRequest" element={<FindPasswordRequest />} />
+				<Route path="/resetPassword/:token" element={<ResetPassword />} />
+
+				<Route path='/findIdRequest' element={<FindId />} />
+
+				<Route path="/user/myPage/profile" element={<MyPageProfile />} />
+
+
 				<Route path="/detail/oilinfoDetail/Conversion" element={<Conversion />} />
 				<Route path="/detail/oilinfoDetail/Tax" element={<Tax />} />
 				<Route path="/detail/blackjuyusoDetail/Blackjuyuso" element={<Blackjuyuso />} />

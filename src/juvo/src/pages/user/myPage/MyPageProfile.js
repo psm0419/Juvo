@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import '../../../assets/css/user/myPage/MyPageProfile.css';
 import MyPageProfileModal from './MyPageProfileModal';
 
+
 function MyPage() {
     let navigate = useNavigate();
 
@@ -71,16 +72,16 @@ function MyPage() {
             newPw.length === 0
                 ? ""
                 : REGEX.PWD.test(newPw)
-                ? "사용 가능한 비밀번호입니다."
-                : "소문자, 대문자, 숫자, 특수문자(!@#$%)가 포함된 8~24자여야 합니다."
+                    ? "사용 가능한 비밀번호입니다."
+                    : "소문자, 대문자, 숫자, 특수문자(!@#$%)가 포함된 8~24자여야 합니다."
         );
         setNewPwMatch(newPw === newPwCheck);
         setNewPwCheckMsg(
             newPwCheck.length === 0
                 ? ""
                 : newPw === newPwCheck
-                ? "비밀번호가 일치합니다."
-                : "비밀번호가 일치하지 않습니다."
+                    ? "비밀번호가 일치합니다."
+                    : "비밀번호가 일치하지 않습니다."
         );
     }, [newPw, newPwCheck]);
 
@@ -195,107 +196,109 @@ function MyPage() {
     if (!userInfo) return <div className="mp-container">사용자 정보를 불러올 수 없습니다.</div>;
 
     return (
-        <div className="mp-page">
-            <div className="mp-container">
-                <h1 className="mp-title">마이페이지</h1>
+            <div className="mp-page">
 
-                <div className="mp-form-group">
-                    <label className="mp-label">아이디</label>
-                    <input type="text" value={userInfo.id || ""} className="mp-input" disabled />
-                </div>
+                <div className="mp-container">
+                    <h1 className="mp-title">마이페이지</h1>
 
-                <div className="mp-form-group">
-                    <label className="mp-label">이름</label>
-                    <input type="text" value={userInfo.username || ""} className="mp-input" disabled />
-                </div>
-
-                <div className="mp-form-group">
-                    <label className="mp-label">닉네임</label>
-                    <input type="text" value={userInfo.nickname || ""} className="mp-input" disabled />
-                </div>
-
-                <div className="mp-form-group">
-                    <label className="mp-label">전화번호</label>
-                    <input type="text" value={maskSensitiveInfo(userInfo.tel, "tel")} className="mp-input" disabled />
-                </div>
-
-                <div className="mp-form-group">
-                    <label className="mp-label">생년월일</label>
-                    <input type="text" value={maskSensitiveInfo(userInfo.jumin, "jumin")} className="mp-input" disabled />
-                </div>
-
-                <div className="mp-form-group">
-                    <label className="mp-label">이메일</label>
-                    <input type="text" value={maskSensitiveInfo(userInfo.email, "email")} className="mp-input" disabled />
-                </div>
-
-                <div className="mp-form-group">
-                    <button className="mp-change-pw-btn" onClick={() => setShowPwModal(true)}>
-                        비밀번호 변경
-                    </button>
-                    <button className="mp-change-nickname-btn" onClick={() => setShowNicknameModal(true)}>
-                        닉네임 변경
-                    </button>
-                </div>
-
-                {/* 비밀번호 변경 모달 */}
-                <MyPageProfileModal
-                    isOpen={showPwModal}
-                    onClose={() => setShowPwModal(false)}
-                    title="비밀번호 변경"
-                    onSubmit={handleChangePassword}
-                >
                     <div className="mp-form-group">
-                        <input
-                            type="password"
-                            ref={ref.newPw}
-                            value={newPw}
-                            className={`mp-input ${newPw.length > 0 ? (validNewPw ? 'mp-valid' : 'mp-invalid') : ''}`}
-                            placeholder="새 비밀번호"
-                            onChange={(e) => setNewPw(e.target.value)}
-                        />
-                        <span className={`mp-message ${newPw.length > 0 ? (validNewPw ? 'mp-valid' : 'mp-invalid') : ''}`}>
-                            {newPwMsg}
-                        </span>
+                        <label className="mp-label">아이디</label>
+                        <input type="text" value={userInfo.id || ""} className="mp-input" disabled />
                     </div>
-                    <div className="mp-form-group">
-                        <input
-                            type="password"
-                            ref={ref.newPwCheck}
-                            value={newPwCheck}
-                            className={`mp-input ${newPwCheck.length > 0 ? (newPwMatch ? 'mp-valid' : 'mp-invalid') : ''}`}
-                            placeholder="비밀번호 확인"
-                            onChange={(e) => setNewPwCheck(e.target.value)}
-                        />
-                        <span className={`mp-message ${newPwCheck.length > 0 ? (newPwMatch ? 'mp-valid' : 'mp-invalid') : ''}`}>
-                            {newPwCheckMsg}
-                        </span>
-                    </div>
-                </MyPageProfileModal>
 
-                {/* 닉네임 변경 모달 */}
-                <MyPageProfileModal
-                    isOpen={showNicknameModal}
-                    onClose={() => setShowNicknameModal(false)}
-                    title="닉네임 변경"
-                    onSubmit={handleChangeNickname}
-                >
                     <div className="mp-form-group">
-                        <input
-                            type="text"
-                            ref={ref.newNickname}
-                            value={newNickname}
-                            className={`mp-input ${newNickname.length > 0 ? (isNicknameValid === true ? 'mp-valid' : isNicknameValid === false ? 'mp-invalid' : '') : ''}`}
-                            placeholder="새 닉네임"
-                            onChange={(e) => setNewNickname(e.target.value)}
-                        />
-                        <span className={`mp-message ${newNickname.length > 0 ? (isNicknameValid === true ? 'mp-valid' : isNicknameValid === false ? 'mp-invalid' : '') : ''}`}>
-                            {nicknameMsg}
-                        </span>
+                        <label className="mp-label">이름</label>
+                        <input type="text" value={userInfo.username || ""} className="mp-input" disabled />
                     </div>
-                </MyPageProfileModal>
+
+                    <div className="mp-form-group">
+                        <label className="mp-label">닉네임</label>
+                        <input type="text" value={userInfo.nickname || ""} className="mp-input" disabled />
+                    </div>
+
+                    <div className="mp-form-group">
+                        <label className="mp-label">전화번호</label>
+                        <input type="text" value={maskSensitiveInfo(userInfo.tel, "tel")} className="mp-input" disabled />
+                    </div>
+
+                    <div className="mp-form-group">
+                        <label className="mp-label">생년월일</label>
+                        <input type="text" value={maskSensitiveInfo(userInfo.jumin, "jumin")} className="mp-input" disabled />
+                    </div>
+
+                    <div className="mp-form-group">
+                        <label className="mp-label">이메일</label>
+                        <input type="text" value={maskSensitiveInfo(userInfo.email, "email")} className="mp-input" disabled />
+                    </div>
+
+                    <div className="mp-form-group">
+                        <button className="mp-change-pw-btn" onClick={() => setShowPwModal(true)}>
+                            비밀번호 변경
+                        </button>
+                        <button className="mp-change-nickname-btn" onClick={() => setShowNicknameModal(true)}>
+                            닉네임 변경
+                        </button>
+                    </div>
+
+                    {/* 비밀번호 변경 모달 */}
+                    <MyPageProfileModal
+                        isOpen={showPwModal}
+                        onClose={() => setShowPwModal(false)}
+                        title="비밀번호 변경"
+                        onSubmit={handleChangePassword}
+                    >
+                        <div className="mp-form-group">
+                            <input
+                                type="password"
+                                ref={ref.newPw}
+                                value={newPw}
+                                className={`mp-input ${newPw.length > 0 ? (validNewPw ? 'mp-valid' : 'mp-invalid') : ''}`}
+                                placeholder="새 비밀번호"
+                                onChange={(e) => setNewPw(e.target.value)}
+                            />
+                            <span className={`mp-message ${newPw.length > 0 ? (validNewPw ? 'mp-valid' : 'mp-invalid') : ''}`}>
+                                {newPwMsg}
+                            </span>
+                        </div>
+                        <div className="mp-form-group">
+                            <input
+                                type="password"
+                                ref={ref.newPwCheck}
+                                value={newPwCheck}
+                                className={`mp-input ${newPwCheck.length > 0 ? (newPwMatch ? 'mp-valid' : 'mp-invalid') : ''}`}
+                                placeholder="비밀번호 확인"
+                                onChange={(e) => setNewPwCheck(e.target.value)}
+                            />
+                            <span className={`mp-message ${newPwCheck.length > 0 ? (newPwMatch ? 'mp-valid' : 'mp-invalid') : ''}`}>
+                                {newPwCheckMsg}
+                            </span>
+                        </div>
+                    </MyPageProfileModal>
+
+                    {/* 닉네임 변경 모달 */}
+                    <MyPageProfileModal
+                        isOpen={showNicknameModal}
+                        onClose={() => setShowNicknameModal(false)}
+                        title="닉네임 변경"
+                        onSubmit={handleChangeNickname}
+                    >
+                        <div className="mp-form-group">
+                            <input
+                                type="text"
+                                ref={ref.newNickname}
+                                value={newNickname}
+                                className={`mp-input ${newNickname.length > 0 ? (isNicknameValid === true ? 'mp-valid' : isNicknameValid === false ? 'mp-invalid' : '') : ''}`}
+                                placeholder="새 닉네임"
+                                onChange={(e) => setNewNickname(e.target.value)}
+                            />
+                            <span className={`mp-message ${newNickname.length > 0 ? (isNicknameValid === true ? 'mp-valid' : isNicknameValid === false ? 'mp-invalid' : '') : ''}`}>
+                                {nicknameMsg}
+                            </span>
+                        </div>
+                    </MyPageProfileModal>
+                </div>
             </div>
-        </div>
+
     );
 }
 

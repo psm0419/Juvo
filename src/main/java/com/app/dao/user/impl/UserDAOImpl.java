@@ -63,6 +63,19 @@ public class UserDAOImpl implements UserDAO {
 		System.out.println();
 		return result;
 	}
+
+	@Override
+	public User findIdByEmail(User requestUser) {
+		User user = sqlSessionTemplate.selectOne("user_mapper.findIdByEmail", requestUser);
+		return user;
+	}
+
+	@Override
+	public User resetPasswordByEmail(User requestUser) {
+		User user = sqlSessionTemplate.selectOne("user_mapper.resetPasswordByEmail", requestUser);
+		
+		return user;
+	}
 	
 
 }
