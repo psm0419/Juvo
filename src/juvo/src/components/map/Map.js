@@ -64,7 +64,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                         case "carWash": return station.carWashYn === "Y";
                         case "maintenance": return station.maintYn === "Y";
                         case "convenience": return station.cvsYn === "Y";
-                        case "self": return station.selfYn === "Y";
+                        case "self": return station.selfYn === "Y" || (station.osNm && station.osNm.includes("셀프"));
                         default: return false;
                     }
                 });
@@ -202,79 +202,71 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                             });
 
                             const infoWindowContent = `
-                                <div style="width: 300px; padding: 15px; background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); font-family: 'Noto Sans KR', sans-serif;">
-                                    <div style="text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #333;">
-                                        ${station.OS_NM || "이름 없음"} <span style="color: #2ecc71;">(${station.pollDivCd || "이름 없음"})</span>
-                                    </div>
-                                    <div style="text-align: right; margin-bottom: 8px;">
-                                        <button onclick="registerFavoriteStation('${station.uniId}')" style="padding: 5px 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">관심 주유소 등록</button>
-                                    </div>
-                                    <div style="border-bottom: 1px solid #eee; margin-bottom: 8px;"></div>
-                                    <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
-                                        <div style="margin-bottom: 4px;">
-                                            <span style="margin-right: 5px;">📞</span> ${station.tel || "전화번호 없음"}
-                                        </div>
-                                        <div>
-                                            <span style="margin-right: 5px;">📍</span> ${station.newAdr || station.vanAdr || "주소 없음"}
-                                        </div>
-                                    </div>
-                                    <div style="margin-bottom: 10px;">
-                                        <table style="width: 100%; border-collapse: collapse; font-size: 12px; color: #333;">
-                                            <thead>
-                                                <tr style="border-bottom: 1px solid #ddd;">
-                                                    <th style="text-align: left; padding: 5px; font-weight: bold;">유종</th>
-                                                    <th style="text-align: left; padding: 5px; font-weight: bold;">가격</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr style="border-bottom: 1px solid #eee;">
-                                                    <td style="padding: 5px;">휘발유</td>
-                                                    <td style="padding: 5px; color: #ff4500;">
-                                                        ${station.hoilPrice != null && station.hoilPrice !== undefined && station.hoilPrice !== '' ? station.hoilPrice + '원' : '정보 없음'}
-                                                    </td>
-                                                </tr>
-                                                <tr style="border-bottom: 1px solid #eee;">
-                                                    <td style="padding: 5px;">경유</td>
-                                                    <td style="padding: 5px; color: #ff4500;">
-                                                        ${station.doilPrice != null && station.doilPrice !== undefined && station.doilPrice !== '' ? station.doilPrice + '원' : '정보 없음'}
-                                                    </td>
-                                                </tr>
-                                                <tr style="border-bottom: 1px solid #eee;">
-                                                    <td style="padding: 5px;">고급 휘발유</td>
-                                                    <td style="padding: 5px; color: #ff4500;">
-                                                        ${station.goilPrice != null && station.goilPrice !== undefined && station.goilPrice !== '' ? station.goilPrice + '원' : '정보 없음'}
-                                                    </td>
-                                                </tr>
-                                                <tr style="border-bottom: 1px solid #eee;">
-                                                    <td style="padding: 5px;">실내 등유</td>
-                                                    <td style="padding: 5px; color: #ff4500;">
-                                                        ${station.ioilPrice != null && station.ioilPrice !== undefined && station.ioilPrice !== '' ? station.ioilPrice + '원' : '정보 없음'}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div style="font-size: 12px; color: #555; margin-bottom: 10px; display: flex; align-items: center;">
-                                        <img id="cwsh_yn" src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_01_off.gif" alt="세차장" 
-                                            style="display: ${station.carWashYn === 'Y' ? 'inline-block' : 'none'}; width: 50px; height: 25px; margin-right: 10px;">
-                                        <img id="lpg_yn" src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_02_01_off.gif" alt="충전소" 
-                                            style="display: ${station.lpgYn === 'Y' ? 'inline-block' : 'none'}; width: 50px; height: 25px; margin-right: 10px;">
-                                        <img id="maint_yn" src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_03_off.gif" alt="경정비" 
-                                            style="display: ${station.maintYn === 'Y' ? 'inline-block' : 'none'}; width: 50px; height: 25px; margin-right: 10px;">
-                                        <img id="cvs_yn" src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_04_off.gif" alt="편의점" 
-                                            style="display: ${station.cvsYn === 'Y' ? 'inline-block' : 'none'}; width: 50px; height: 25px; margin-right: 10px;">
-                                    </div>
-                                    <div style="font-size: 12px; color: #555; margin-bottom: 10px;">
-                                        ${station.kpetroYn === "Y" ? "품질인증 주유소 ✅" : "품질인증 주유소 ❌"}
-                                    </div>
-                                    <button 
-                                        style="margin-top: 5px; padding: 8px 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 14px; font-weight: bold;"
-                                        onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})"
-                                    >
-                                        경로찾기
+                            <div class="info-window">
+                                <div class="info-window-title">
+                                    ${station.OS_NM || "이름 없음"} <span>(${station.pollDivCd || "이름 없음"})</span>
+                                </div>
+                                <div class="info-window-button-container">
+                                    <button onclick="registerFavoriteStation('${station.uniId}')" class="info-window-button">
+                                        관심 주유소 등록
                                     </button>
                                 </div>
-                            `;
+                                <div class="info-window-divider"></div>
+                                <div class="info-window-details">
+                                    <div>
+                                        <span>📞</span> ${station.tel || "전화번호 없음"}
+                                    </div>
+                                    <div>
+                                        <span>📍</span> ${station.newAdr || station.vanAdr || "주소 없음"}
+                                    </div>
+                                </div>
+                                <div class="info-window-table-container">
+                                    <table class="info-window-table">
+                                        <thead>
+                                            <tr>
+                                                <th>유종</th>
+                                                <th>가격</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>휘발유</td>
+                                                <td class="info-window-price">${station.hoilPrice ? station.hoilPrice + '원' : '정보 없음'}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>경유</td>
+                                                <td class="info-window-price">${station.doilPrice ? station.doilPrice + '원' : '정보 없음'}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>고급 휘발유</td>
+                                                <td class="info-window-price">${station.goilPrice ? station.goilPrice + '원' : '정보 없음'}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>실내 등유</td>
+                                                <td class="info-window-price">${station.ioilPrice ? station.ioilPrice + '원' : '정보 없음'}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="info-window-icons">
+                                    <img src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_01_off.gif" alt="세차장" 
+                                        style="display: ${station.carWashYn === 'Y' ? 'inline-block' : 'none'};">
+                                    <img src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_02_01_off.gif" alt="충전소" 
+                                        style="display: ${station.lpgYn === 'Y' ? 'inline-block' : 'none'};">
+                                    <img src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_03_off.gif" alt="경정비" 
+                                        style="display: ${station.maintYn === 'Y' ? 'inline-block' : 'none'};">
+                                    <img src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_04_off.gif" alt="편의점" 
+                                        style="display: ${station.cvsYn === 'Y' ? 'inline-block' : 'none'};">
+                                </div>
+                                <div class="info-window-quality">
+                                    ${station.kpetroYn === "Y" ? "품질인증 주유소 ✅" : "품질인증 주유소 ❌"}
+                                </div>
+                                <button class="info-window-route-button"
+                                    onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})">
+                                    경로찾기
+                                </button>
+                            </div>
+                        `;
 
                             // 관심 주유소 등록 함수 (글로벌 스코프에 정의)
                             window.registerFavoriteStation = function (uniId) {
