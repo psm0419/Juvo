@@ -3,104 +3,182 @@
 
 <mapper namespace="juyuso_mapper">
 
-    <!-- 데이터 삽입 (UNI_ID가 존재하면 삽입 안 함) -->
-    <insert id="insertJuyuso" parameterType="Juyuso">
-        INSERT INTO juyuso (
-            UNI_ID, POLL_DIV_CD, OS_NM, VAN_ADR, NEW_ADR, TEL, SIGUNCD,
-            LPG_YN, MAINT_YN, CAR_WASH_YN, KPETRO_YN, CVS_YN, 
-            GIS_X_COOR, GIS_Y_COOR, H_OIL_PRICE, G_OIL_PRICE, D_OIL_PRICE, I_OIL_PRICE, 
-            OPERATATION
-        )
-        SELECT 
-            #{uniId}, #{pollDivCd}, #{osNm}, #{vanAdr}, #{newAdr}, #{tel}, #{siguncd},
-            #{lpgYn}, #{maintYn}, #{carWashYn}, #{kpetroYn}, #{cvsYn}, 
-            #{gisXCoor}, #{gisYCoor}, #{hOilPrice}, #{gOilPrice}, #{dOilPrice}, #{iOilPrice}, 
-            #{operatation}
-        FROM DUAL
-        WHERE NOT EXISTS (
-            SELECT 1 FROM juyuso WHERE UNI_ID = #{uniId}
-        )
-    </insert>
+	<!-- 데이터 삽입 (UNI_ID가 존재하면 삽입 안 함) -->
+	<insert id="insertJuyuso" parameterType="Juyuso">
+		INSERT INTO juyuso (
+		UNI_ID, POLL_DIV_CD, OS_NM, VAN_ADR, NEW_ADR, TEL, SIGUNCD,
+		LPG_YN,
+		MAINT_YN, CAR_WASH_YN, KPETRO_YN, CVS_YN,
+		GIS_X_COOR, GIS_Y_COOR,
+		H_OIL_PRICE, G_OIL_PRICE, D_OIL_PRICE, I_OIL_PRICE,
+		OPERATATION
+		)
+		SELECT
+		#{uniId}, #{pollDivCd}, #{osNm}, #{vanAdr}, #{newAdr}, #{tel},
+		#{siguncd},
+		#{lpgYn}, #{maintYn}, #{carWashYn}, #{kpetroYn}, #{cvsYn},
+		#{gisXCoor}, #{gisYCoor}, #{hOilPrice}, #{gOilPrice}, #{dOilPrice},
+		#{iOilPrice},
+		#{operatation}
+		FROM DUAL
+		WHERE NOT EXISTS (
+		SELECT 1 FROM
+		juyuso WHERE UNI_ID = #{uniId}
+		)
+	</insert>
 
-    <!-- UNI_ID로 데이터 조회 -->
-    <select id="getJuyusoById" parameterType="string" resultType="Juyuso">
-        SELECT * FROM juyuso WHERE UNI_ID = #{uniId}
-    </select>
+	<!-- UNI_ID로 데이터 조회 -->
+	<select id="getJuyusoById" parameterType="string"
+		resultType="Juyuso">
+		SELECT * FROM juyuso WHERE UNI_ID = #{uniId}
+	</select>
 
-    <!-- 모든 데이터 조회 -->
-    <select id="getAllJuyuso" resultType="Juyuso">
-        SELECT * FROM juyuso
-    </select>
+	<!-- 모든 데이터 조회 -->
+	<select id="getAllJuyuso" resultType="Juyuso">
+		SELECT * FROM juyuso
+	</select>
 
-    <!-- 주유소 정보 업데이트 -->
-    <update id="updateJuyuso" parameterType="Juyuso">
-        UPDATE juyuso 
-        SET POLL_DIV_CD = #{pollDivCd}, OS_NM = #{osNm}, VAN_ADR = #{vanAdr},
-            NEW_ADR = #{newAdr}, TEL = #{tel}, SIGUNCD = #{siguncd}, 
-            LPG_YN = #{lpgYn}, MAINT_YN = #{maintYn}, CAR_WASH_YN = #{carWashYn},
-            KPETRO_YN = #{kpetroYn}, CVS_YN = #{cvsYn}, 
-            GIS_X_COOR = #{gisXCoor}, GIS_Y_COOR = #{gisYCoor}, 
-            H_OIL_PRICE = #{hOilPrice}, G_OIL_PRICE = #{gOilPrice}, 
-            D_OIL_PRICE = #{dOilPrice}, I_OIL_PRICE = #{iOilPrice}, 
-            OPERATATION = #{operatation}
+	<!-- 주유소 정보 업데이트 -->
+	<update id="updateJuyuso" parameterType="Juyuso">
+		UPDATE juyuso
+		SET
+		POLL_DIV_CD = #{pollDivCd}, OS_NM = #{osNm}, VAN_ADR = #{vanAdr},
+		NEW_ADR = #{newAdr}, TEL = #{tel}, SIGUNCD = #{siguncd},
+		LPG_YN =
+		#{lpgYn}, MAINT_YN = #{maintYn}, CAR_WASH_YN = #{carWashYn},
+		KPETRO_YN
+		= #{kpetroYn}, CVS_YN = #{cvsYn},
+		GIS_X_COOR = #{gisXCoor}, GIS_Y_COOR
+		= #{gisYCoor},
+		H_OIL_PRICE = #{hOilPrice}, G_OIL_PRICE = #{gOilPrice},
+		D_OIL_PRICE = #{dOilPrice}, I_OIL_PRICE = #{iOilPrice},
+		OPERATATION =
+		#{operatation}
+		WHERE UNI_ID = #{uniId}
+	</update>
+
+	<!-- 주유소 삭제 -->
+	<delete id="deleteJuyuso" parameterType="string">
+		DELETE FROM juyuso WHERE
+		UNI_ID = #{uniId}
+	</delete>
+
+	<!-- 중복 확인 -->
+	<select id="existsById" resultType="int">
+		SELECT COUNT(*) FROM juyuso
+		WHERE UNI_ID = #{uniId}
+	</select>
+
+	<!-- 상세 정보 업데이트 -->
+	<update id="updateJuyusoDetail" parameterType="Juyuso">
+		UPDATE juyuso
+		SET
+		POLL_DIV_CD = #{pollDivCd},
+		LPG_YN = #{lpgYn},
+		MAINT_YN = #{maintYn},
+		CAR_WASH_YN = #{carWashYn},
+		KPETRO_YN = #{kpetroYn},
+		CVS_YN = #{cvsYn},
+		NEW_ADR = #{newAdr},
+		VAN_ADR = #{vanAdr},
+		TEL = #{tel},
+		SIGUNCD =
+		#{siguncd},
+		GIS_X_COOR = #{gisXCoor},
+		GIS_Y_COOR = #{gisYCoor},
+		H_OIL_PRICE = #{hOilPrice},
+		G_OIL_PRICE = #{gOilPrice},
+		D_OIL_PRICE =
+		#{dOilPrice},
+		I_OIL_PRICE = #{iOilPrice}
+		WHERE UNI_ID = #{uniId}
+	</update>
+
+	<!-- 상세 정보 존재 여부 확인 (필요 시 사용, 현재 코드에서는 사용 안 함) -->
+	<select id="existsDetailById" resultType="int">
+		SELECT COUNT(*)
+		FROM
+		juyuso
+		WHERE UNI_ID = #{uniId}
+		AND (LPG_YN IS NOT NULL
+		OR MAINT_YN IS NOT
+		NULL
+		OR CAR_WASH_YN IS NOT NULL
+		OR KPETRO_YN IS NOT NULL
+		OR CVS_YN IS NOT
+		NULL)
+	</select>
+
+	<!-- 관심 주유소 삽입 -->
+	<insert id="insertFavoriteStation" parameterType="LikeJuyuso">
+		INSERT INTO
+		like_juyuso (user_id, UNI_ID)
+		VALUES (#{userId}, #{uniId})
+	</insert>
+
+	<!-- 중복 체크 -->
+	<select id="checkFavoriteStationExists" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM like_juyuso
+		WHERE user_id = #{userId}
+		AND UNI_ID = #{uniId}
+	</select>
+
+	<!-- 리뷰 조회 -->
+	<select id="getReviewsByStationId" parameterType="String"
+		resultType="map">
+		SELECT
+		USER_ID AS user_id,
+		STARCNT AS starCnt,
+		CONTENT AS
+		content,
+		TO_CHAR(CREATE_AT, 'YY/MM/DD') AS create_at
+		FROM juyuso_review
+		WHERE UNI_ID = #{uniId}
+	</select>
+
+	<!-- 키워드 조회 (userId 기준) -->
+	<select id="getKeywordsByStationAndUser" parameterType="map"
+		resultType="int">
+		SELECT KEYWORD AS keyword
+		FROM user_keyword
+		WHERE UNI_ID =
+		#{uniId}
+		AND USER_ID = #{userId}
+	</select>
+
+	<!-- 키워드 조회 (모든 키워드) -->
+	<select id="getAllKeywordsStatsByStation" parameterType="string" resultType="map">
+        SELECT KEYWORD AS KEYWORD_ID, COUNT(*) AS COUNT
+        FROM user_keyword
         WHERE UNI_ID = #{uniId}
-    </update>
-
-    <!-- 주유소 삭제 -->
-    <delete id="deleteJuyuso" parameterType="string">
-        DELETE FROM juyuso WHERE UNI_ID = #{uniId}
-    </delete>
-    
-    <!-- 중복 확인 -->
-    <select id="existsById" resultType="int">
-        SELECT COUNT(*) FROM juyuso WHERE UNI_ID = #{uniId}
+        GROUP BY KEYWORD
     </select>
-    
-    <!-- 상세 정보 업데이트 -->
-    <update id="updateJuyusoDetail" parameterType="Juyuso">
-        UPDATE juyuso 
-        SET POLL_DIV_CD = #{pollDivCd},
-            LPG_YN = #{lpgYn}, 
-            MAINT_YN = #{maintYn}, 
-            CAR_WASH_YN = #{carWashYn}, 
-            KPETRO_YN = #{kpetroYn}, 
-            CVS_YN = #{cvsYn}, 
-            NEW_ADR = #{newAdr}, 
-            VAN_ADR = #{vanAdr},
-            TEL = #{tel},
-            SIGUNCD = #{siguncd},
-            GIS_X_COOR = #{gisXCoor}, 
-            GIS_Y_COOR = #{gisYCoor},
-            H_OIL_PRICE = #{hOilPrice}, 
-            G_OIL_PRICE = #{gOilPrice}, 
-            D_OIL_PRICE = #{dOilPrice}, 
-            I_OIL_PRICE = #{iOilPrice}
-        WHERE UNI_ID = #{uniId}
-    </update>
 
-    <!-- 상세 정보 존재 여부 확인 (필요 시 사용, 현재 코드에서는 사용 안 함) -->
-    <select id="existsDetailById" resultType="int">
-        SELECT COUNT(*) 
-        FROM juyuso 
-        WHERE UNI_ID = #{uniId}
-        AND (LPG_YN IS NOT NULL 
-             OR MAINT_YN IS NOT NULL 
-             OR CAR_WASH_YN IS NOT NULL 
-             OR KPETRO_YN IS NOT NULL 
-             OR CVS_YN IS NOT NULL)
-    </select>
-    
-    <!-- 관심 주유소 삽입 -->
-<insert id="insertFavoriteStation" parameterType="LikeJuyuso">
-    INSERT INTO like_juyuso (user_id, UNI_ID)
-    VALUES (#{userId}, #{uniId})
-</insert>
+	<insert id="insertReview" parameterType="map">
+		INSERT INTO juyuso_review (
+		REVIEW_ID, UNI_ID, USER_ID, STARCNT, CONTENT, CREATE_AT
+		)
+		VALUES (
+		JUYUSO_REVIEW_SEQ.NEXTVAL, #{uniId}, #{userId}, #{starCnt}, #{content}, SYSDATE
+		)
+	</insert>
 
-<!-- 중복 체크 -->
-<select id="checkFavoriteStationExists" parameterType="map" resultType="int">
-        SELECT COUNT(*)
-        FROM like_juyuso
-        WHERE user_id = #{userId}
-        AND UNI_ID = #{uniId}
-    </select>
+	<insert id="insertKeyword" parameterType="map">
+		INSERT INTO user_keyword (USER_ID, UNI_ID, KEYWORD)
+		VALUES (#{userId}, #{uniId}, #{keyword})
+	</insert>
+
+	<delete id="deleteReview" parameterType="map">
+		DELETE FROM juyuso_review
+		WHERE UNI_ID = #{uniId}
+		AND USER_ID = #{userId}
+		AND CONTENT = #{content}
+	</delete>
+	<delete id="deleteKeywordsByUserAndStation" parameterType="map">
+		DELETE FROM user_keyword
+		WHERE USER_ID = #{userId}
+		AND UNI_ID = #{uniId}
+	</delete>
 </mapper>

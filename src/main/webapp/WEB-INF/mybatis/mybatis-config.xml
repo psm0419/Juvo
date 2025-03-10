@@ -11,5 +11,7 @@
 		<typeAlias type="com.app.dto.user.User" alias="User" />
 		<typeAlias type="com.app.dto.juyuso.Juyuso" alias="Juyuso" />
 		<typeAlias type="com.app.dto.juyuso.LikeJuyuso" alias="LikeJuyuso" />
+		<typeAlias type="com.app.dto.juyuso.UserKeyword" alias="UserKeyword" />
+		<typeAlias type="com.app.dto.juyuso.Keyword" alias="Keyword" />
 	</typeAliases>
 </configuration>

@@ -75,4 +75,46 @@ public class JuyusoDAOImpl implements JuyusoDAO {
         Integer count = sqlSessionTemplate.selectOne(NAMESPACE + "checkFavoriteStationExists", params);
         return count != null ? count : 0; // null 체크 후 기본값 0 반환
     }
+   
+
+    @Override
+    public List<Map<String, Object>> getReviewsByStationId(String uniId) {
+        List<Map<String, Object>> reviews = sqlSessionTemplate.selectList(NAMESPACE + "getReviewsByStationId", uniId);
+        System.out.println("Raw reviews from DB for uniId " + uniId + ": " + reviews);
+        return reviews;
+    }
+
+    @Override
+    public List<Integer> getKeywordsByStationAndUser(String uniId, String userId) {
+        Map<String, String> params = new HashMap<>();
+        params.put("uniId", uniId);
+        params.put("userId", userId);
+        List<Integer> keywords = sqlSessionTemplate.selectList(NAMESPACE + "getKeywordsByStationAndUser", params);
+        System.out.println("Raw keywords from DB for uniId " + uniId + ", userId " + userId + ": " + keywords);
+        return keywords;
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllKeywordsStatsByStation(String uniId) {
+        return sqlSessionTemplate.selectList(NAMESPACE + "getAllKeywordsStatsByStation", uniId);
+    }
+    @Override
+    public int insertReview(Map<String, Object> review) {
+        return sqlSessionTemplate.insert(NAMESPACE + "insertReview", review);
+    }
+
+    @Override
+    public int insertKeyword(Map<String, Object> param) {
+        return sqlSessionTemplate.insert(NAMESPACE + "insertKeyword", param);
+    }
+    
+    @Override
+    public int deleteReview(Map<String, Object> param) {
+        return sqlSessionTemplate.delete(NAMESPACE + "deleteReview", param);
+    }
+
+    @Override
+    public int deleteKeywordsByUserAndStation(Map<String, Object> param) {
+        return sqlSessionTemplate.delete(NAMESPACE + "deleteKeywordsByUserAndStation", param);
+    }
 }

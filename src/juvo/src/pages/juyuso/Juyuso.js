@@ -7,35 +7,41 @@ const Juyuso = () => {
     const [lat, setLat] = useState(36.807317819607775);
     const [lng, setLng] = useState(127.14715449120254);
 
-    const fetchFuelStations = (lat, lng) => {
+    const fetchFuelStations = async (lat, lng) => {
         setLoading(true);
-        fetch(`/getJuyuso?lat=${lat}&lng=${lng}`)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data) => {
-                console.log("Fetched stations:", data);
-                const stationList = data.RESULT?.OIL || [];
-                setStations(stationList);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error("Error fetching fuel stations:", error);
-                setStations([]);
-                setLoading(false);
-            });
+        try {
+            const response = await fetch(`/getJuyuso?lat=${lat}&lng=${lng}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log("Fetched stations:", data);
+            const stationList = data.RESULT?.OIL || [];
+            setStations(stationList);
+        } catch (error) {
+            console.error("Error fetching fuel stations:", error);
+            setStations([]);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleFetchStations = () => {
-        fetchFuelStations(lat, lng);
+        fetchFuelStations(lat, lng); // 조회 버튼 클릭 시에만 호출
     };
 
     return (
         <div>
-            <Map fetchFuelStations={fetchFuelStations} stations={stations} loading={loading} />            
+            <Map 
+                fetchFuelStations={fetchFuelStations} 
+                stations={stations} 
+                loading={loading} 
+                lat={lat} 
+                lng={lng} 
+                setLat={setLat} 
+                setLng={setLng} // 부모 상태 업데이트용
+            />
+            <button onClick={handleFetchStations}>조회</button> {/* 플라이박스 버튼 */}
         </div>
     );
 };
