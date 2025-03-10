@@ -4,8 +4,8 @@ import '../../assets/css/map/FuelStationDetail.css';
 const FuelStationDetail = ({ station, onClose }) => {
     const [reviews, setReviews] = useState([]);
     const [averageRating, setAverageRating] = useState(0);
-    const [keywords, setKeywords] = useState([]);
     const [keywordCounts, setKeywordCounts] = useState({});
+    const [userKeywords, setUserKeywords] = useState([]);
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [showKeywordForm, setShowKeywordForm] = useState(false);
     const [reviewContent, setReviewContent] = useState('');
@@ -58,10 +58,8 @@ const FuelStationDetail = ({ station, onClose }) => {
 
     const fetchKeywords = async () => {
         try {
+            const headers = { 'Content-Type': 'application/json' };
             const token = localStorage.getItem('accessToken');
-            const headers = {
-                'Content-Type': 'application/json',
-            };
             if (token) headers['Authorization'] = `Bearer ${token}`;
 
             const response = await fetch(`/api/keywords?uniId=${station.uniId}`, {
@@ -71,17 +69,34 @@ const FuelStationDetail = ({ station, onClose }) => {
             if (!response.ok) throw new Error("Failed to fetch keywords");
             const data = await response.json();
             console.log("Keywords data:", data);
-            if (isLoggedIn) {
-                setKeywords(data.keywords || []);
-                setKeywordCounts({});
-            } else {
-                setKeywords([]);
-                setKeywordCounts(data.keywordCounts || {});
-            }
+            setKeywordCounts(data.keywordCounts || {});
         } catch (error) {
             console.error('Error fetching keywords:', error);
-            setKeywords([]);
             setKeywordCounts({});
+        }
+    };
+
+    const fetchUserKeywords = async () => {
+        try {
+            const token = localStorage.getItem('accessToken');
+            if (!token) return;
+
+            const response = await fetch(`/api/user-keywords?uniId=${station.uniId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            if (!response.ok) throw new Error("Failed to fetch user keywords");
+            const data = await response.json();
+            console.log("User keywords:", data);
+            setUserKeywords(data.keywords || []);
+            setSelectedKeywords(data.keywords || []);
+        } catch (error) {
+            console.error('Error fetching user keywords:', error);
+            setUserKeywords([]);
+            setSelectedKeywords([]);
         }
     };
 
@@ -160,7 +175,8 @@ const FuelStationDetail = ({ station, onClose }) => {
                 alert('키워드가 저장되었습니다.');
                 setSelectedKeywords([]);
                 setShowKeywordForm(false);
-                fetchKeywords();
+                fetchKeywords(); // 전체 키워드 갱신
+                fetchUserKeywords(); // 사용자 키워드 갱신
             } else {
                 alert(data.message || '키워드 저장에 실패했습니다.');
             }
@@ -274,28 +290,16 @@ const FuelStationDetail = ({ station, onClose }) => {
                 <div className="detail-section">
                     <h3 className="section-title">키워드</h3>
                     <div className="service-icons">
-                        {isLoggedIn ? (
-                            keywords.length > 0 ? (
-                                keywords.map((keywordId) => (
-                                    keywordOptions[keywordId] ? (
-                                        <span key={keywordId} className="service-item">{keywordOptions[keywordId]}</span>
-                                    ) : null
-                                ))
-                            ) : (
-                                <span className="service-item">키워드 없음</span>
-                            )
+                        {Object.keys(keywordCounts).length > 0 ? (
+                            Object.entries(keywordCounts).map(([keywordId, count]) => (
+                                keywordOptions[keywordId] ? (
+                                    <span key={keywordId} className="service-item">
+                                        {keywordOptions[keywordId]} {count}
+                                    </span>
+                                ) : null
+                            ))
                         ) : (
-                            Object.keys(keywordCounts).length > 0 ? (
-                                Object.entries(keywordCounts).map(([keywordId, count]) => (
-                                    keywordOptions[keywordId] ? (
-                                        <span key={keywordId} className="service-item">
-                                            {keywordOptions[keywordId]} {count}
-                                        </span>
-                                    ) : null
-                                ))
-                            ) : (
-                                <span className="service-item">키워드 없음</span>
-                            )
+                            <span className="service-item">키워드 없음</span>
                         )}
                     </div>
                     <p className="quality-cert">
@@ -345,7 +349,7 @@ const FuelStationDetail = ({ station, onClose }) => {
                                 min="0"
                                 max="5"
                                 step="0.1"
-                            />
+                            /><br></br>
                             <button onClick={editingReview ? handleUpdateReview : handleWriteReview}>
                                 {editingReview ? "수정 완료" : "저장"}
                             </button>
@@ -376,7 +380,13 @@ const FuelStationDetail = ({ station, onClose }) => {
                         <button onClick={() => setShowReviewForm(!showReviewForm)} className="favorite-btn">
                             {showReviewForm ? "리뷰 작성 취소" : "리뷰 작성"}
                         </button>
-                        <button onClick={() => setShowKeywordForm(!showKeywordForm)} className="route-btn">
+                        <button
+                            onClick={() => {
+                                setShowKeywordForm(!showKeywordForm);
+                                if (!showKeywordForm) fetchUserKeywords();
+                            }}
+                            className="route-btn"
+                        >
                             {showKeywordForm ? "키워드 선택 취소" : "키워드 선택"}
                         </button>
                     </div>

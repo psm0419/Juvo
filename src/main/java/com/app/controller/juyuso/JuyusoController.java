@@ -141,9 +141,8 @@ public class JuyusoController {
 		return success ? ResponseEntity.ok(Map.of("status", "success", "message", "리뷰가 저장되었습니다."))
 				: ResponseEntity.status(400).body(Map.of("status", "error", "message", "리뷰 저장에 실패했습니다."));
 	}
-
-	// 키워드 저장 (추가)
-    @PostMapping("/api/keywords")
+	//키워드 저장
+	@PostMapping("/api/keywords")
     @ResponseBody
     public ResponseEntity<Map<String, String>> saveKeywords(
             HttpServletRequest request,
@@ -175,26 +174,8 @@ public class JuyusoController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getKeywords(HttpServletRequest request, @RequestParam String uniId) {
         Map<String, Object> response = new HashMap<>();
-        String token = JwtProvider.extractToken(request);
-
-        if (token == null || !JwtProvider.isVaildToken(token)) {
-            // 로그인 안 한 경우: 키워드별 개수 반환
-            Map<Integer, Integer> keywordCounts = juyusoService.getAllKeywordsCountByStation(uniId);
-            response.put("keywordCounts", keywordCounts);
-            return ResponseEntity.ok(response);
-        }
-
-        String userId = JwtProvider.getUserIdFromToken(token);
-        if (userId == null || userId.trim().isEmpty()) {
-            // 토큰 유효성 문제: 키워드별 개수 반환
-            Map<Integer, Integer> keywordCounts = juyusoService.getAllKeywordsCountByStation(uniId);
-            response.put("keywordCounts", keywordCounts);
-            return ResponseEntity.ok(response);
-        }
-
-        // 로그인한 경우: 사용자별 키워드 반환
-        List<Integer> userKeywords = juyusoService.getKeywordsByStationAndUser(uniId, userId);
-        response.put("keywords", userKeywords);
+        Map<Integer, Integer> keywordCounts = juyusoService.getAllKeywordsCountByStation(uniId);
+        response.put("keywordCounts", keywordCounts);
         return ResponseEntity.ok(response);
     }
 
@@ -217,6 +198,26 @@ public class JuyusoController {
 				: ResponseEntity.status(400).body(Map.of("status", "error", "message", "리뷰 삭제에 실패했습니다."));
 	}
 
+	@GetMapping("/api/user-keywords")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> getUserKeywords(HttpServletRequest request, @RequestParam String uniId) {
+	    Map<String, Object> response = new HashMap<>();
+	    String token = JwtProvider.extractToken(request);
+
+	    if (token == null || !JwtProvider.isVaildToken(token)) {
+	        return ResponseEntity.status(401).body(Map.of("status", "error", "message", "유효하지 않은 토큰입니다."));
+	    }
+
+	    String userId = JwtProvider.getUserIdFromToken(token);
+	    if (userId == null || userId.trim().isEmpty()) {
+	        return ResponseEntity.status(401).body(Map.of("status", "error", "message", "사용자 ID를 가져올 수 없습니다."));
+	    }
+
+	    List<Integer> userKeywords = juyusoService.getKeywordsByStationAndUser(uniId, userId);
+	    response.put("keywords", userKeywords);
+	    return ResponseEntity.ok(response);
+	}
+	
 	// 리뷰 조회
 	@GetMapping("/api/reviews")
 	@ResponseBody
