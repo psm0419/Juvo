@@ -1,10 +1,13 @@
 package com.app.service.juyuso.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.app.controller.juyuso.GeoTrans;
 import com.app.dao.juyuso.JuyusoDAO;
@@ -315,5 +318,99 @@ public class JuyusoServiceImpl implements JuyusoService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<String, Object> getReviewsByStationId(String uniId) {
+        Map<String, Object> result = new HashMap<>();
+        List<Map<String, Object>> reviews = juyusoDAO.getReviewsByStationId(uniId);
+        System.out.println("DAO returned reviews for uniId " + uniId + ": " + reviews);
+
+        double avgRating = reviews.stream()
+            .mapToDouble(r -> {
+                Object starCnt = r.get("STARCNT");
+                return starCnt != null ? Double.parseDouble(starCnt.toString()) : 0.0;
+            })
+            .average()
+            .orElse(0.0);
+
+        result.put("reviews", reviews);
+        result.put("averageRating", avgRating);
+        return result;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> getKeywordsByStationAndUser(String uniId, String userId) {
+        System.out.println("Fetching keywords for uniId " + uniId + ", userId " + userId);
+        List<Integer> keywords = juyusoDAO.getKeywordsByStationAndUser(uniId, userId);
+        System.out.println("DAO returned keywords: " + keywords);
+        return keywords;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<Integer, Integer> getAllKeywordsCountByStation(String uniId) {
+        List<Map<String, Object>> keywordStats = juyusoDAO.getAllKeywordsStatsByStation(uniId);
+        System.out.println("Keyword stats for uniId " + uniId + ": " + keywordStats); // 디버깅 로그
+        Map<Integer, Integer> keywordCounts = new HashMap<>();
+        for (Map<String, Object> stat : keywordStats) {
+            Number keywordIdNumber = (Number) stat.get("KEYWORD_ID");
+            Number countNumber = (Number) stat.get("COUNT");
+            if (keywordIdNumber != null && countNumber != null) {
+                Integer keywordId = keywordIdNumber.intValue();
+                Integer count = countNumber.intValue();
+                keywordCounts.put(keywordId, count);
+            } else {
+                System.out.println("Null value detected in stats: " + stat);
+            }
+        }
+        return keywordCounts;
+    }
+    
+    @Transactional
+    @Override
+    public boolean saveReview(String userId, String uniId, String content, double starCnt) {
+        System.out.println("Saving review - userId: " + userId + ", uniId: " + uniId + ", starCnt: " + starCnt + ", content: " + content);
+        Map<String, Object> review = new HashMap<>();
+        review.put("uniId", uniId);
+        review.put("userId", userId);
+        review.put("starCnt", starCnt);
+        review.put("content", content);
+        int result = juyusoDAO.insertReview(review);
+        System.out.println("Inserted review for uniId " + uniId + ": " + result);
+        return result > 0;
+    }
+
+    @Override
+    @Transactional
+    public boolean saveKeywords(String userId, String uniId, List<Integer> keywords) {
+        // 기존 키워드 삭제 (중복 방지)
+        Map<String, Object> param = new HashMap<>();
+        param.put("userId", userId);
+        param.put("uniId", uniId);
+        juyusoDAO.deleteKeywordsByUserAndStation(param);
+
+        // 새 키워드 삽입
+        boolean success = true;
+        for (Integer keyword : keywords) {
+            param.put("keyword", keyword);
+            int result = juyusoDAO.insertKeyword(param);
+            if (result <= 0) success = false;
+        }
+        return success;
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteReview(String userId, String uniId, String content) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("userId", userId);
+        param.put("uniId", uniId);
+        param.put("content", content);
+        int result = juyusoDAO.deleteReview(param);
+        System.out.println("Deleted review for userId: " + userId + ", uniId: " + uniId + ", result: " + result);
+        return result > 0;
     }
 }

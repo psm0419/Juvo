@@ -76,6 +76,7 @@ CREATE TABLE CHARGING_STATION (
 );
 
 -- 사용자 관심 키워드 테이블
+--1:친절 2:진출입 편함 3: 깔끔한 시설 4: 정량 주유 5:믿음가는 품질 6:사은품 증정 7: 주유시 세차 할인
 CREATE TABLE user_keyword (
     UNI_ID VARCHAR2(32) NOT NULL,
     user_id VARCHAR2(32) NOT NULL,

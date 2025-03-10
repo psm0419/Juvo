@@ -15,8 +15,8 @@ public interface UserService {
 	public int changePassword(User findUser);
 	public User findUserById(String id);
 	public int changeNickname(User findUser);
-	public User findIdByEmail(User requestUser);
-	public User resetPasswordByEmail(User requestUser);
+	public User findIdByRequest(User requestUser);
+	public User resetPasswordRequest(User requestUser);
 	
 	
 }

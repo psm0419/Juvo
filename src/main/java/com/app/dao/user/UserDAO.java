@@ -23,8 +23,8 @@ public interface UserDAO {
 
 	public int changeNickname(User user);
 
-	public User findIdByEmail(User requestUser);
+	public User findIdRequest(User requestUser);
 	
-	public User resetPasswordByEmail(User requestUser);
+	public User resetPasswordRequest(User requestUser);
 	
 }

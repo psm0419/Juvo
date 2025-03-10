@@ -26,24 +26,52 @@ function FindId() {
         EMAIL: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
     };
 
-    useEffect(() => {
-        setValidTel(REGEX.TEL.test(tel));
-        if (tel.length === 0) {
-            setTelMsg("");
-        } else if (REGEX.TEL.test(tel)) {
-            setTelMsg("유효한 전화번호 형식입니다.");
-        } else {
-            setTelMsg("전화번호 형식이 올바르지 않습니다. (예: 01012345678)");
-        }
+    const handleTelChange = (e) => {
+        setTel(e.target.value);
+        setValidTel(null);
+        setTelMsg("");
+    };
 
-        setValidEmail(REGEX.EMAIL.test(email));
-        if (email.length === 0) {
-            setEmailMsg("");
-        } else if (REGEX.EMAIL.test(email)) {
-            setEmailMsg("유효한 이메일 형식입니다.");
-        } else {
-            setEmailMsg("이메일 형식이 올바르지 않습니다.");
-        }
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+        setValidEmail(null);
+        setEmailMsg("");
+    };
+
+    useEffect(() => {
+        const validateTel = () => {
+            if (tel.length === 0) {
+                setTelMsg("");
+                setValidTel(null);
+            } else if (REGEX.TEL.test(tel)) {
+                setTelMsg("유효한 전화번호 형식입니다.");
+                setValidTel(true);
+            } else {
+                setTelMsg("전화번호 형식이 올바르지 않습니다. (예: 01012345678)");
+                setValidTel(false);
+            }
+        };
+
+        const validateEmail = () => {
+            if (email.length === 0) {
+                setEmailMsg("");
+                setValidEmail(null);
+            } else if (REGEX.EMAIL.test(email)) {
+                setEmailMsg("유효한 이메일 형식입니다.");
+                setValidEmail(true);
+            } else {
+                setEmailMsg("이메일 형식이 올바르지 않습니다.");
+                setValidEmail(false);
+            }
+        };
+
+        // 입력값이 변경될 때마다 유효성 검사 실행
+        const timeoutId = setTimeout(() => {
+            validateTel();
+            validateEmail();
+        }, 500); // 디바운스 처리
+
+        return () => clearTimeout(timeoutId);
     }, [tel, email]);
 
     const focusInvalidField = () => {
@@ -93,58 +121,62 @@ function FindId() {
 
     return (
         <div className="fi-page">
-        <div className="fi-container">
-            <h1 className="fi-title">아이디 찾기</h1>
+            <div className="fi-container">
+                <h1 className="fi-title">아이디 찾기</h1>
 
-            <div className="fi-form-group">
-                <input
-                    type="text"
-                    ref={ref.tel}
-                    value={tel}
-                    disabled={foundId}
-                    className={`fi-input ${tel.length > 0 ? (validTel ? 'fi-valid' : 'fi-invalid') : ''}`}
-                    placeholder="전화번호 (예: 01012345678)"
-                    onChange={(e) => setTel(e.target.value)}
-                />
-                <span
-                    className={`fi-message ${tel.length > 0 ? (validTel ? 'fi-valid' : 'fi-invalid') : ''}`}
-                >
-                    {telMsg}
-                </span>
-            </div>
-
-            <div className="fi-form-group">
-                <input
-                    type="text"
-                    ref={ref.email}
-                    value={email}
-                    disabled={foundId}
-                    className={`fi-input ${email.length > 0 ? (validEmail ? 'fi-valid' : 'fi-invalid') : ''}`}
-                    placeholder="이메일"
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <span
-                    className={`fi-message ${email.length > 0 ? (validEmail ? 'fi-valid' : 'fi-invalid') : ''}`}
-                >
-                    {emailMsg}
-                </span>
-            </div>
-
-            <div className="fi-form-group">
-                <button
-                    className="fi-submit-btn"
-                    onClick={handleFindId}
-                    disabled={!isValidSuccess()}
-                >
-                    아이디 찾기
-                </button>
-            </div>
-
-            {foundId && (
                 <div className="fi-form-group">
-                    <p className="fi-message fi-valid">
-                        회원님의 아이디: <strong>{foundId}</strong>
-                    </p>
+                    <input
+                        type="text"
+                        ref={ref.tel}
+                        value={tel}
+                        disabled={foundId}
+                        className={`fi-input ${tel.length > 0 ? (validTel ? 'fi-valid' : 'fi-invalid') : ''}`}
+                        placeholder="전화번호 (예: 01012345678)"
+                        onChange={handleTelChange}
+                    />
+                    <span
+                        className={`fi-message ${tel.length > 0 ? (validTel ? 'fi-valid' : 'fi-invalid') : ''}`}
+                    >
+                        {telMsg}
+                    </span>
+                </div>
+
+                <div className="fi-form-group">
+                    <input
+                        type="text"
+                        ref={ref.email}
+                        value={email}
+                        disabled={foundId}
+                        className={`fi-input ${email.length > 0 ? (validEmail ? 'fi-valid' : 'fi-invalid') : ''}`}
+                        placeholder="이메일"
+                        onChange={handleEmailChange}
+                    />
+                    <span
+                        className={`fi-message ${email.length > 0 ? (validEmail ? 'fi-valid' : 'fi-invalid') : ''}`}
+                    >
+                        {emailMsg}
+                    </span>
+                </div>
+
+                <div className="fi-form-group">
+                    <button
+                        className="fi-submit-btn"
+                        onClick={handleFindId}
+                        disabled={!isValidSuccess()}
+                    >
+                        아이디 찾기
+                    </button>
+                </div>
+
+                {foundId && (
+                    <div className="fi-form-group">
+                        <p className="fi-message fi-valid">
+                            회원님의 아이디: <strong>{foundId}</strong>
+                        </p>
+                    </div>
+                )}
+
+                <div className="fi-form-group">
                     <button
                         className="fi-login-btn"
                         onClick={() => navigate("/user/login")}
@@ -152,8 +184,7 @@ function FindId() {
                         로그인 페이지로 이동
                     </button>
                 </div>
-            )}
-        </div>
+            </div>
         </div>
     );
 }
