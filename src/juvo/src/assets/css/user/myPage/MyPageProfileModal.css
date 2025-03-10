@@ -1,0 +1,121 @@
+/* 모달 오버레이 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* 모달 */
+.modal {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 모달 제목 */
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 입력 필드 */
+.modal .mp-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: border-color 0.3s;
+}
+
+.modal .mp-input.mp-valid {
+    border-color: #4a90e2;
+}
+
+.modal .mp-input.mp-invalid {
+    border-color: #e74c3c;
+}
+
+.modal .mp-input:focus {
+    border-color: #4a90e2;
+    outline: none;
+}
+
+/* 유효성 메시지 */
+.modal .mp-message {
+    display: block;
+    font-size: 12px;
+    margin-top: 6px;
+    min-height: 18px;
+    color: #888;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.modal .mp-message.mp-valid {
+    color: #4a90e2;
+}
+
+.modal .mp-message.mp-invalid {
+    color: #e74c3c;
+}
+
+/* 모달 버튼 그룹 */
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+/* 모달 확인 버튼 */
+.modal-submit-btn {
+    flex: 1;
+    padding: 12px;
+    background-color: #4a90e2;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background-color 0.3s;
+}
+
+.modal-submit-btn:hover {
+    background-color: #357abd;
+}
+
+/* 모달 취소 버튼 */
+.modal-cancel-btn {
+    flex: 1;
+    padding: 12px;
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background-color 0.3s;
+}
+
+.modal-cancel-btn:hover {
+    background-color: #d0d0d0;
+}

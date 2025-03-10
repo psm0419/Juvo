@@ -38,4 +38,44 @@ public class UserDAOImpl implements UserDAO {
 		return checkDupNickname;
 	}
 
+	@Override
+	public User checkUserByToken(String id) {
+		User user = sqlSessionTemplate.selectOne("user_mapper.checkUserByToken",id);
+		return user;
+	}
+
+	@Override
+	public User findUserById(String id) {
+		User user = sqlSessionTemplate.selectOne("user_mapper.findUserById", id);
+		return user;
+	}
+
+	@Override
+	public int changePassword(User user) {
+		int result = sqlSessionTemplate.update("user_mapper.changePassword", user);
+		System.out.println();
+		return result;
+	}
+
+	@Override
+	public int changeNickname(User user) {
+		int result = sqlSessionTemplate.update("user_mapper.changeNickname", user);
+		System.out.println();
+		return result;
+	}
+
+	@Override
+	public User findIdByEmail(User requestUser) {
+		User user = sqlSessionTemplate.selectOne("user_mapper.findIdByEmail", requestUser);
+		return user;
+	}
+
+	@Override
+	public User resetPasswordByEmail(User requestUser) {
+		User user = sqlSessionTemplate.selectOne("user_mapper.resetPasswordByEmail", requestUser);
+		
+		return user;
+	}
+	
+
 }

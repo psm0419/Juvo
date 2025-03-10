@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import '../../assets/css/user/FindId.css';
+import '../../assets/css/user/FindIdRequest.css';
 
 function FindId() {
     let navigate = useNavigate();
@@ -68,9 +68,10 @@ function FindId() {
             focusInvalidField();
             return;
         }
+        console.log(email);
         axios
             .post(
-                "/user/find-id",
+                "/user/findId",
                 { tel, email },
                 { headers: { "Content-Type": "application/json" } }
             )

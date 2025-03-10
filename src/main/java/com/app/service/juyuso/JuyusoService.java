@@ -12,4 +12,5 @@ public interface JuyusoService {
     boolean fetchAndSaveJuyusoData(double lat, double lng);
     boolean updateJuyusoDetail(String uniId);
     String getJuyusoWithDetails(double lat, double lng);
+    boolean registerFavoriteStation(String userId, String uniId);
 }

@@ -14,4 +14,17 @@ public interface UserDAO {
 	public User checkDupId(String id);
 
 	public User checkDupNickname(String nickname);
+
+	public User checkUserByToken(String id);
+
+	public User findUserById(String id);
+
+	public int changePassword(User user);
+
+	public int changeNickname(User user);
+
+	public User findIdByEmail(User requestUser);
+	
+	public User resetPasswordByEmail(User requestUser);
+	
 }

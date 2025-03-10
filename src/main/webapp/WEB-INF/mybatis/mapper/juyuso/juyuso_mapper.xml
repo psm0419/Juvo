@@ -66,9 +66,9 @@
             KPETRO_YN = #{kpetroYn}, 
             CVS_YN = #{cvsYn}, 
             NEW_ADR = #{newAdr}, 
-            VAN_ADR = #{vanAdr},  -- 추가
-            TEL = #{tel},         -- 추가
-            SIGUNCD = #{siguncd}, -- 추가
+            VAN_ADR = #{vanAdr},
+            TEL = #{tel},
+            SIGUNCD = #{siguncd},
             GIS_X_COOR = #{gisXCoor}, 
             GIS_Y_COOR = #{gisYCoor},
             H_OIL_PRICE = #{hOilPrice}, 
@@ -88,5 +88,19 @@
              OR CAR_WASH_YN IS NOT NULL 
              OR KPETRO_YN IS NOT NULL 
              OR CVS_YN IS NOT NULL)
+    </select>
+    
+    <!-- 관심 주유소 삽입 -->
+<insert id="insertFavoriteStation" parameterType="LikeJuyuso">
+    INSERT INTO like_juyuso (user_id, UNI_ID)
+    VALUES (#{userId}, #{uniId})
+</insert>
+
+<!-- 중복 체크 -->
+<select id="checkFavoriteStationExists" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM like_juyuso
+        WHERE user_id = #{userId}
+        AND UNI_ID = #{uniId}
     </select>
 </mapper>
