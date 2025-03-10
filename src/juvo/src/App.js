@@ -6,13 +6,10 @@ import Login from './pages/user/Login';
 import Signup from './pages/user/Signup';
 import FindId from './pages/user/FindIdRequest';
 import MyPageProfile from './pages/user/myPage/MyPageProfile';
-<<<<<<< HEAD
 import Admin from './pages/admin/Admin';
-=======
 import MyPageLayout from './pages/user/myPage/MyPageLayout';
 import MyPageFavorites from './pages/user/myPage/MyPageFavorites';
 import MyPageMembership from './pages/user/myPage/MyPageMembership';
->>>>>>> 962ae1f750af82d5e813f685b41a7e0ce62e98b0
 import FindPassword from './pages/user/FindPasswordRequest';
 import Conversion from './pages/detail/oilinfoDetail/Conversion';
 import Tax from './pages/detail/oilinfoDetail/Tax';

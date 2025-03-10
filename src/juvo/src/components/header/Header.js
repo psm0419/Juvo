@@ -79,7 +79,7 @@ function Header() {
             <div className="btns">
                 {isLogin ? (
                     <>
-                        <div className="mypage" onClick={() => navigate("/user/myPage/profile")}>마이페이지</div>
+                        <div className="mypage" onClick={() => navigate("/myPage/profile")}>마이페이지</div>
                         <div className="logout" onClick={handleLogout}>로그아웃</div>
                     </>
                 ) : (
