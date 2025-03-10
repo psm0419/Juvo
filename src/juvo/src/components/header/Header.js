@@ -1,9 +1,34 @@
 import '../../assets/css/header/Header.css';
 import Logo from '../../assets/image/Logo.png';
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 function Header() {
     const navigate = useNavigate();
+    const [isLogin, setIsLogin] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        setIsLogin(!!token);
+    }, []);
+    
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setIsLogin(!!localStorage.getItem('accessToken'));
+        };
+    
+        window.addEventListener("storage", handleStorageChange);
+        return () => window.removeEventListener("storage", handleStorageChange);
+    }, []);
+    
+
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken');
+        setIsLogin(false);
+        alert('로그아웃 되었습니다.');
+        navigate('/');
+    };
+
 
     const menuItems = {
         '주유소찾기': [
@@ -52,8 +77,17 @@ function Header() {
                 </div>
             </div>
             <div className="btns">
-                <div className="login" onClick={() => navigate("/user/login")}>로그인</div>
-                <div className="signup" onClick={() => navigate("/user/signup")}>회원가입</div>
+                {isLogin ? (
+                    <>
+                        <div className="mypage" onClick={() => navigate("/user/myPage/profile")}>마이페이지</div>
+                        <div className="logout" onClick={handleLogout}>로그아웃</div>
+                    </>
+                ) : (
+                    <>
+                        <div className="login" onClick={() => navigate("/user/login")}>로그인</div>
+                        <div className="signup" onClick={() => navigate("/user/signup")}>회원가입</div>
+                    </>
+                )}
             </div>
         </div>
     );
