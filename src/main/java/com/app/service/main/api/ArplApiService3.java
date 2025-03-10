@@ -14,19 +14,20 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.app.dto.main.CheapJuyuso;
+import com.app.dto.main.AvgByDay;
+import com.app.dto.main.AvgByRegion;
 
-public class ArplApiService {
+public class ArplApiService3 {
     public static String juyuso(String area, String prodcd) throws IOException {
-        System.out.println("주유소 API 요청 시작: area=" + area + "prodcd=" + prodcd);
+        System.out.println("주유소 API 요청 시작 prodcd : " + prodcd);
         
         // 공공 API URL 구성
-        StringBuilder urlBuilder = new StringBuilder("http://www.opinet.co.kr/api/lowTop10.do");
-        urlBuilder.append("?" + URLEncoder.encode("out","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("code","UTF-8") + "=F250306159");
+        StringBuilder urlBuilder = new StringBuilder("http://www.opinet.co.kr/api/areaAvgRecentPrice.do");
+        urlBuilder.append("?" + URLEncoder.encode("code","UTF-8") + "=F250306157");
+        urlBuilder.append("&" + URLEncoder.encode("out","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("area","UTF-8") + "=" + URLEncoder.encode(area, "UTF-8")); // 지역코드
+        urlBuilder.append("&" + URLEncoder.encode("date","UTF-8") + "=" + URLEncoder.encode("", "UTF-8")); // 시도코드
         urlBuilder.append("&" + URLEncoder.encode("prodcd","UTF-8") + "=" + URLEncoder.encode(prodcd, "UTF-8")); // 제품구분
-        urlBuilder.append("&" + URLEncoder.encode("area","UTF-8") + "=" + URLEncoder.encode(area, "UTF-8")); // 지역구분
-        urlBuilder.append("&" + URLEncoder.encode("cnt","UTF-8") + "=" + URLEncoder.encode("5", "UTF-8")); //최저가순 결과 건수
         
         
         System.out.println("요청 URL: " + urlBuilder.toString());
@@ -61,12 +62,12 @@ public class ArplApiService {
         return response;
     } 
     
-    public static List<CheapJuyuso> cheapJuyusoList(String prodcd, String area) throws Exception {
+    public static List<AvgByDay> avgByDay(String area, String prodcd) throws Exception {
     	
-    	List<CheapJuyuso> cheapJuyusoList = new ArrayList<CheapJuyuso>();
+    	List<AvgByDay> avgList = new ArrayList<AvgByDay>();
     	
     	try {
-            String jsonText = juyuso(prodcd, area); 
+            String jsonText = juyuso(area,prodcd); 
             System.out.println("파싱할 JSON 데이터: " + jsonText);
             
             JSONParser jsonParser = new JSONParser();
@@ -87,30 +88,24 @@ public class ArplApiService {
 			for (Object obj : oilArray) {
 	            JSONObject oil = (JSONObject) obj;
 
-	            CheapJuyuso cj = new CheapJuyuso();
-	            cj.setUniId((String) oil.get("UNI_ID"));
+	            AvgByDay abd = new AvgByDay();
+	            abd.setDate((String) oil.get("DATE"));
+	            abd.setProdcd((String) oil.get("AREA_CD"));
+	            abd.setProdcd((String) oil.get("AREA_NM"));
+	            abd.setProdcd((String) oil.get("PRODCD"));
 
 	            // PRICE는 Long으로 되어 있을 수 있으므로 Double로 변환
-	            cj.setPrice(((Number) oil.get("PRICE")).doubleValue());
+	            abd.setPrice(((Number) oil.get("PRICE")).doubleValue());
 
-	            cj.setPollDivCd((String) oil.get("POLL_DIV_CD"));
-	            cj.setOsNm((String) oil.get("OS_NM"));
-	            cj.setVanAdr((String) oil.get("VAN_ADR"));
-	            cj.setNewAdr((String) oil.get("NEW_ADR"));
-
-	            // GIS_X_COOR, GIS_Y_COOR는 Long 타입이므로 Double로 변환
-	            cj.setGisXCoor(((Number) oil.get("GIS_X_COOR")).doubleValue());
-	            cj.setGisYCoor(((Number) oil.get("GIS_Y_COOR")).doubleValue());
-
-	            cheapJuyusoList.add(cj);
+	            avgList.add(abd);
 	        }
-            
+           
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return cheapJuyusoList;
+        return avgList;
     }
     
 }

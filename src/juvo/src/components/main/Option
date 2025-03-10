@@ -1,0 +1,7 @@
+function Option({ label, options, selectedValue, onChange }) {
+    return (
+        
+    );
+}
+
+export default Option;

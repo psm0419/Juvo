@@ -2,11 +2,35 @@ import '../../assets/css/main/Main.css';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import CheapJuyuso from "../../components/main/CheapJuyuso";
+import AvgByRegion from '../../components/main/AvgByRegion';
+import AvgPriceChart from './AvgPriceChart';
 
 function Main() {	
 
+	//저렴한 주유소, 시도별평균
 	const [cheapJuyusoList, setCheapJuyusoList] = useState([]);
+	const [avgList, setAvgList] = useState([]);
+	const [selectedProduct, setSelectedProduct] = useState("휘발유");
 	const [selectedArea, setSelectedArea] = useState("");
+
+	//오늘의 유가
+	const [todayPrices, setTodayPrices] = useState({
+		"휘발유": 0,
+		"경유": 0,
+		"고급휘발유": 0,
+		"실내등유": 0
+	});
+	
+
+	//제품코드
+	const productCodes = {
+		"휘발유": "B027",
+		"경유": "D047",
+		"고급휘발유": "B034",
+		"실내등유": "C004"
+	};
+
+	//지역코드
 	const areaCodes = {
 		"서울": "01",
 		"경기": "02",
@@ -26,46 +50,76 @@ function Main() {
 		"울산": "18",
 		"세종": "19"
     };
-    
-    useEffect(() => {
-		axios.get('/api/cheapJuyuso')
-			.then(response => {
-				console.log(response.data);
-				// 배열인지 확인하고 배열로 변환
-				if (Array.isArray(response.data)) {
-					setCheapJuyusoList(response.data);
-				} else {
-					console.error('응답 데이터는 배열이 아닙니다.');
-				}
-			})
-			.catch(error => {
-				console.error('API 호출 중 오류 발생:', error);
-			});
-	}, []);
 
-	useEffect(() => {
-		// 기본적으로 전국 데이터를 요청 (selectedArea가 비어있을 때)
-		const areaCode = selectedArea ? areaCodes[selectedArea] : ""; 
-		console.log(`API 호출 지역 코드: ${areaCode}`); // 디버깅 로그 추가
-		axios.get(`/api/cheapJuyuso?area=${areaCode}`)
-			.then(response => {
-				console.log(response.data);
-				// 배열인지 확인하고 배열로 변환
-				if (Array.isArray(response.data)) {
-					setCheapJuyusoList(response.data);
-				} else {
-					console.error('응답 데이터는 배열이 아닙니다.');
-				}
-			})
-			.catch(error => {
-				console.error('API 호출 중 오류 발생:', error);
-			});
-	}, [selectedArea]); // selectedArea가 변경될 때마다 호출
+	// 제품 선택 시 상태 업데이트
+	const handleProductChange = (event) => {
+		setSelectedProduct(event.target.value); 
+	};
 
-
+	// 지역 선택 시 상태 업데이트
 	const handleAreaChange = (event) => {
-        setSelectedArea(event.target.value); // 지역 선택 시 상태 업데이트
+        setSelectedArea(event.target.value); 
     };
+
+	//전국평균값
+	useEffect(() => {
+		const fetchNationwidePrices = async () => {
+			const productKeys = Object.keys(productCodes); // ["휘발유", "경유", "고급휘발유", "실내등유"]
+			const prices = { "휘발유": 0, "경유": 0, "고급휘발유": 0, "실내등유": 0 };
+	
+			try {
+				for (const product of productKeys) {
+					const prodcd = productCodes[product];
+					const response = await axios.get(`/api/avgByRegion?prodcd=${prodcd}`);
+					const nationwideData = response.data.find(item => item.sidocd === "00");
+					if (nationwideData) {
+						prices[product] = nationwideData.price || 0;
+					}
+				}
+				setTodayPrices(prices);
+			} catch (error) {
+				console.error('전국 평균 유가 가져오기 실패:', error);
+			}
+		};
+	
+		fetchNationwidePrices();
+	}, []); // 한 번만 실행되도록 빈 배열 사용
+
+	//저렴한 주유소
+	useEffect(() => {
+		const areaCode = selectedArea ? areaCodes[selectedArea] : ""; 
+		const prodcd = productCodes[selectedProduct] || "B027";  
+	
+		axios.get(`/api/cheapJuyuso?prodcd=${prodcd}&area=${areaCode}`)
+			.then(response => {
+				if (Array.isArray(response.data)) {
+					setCheapJuyusoList(response.data);
+				} else {
+					console.error('응답 데이터는 배열이 아닙니다.');
+				}
+			})
+			.catch(error => {
+				console.error('API 호출 중 오류 발생:', error);
+			});
+	}, [selectedProduct, selectedArea]);
+
+	//시도별 평균
+	useEffect(() => {
+		const prodcd = productCodes[selectedProduct] || "B027";
+
+		axios.get(`/api/avgByRegion?prodcd=${prodcd}`)
+			.then(response => {
+				if (Array.isArray(response.data)) {
+					setAvgList(response.data);
+				} else {
+					console.error('응답 데이터가 배열이 아닙니다.');
+				}
+			})
+			.catch(error => {
+				console.error('API 호출 중 오류 발생:', error);
+			});
+	}, [selectedProduct]);
+	
 
 	return (
 		<>
@@ -83,26 +137,25 @@ function Main() {
 						<div className="lmiddle middle">
 							<div className="lmiddlet">
 								<div className="todaySelect">
-									<p className="point_text2">오늘의 유가 <span>(평균)</span> </p>
-									<select className="region">
-											<option value="option1">휘발유</option>
-											<option value="option2">경유</option>
-											<option value="option3">전기차</option>
-									</select>
+									<p className="point_text2">오늘의 유가 <span>(전국평균)</span> </p>
 								</div>
 								<div className="todayContrainer">
-									<div className="box">
-										<h4>휘발유</h4>
-										<p>12.34</p>
-									</div>
-									<div className="box">
-										<h4>경유</h4>
-										<p>56.78</p>
-									</div>
-									<div className="box noBorder">
-										<h4>전기차</h4>
-										<p>91.01</p>
-									</div>
+								<div className="box">
+									<h4>휘발유</h4>
+									<p>{todayPrices["휘발유"]}</p>
+								</div>
+								<div className="box">
+									<h4>경유</h4>
+									<p>{todayPrices["경유"]}</p>
+								</div>
+								<div className="box">
+									<h4>고급휘발유</h4>
+									<p>{todayPrices["고급휘발유"]}</p>
+								</div>
+								<div className="box noBorder">
+									<h4>등유</h4>
+									<p>{todayPrices["실내등유"]}</p>
+								</div>
 								</div>
 							</div>
 							<div className="lmiddleb">
@@ -128,6 +181,12 @@ function Main() {
 										<option value="울산">울산</option>
 										<option value="세종">세종</option>
 									</select>
+									<select className="region" onChange={handleProductChange} value={selectedProduct}>
+										<option value="휘발유">휘발유</option>
+										<option value="경유">경유</option>
+										<option value="고급휘발유">고급휘발유</option>
+										<option value="실내등유">실내등유</option>
+									</select>
 								</div>
 								<div className="cheapList">
 									<CheapJuyuso cheapJuyusoList={cheapJuyusoList} />
@@ -135,15 +194,15 @@ function Main() {
 							</div>
 						</div>
 						<div className="mmiddle middle">
-							<p className="point_text">시도별 평균</p>
-							<div>
-
+							<p className="point_text">유가추이</p>
+							<div className='chart'>
+								<AvgPriceChart selectedProduct={selectedProduct} selectedArea={selectedArea} />
 							</div>
 						</div>
 						<div className="rmiddle middle noBorder">
-							<p className="point_text">유가추이</p>
-							<div>
-								
+							<p className="point_text">시도별 평균</p>
+							<div className="avgList">
+								<AvgByRegion avgList={avgList} />
 							</div>
 						</div>
 					</div>
