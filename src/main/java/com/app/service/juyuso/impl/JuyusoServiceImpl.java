@@ -1,14 +1,18 @@
 package com.app.service.juyuso.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.app.controller.juyuso.GeoTrans;
 import com.app.dao.juyuso.JuyusoDAO;
 import com.app.dto.juyuso.Juyuso;
+import com.app.dto.juyuso.LikeJuyuso;
 import com.app.service.api.ArplApiService;
 import com.app.service.juyuso.JuyusoService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -67,33 +71,53 @@ public class JuyusoServiceImpl implements JuyusoService {
 
             System.out.println("Found " + stations.size() + " stations in response");
 
-            // enrichedStations 선언 및 초기화
-            List<JsonNode> enrichedStations = new ArrayList<>();
+            boolean allSuccess = true;
             for (JsonNode stationNode : stations) {
                 String uniId = stationNode.path("UNI_ID").asText();
                 Juyuso existingJuyuso = juyusoDAO.getJuyusoById(uniId);
-                Juyuso detailData;
-                if (existingJuyuso != null && isJuyusoDetailComplete(existingJuyuso)) {
-                    System.out.println("Using cached detail data for: " + uniId);
-                    detailData = existingJuyuso;
-                } else {
-                    detailData = fetchDetailData(uniId);
+
+                Juyuso juyuso = new Juyuso();
+                juyuso.setUniId(uniId);
+                juyuso.setOsNm(stationNode.path("OS_NM").asText(""));
+                juyuso.setNewAdr(stationNode.path("NEW_ADR").asText(""));
+                juyuso.setPollDivCd(stationNode.path("POLL_DIV_CO").asText(""));
+                Double hOilPrice = stationNode.path("PRICE").isMissingNode() ? null : stationNode.path("PRICE").asDouble();
+                juyuso.setHOilPrice(hOilPrice);
+
+                if (existingJuyuso == null) {
+                    // DB에 없는 경우: 삽입
+                    System.out.println("Inserting new juyuso: " + uniId);
+                    allSuccess &= juyusoDAO.insertJuyuso(juyuso);
+                    
+                    // 상세 정보 가져와서 업데이트
+                    Juyuso detailData = fetchDetailData(uniId);
                     if (detailData != null) {
-                        juyusoDAO.updateJuyusoDetail(detailData); // DB 업데이트
+                        allSuccess &= juyusoDAO.updateJuyusoDetail(detailData);
                     }
-                }
-                if (detailData != null) {
-                    JsonNode detailNode = objectMapper.valueToTree(detailData);
-                    ((ObjectNode) stationNode).setAll((ObjectNode) detailNode);
-                }
-                enrichedStations.add(stationNode);
+                } else {
+                    // DB에 있는 경우: 가격 비교 후 필요 시 업데이트
+                    if (!nullSafeEquals(existingJuyuso.getHOilPrice(), hOilPrice)) {
+                        System.out.println("Price changed for " + uniId + ", fetching details and updating");
+                        Juyuso detailData = fetchDetailData(uniId);
+                        if (detailData != null) {
+                            allSuccess &= juyusoDAO.updateJuyusoDetail(detailData);
+                        }
+                    } else {
+                        System.out.println("Price unchanged for " + uniId + ", skipping update");
+                    }
+                }System.out.println("Inserted juyuso: " + uniId + ", success: " + juyusoDAO.insertJuyuso(juyuso));
             }
-            return true;
+            return allSuccess;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+    
+    
+    
+    
+    
     private boolean isJuyusoDetailComplete(Juyuso juyuso) {
         return juyuso.getTel() != null && !juyuso.getTel().isEmpty() &&
                juyuso.getVanAdr() != null && !juyuso.getVanAdr().isEmpty() &&
@@ -273,5 +297,120 @@ public class JuyusoServiceImpl implements JuyusoService {
             this.key = key;
             this.value = value;
         }
+    }
+
+    @Override
+    public boolean registerFavoriteStation(String userId, String uniId) {
+        try {
+            // 중복 체크
+            int exists = juyusoDAO.checkFavoriteStationExists(userId, uniId);
+            if (exists > 0) {
+                System.out.println("Already registered: userId=" + userId + ", uniId=" + uniId);
+                return false;
+            }
+
+            LikeJuyuso likeJuyuso = new LikeJuyuso();
+            likeJuyuso.setUserId(userId);
+            likeJuyuso.setUniId(uniId);
+
+            return juyusoDAO.insertFavoriteStation(likeJuyuso);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<String, Object> getReviewsByStationId(String uniId) {
+        Map<String, Object> result = new HashMap<>();
+        List<Map<String, Object>> reviews = juyusoDAO.getReviewsByStationId(uniId);
+        System.out.println("DAO returned reviews for uniId " + uniId + ": " + reviews);
+
+        double avgRating = reviews.stream()
+            .mapToDouble(r -> {
+                Object starCnt = r.get("STARCNT");
+                return starCnt != null ? Double.parseDouble(starCnt.toString()) : 0.0;
+            })
+            .average()
+            .orElse(0.0);
+
+        result.put("reviews", reviews);
+        result.put("averageRating", avgRating);
+        return result;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> getKeywordsByStationAndUser(String uniId, String userId) {
+        System.out.println("Fetching keywords for uniId " + uniId + ", userId " + userId);
+        List<Integer> keywords = juyusoDAO.getKeywordsByStationAndUser(uniId, userId);
+        System.out.println("DAO returned keywords: " + keywords);
+        return keywords;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<Integer, Integer> getAllKeywordsCountByStation(String uniId) {
+        List<Map<String, Object>> keywordStats = juyusoDAO.getAllKeywordsStatsByStation(uniId);
+        System.out.println("Keyword stats for uniId " + uniId + ": " + keywordStats); // 디버깅 로그
+        Map<Integer, Integer> keywordCounts = new HashMap<>();
+        for (Map<String, Object> stat : keywordStats) {
+            Number keywordIdNumber = (Number) stat.get("KEYWORD_ID");
+            Number countNumber = (Number) stat.get("COUNT");
+            if (keywordIdNumber != null && countNumber != null) {
+                Integer keywordId = keywordIdNumber.intValue();
+                Integer count = countNumber.intValue();
+                keywordCounts.put(keywordId, count);
+            } else {
+                System.out.println("Null value detected in stats: " + stat);
+            }
+        }
+        return keywordCounts;
+    }
+    
+    @Transactional
+    @Override
+    public boolean saveReview(String userId, String uniId, String content, double starCnt) {
+        System.out.println("Saving review - userId: " + userId + ", uniId: " + uniId + ", starCnt: " + starCnt + ", content: " + content);
+        Map<String, Object> review = new HashMap<>();
+        review.put("uniId", uniId);
+        review.put("userId", userId);
+        review.put("starCnt", starCnt);
+        review.put("content", content);
+        int result = juyusoDAO.insertReview(review);
+        System.out.println("Inserted review for uniId " + uniId + ": " + result);
+        return result > 0;
+    }
+
+    @Override
+    @Transactional
+    public boolean saveKeywords(String userId, String uniId, List<Integer> keywords) {
+        // 기존 키워드 삭제 (중복 방지)
+        Map<String, Object> param = new HashMap<>();
+        param.put("userId", userId);
+        param.put("uniId", uniId);
+        juyusoDAO.deleteKeywordsByUserAndStation(param);
+
+        // 새 키워드 삽입
+        boolean success = true;
+        for (Integer keyword : keywords) {
+            param.put("keyword", keyword);
+            int result = juyusoDAO.insertKeyword(param);
+            if (result <= 0) success = false;
+        }
+        return success;
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteReview(String userId, String uniId, String content) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("userId", userId);
+        param.put("uniId", uniId);
+        param.put("content", content);
+        int result = juyusoDAO.deleteReview(param);
+        System.out.println("Deleted review for userId: " + userId + ", uniId: " + uniId + ", result: " + result);
+        return result > 0;
     }
 }

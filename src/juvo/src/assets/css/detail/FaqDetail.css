@@ -1,0 +1,59 @@
+.faq-detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 100px;
+}
+
+.faq-header {
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.faq-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.faq-date {
+    font-size: 14px;
+    color: #888;
+}
+
+.faq-content {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.faq-content p {
+    margin-bottom: 15px;
+}
+
+.faq-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.back-link {
+    padding: 10px 20px;
+    background-color: #0066cc;
+    /* 파란색으로 통일, 초록색(#28a745)으로 변경 가능 */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.back-link:hover {
+    background-color: #005bb5;
+    /* 호버 시 약간 어두운 파란색 */
+}

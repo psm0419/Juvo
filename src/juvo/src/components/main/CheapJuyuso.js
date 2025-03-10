@@ -8,8 +8,9 @@ function CheapJuyuso({cheapJuyusoList}) {
             {cheapJuyusoList.length > 0 ? (
                 <ul>
                     {cheapJuyusoList.map((juyuso, index) => (
+                        
                         <li key={index}>
-                            <p><strong>{juyuso.osNm}</strong> {juyuso.price}원</p>
+                            <p><strong>{juyuso.osNm}</strong> {juyuso.price.toLocaleString('ko-KR')}원</p>
                         </li>
                     ))}
                 </ul>

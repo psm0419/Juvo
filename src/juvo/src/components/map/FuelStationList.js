@@ -1,6 +1,6 @@
 import React from "react";
 
-const FuelStationList = ({ stations, loading }) => {
+const FuelStationList = ({ stations, loading, onStationClick }) => { // onStationClick prop 추가
     if (loading) {
         return <div style={{ padding: "10px", textAlign: "center" }}>로딩 중...</div>;
     }
@@ -11,7 +11,7 @@ const FuelStationList = ({ stations, loading }) => {
 
     const getBrandLogo = (pollDivCd) => {
         const logos = {
-            GSC: "🟢", // GS칼텍스 (예시로 이모지 사용)
+            GSC: "🟢", // GS칼텍스
             SKE: "🟡", // SK에너지
             HDO: "🔵", // 현대오일뱅크
             SOL: "🟠", // S-OIL
@@ -52,7 +52,12 @@ const FuelStationList = ({ stations, loading }) => {
                 >
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                         <span>{getBrandLogo(station.pollDivCd)}</span>
-                        <span>{station.osNm || "이름 없음"}</span>
+                        <span
+                            style={{ cursor: "pointer", color: "#007bff" }} // 클릭 가능하도록 스타일 추가
+                            onClick={() => onStationClick(station)} // 클릭 시 부모로 데이터 전달
+                        >
+                            {station.OS_NM || "이름 없음"}
+                        </span>
                     </div>
                     <div style={{ display: "flex", gap: "20px", fontWeight: "bold" }}>
                         <span>{station.hoilPrice || station.PRICE || "-"}</span>
