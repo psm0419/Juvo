@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import '../../assets/css/login/Signup.css';
+import '../../assets/css/user/Signup.css';
 
 function Signup() {
     let navigate = useNavigate();

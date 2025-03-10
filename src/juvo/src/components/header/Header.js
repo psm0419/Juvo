@@ -18,10 +18,7 @@ function Header() {
         ],
         '이용안내': [
             { name: 'Guide', label: 'JUVO이용안내', path: '/detail/guideDetail/Guide' },
-            { name: 'Law', label: '법률', path: '/detail/guideDetail/Law' },
-            { name: 'LocationServiceTerms', label: '위치서비스약관', path: '/detail/guideDetail/LocationServiceTerms' },
-            { name: 'PrivacyPolicy', label: '개인정보정책', path: '/detail/guideDetail/PrivacyPolicy' },
-            { name: 'RefundPolicy', label: '환불정책', path: '/detail/guideDetail/RefundPolicy' },
+            { name: 'Faq', label: '자주묻는질문', path: '/detail/guideDetail/Faq' },
         ],
     };
 

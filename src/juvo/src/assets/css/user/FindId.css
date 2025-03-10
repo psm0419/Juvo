@@ -1,0 +1,132 @@
+@font-face {
+    font-family: 'BookkMyungjo-Bd';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* 페이지 전체 레이아웃 */
+.fi-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 컨테이너 */
+.fi-container {
+    max-width: 400px;
+    width: 100%;
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+/* 제목 */
+.fi-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 입력 그룹 */
+.fi-form-group {
+    margin-bottom: 15px;
+}
+
+/* 입력 필드 */
+.fi-input {
+    width: 100%;
+    padding: 11px 15px;
+    border: 1px solid #dadada;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #333;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: border-color 0.3s;
+}
+
+.fi-input.fi-valid {
+    border-color: #03c75a !important;
+}
+
+.fi-input.fi-invalid {
+    border-color: #ff3d3d !important;
+}
+
+.fi-input:focus {
+    border: 2px solid #03c75a;
+    outline: none;
+}
+
+/* 유효성 메시지 */
+.fi-message {
+    display: block;
+    font-size: 12px;
+    margin-top: 6px;
+    min-height: 18px;
+    color: #8e8e8e;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.fi-message.fi-valid {
+    color: #03c75a;
+}
+
+.fi-message.fi-invalid {
+    color: #ff3d3d;
+}
+
+/* 제출 버튼 */
+.fi-submit-btn {
+    width: 100%;
+    padding: 11px 15px;
+    background-color: #03c75a;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+}
+
+.fi-submit-btn:disabled {
+    background-color: #d0d0d0;
+    cursor: not-allowed;
+}
+
+.fi-submit-btn:not(:disabled):hover {
+    background-color: #02b050;
+}
+
+/* 로그인 이동 버튼 */
+.fi-login-btn {
+    width: 100%;
+    padding: 13px;
+    background-color: #03c75a;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background-color 0.3s;
+}
+
+.fi-login-btn:disabled {
+    background-color: #d0d0d0;
+    cursor: not-allowed;
+}
+
+.fi-login-btn:not(:disabled):hover {
+    background-color: #02b050;
+}
