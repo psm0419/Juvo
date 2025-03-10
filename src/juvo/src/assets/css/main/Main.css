@@ -7,31 +7,87 @@
 /* 전체 컨테이너 */
 .containerM {}
 
-/* 사진부분 */
+/* 사진(동영상) 부분 */
 .mainTop {
     position: relative;
     width: 100%;
+    height: 400px; /* 동영상 높이 고정 */
+    overflow: hidden; /* 동영상이 넘치지 않도록 */
 }
 
-.mainTop img {
+/* 동영상 스타일 */
+.bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 350px;
+    height: 100%; /* .mainTop 높이에 맞춤 */
+    object-fit: cover; /* 동영상이 가로/세로 비율 유지하며 꽉 차게 */
+    z-index: 1; /* 동영상을 텍스트 뒤에 배치 */
 }
 
-/* 사진 위 텍스트 */
+/* 기존 img 스타일은 동영상으로 대체되므로 비활성화 */
+.mainTop img {
+    display: none; /* 이미지 사용 중지 */
+}
+
+/* 사진 위 텍스트 - 개선된 스타일 */
 .textOverlay {
     position: absolute;
-    top: 80px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%); /* 정확한 중앙 정렬 */
     text-align: center;
-    color: rgb(0, 0, 0);
-    font-size: 1.5rem;
+    color: #FFFFFF; /* 흰색 텍스트, 동영상 대비 */
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8); /* 더 선명한 그림자 */
+    z-index: 2; /* 텍스트를 동영상 위에 배치 */
+    padding: 20px; /* 여백 추가 */
+    border-radius: 15px; /* 둥근 모서리 */
+    animation: fadeIn 1.5s ease-in-out; /* 애니메이션 추가 */
 }
 
-.textOverlay p {
-    margin-bottom: 8px;
+.textOverlay p:nth-child(1) {
+    font-size: 2.5rem; /* 주요 텍스트 크기 증가 */
+    font-weight: 700; /* 더 굵게 */
+    color: #FFC107; /* JUVO 노랑 톤 */
+    margin-bottom: 10px;
 }
+
+.textOverlay p:nth-child(2) {
+    font-size: 1.8rem; /* 보조 텍스트 크기 조정 */
+    font-weight: 500;
+    color: #000000; /* JUVO 오렌지 톤 */
+    margin-bottom: 15px;
+}
+
+.textOverlay p:nth-child(3) {
+    font-size: 1.1rem; /* 세부 설명 크기 조정 */
+    font-weight: 400;
+    color: #000000;
+    max-width: 80%; /* 텍스트 너비 제한 */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 애니메이션 정의 */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translate(-50%, -60%); }
+    100% { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+/* 선택적: 텍스트 가독성을 더 높이기 위한 오버레이 (이미 .textOverlay에 적용) */
+/*
+.mainTop::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); 
+    z-index: 1;
+}
+*/
 
 /* 유가부분 */
 .mainMiddle {
@@ -57,8 +113,7 @@
 }
 
 .rmiddle {
-    border: none;
-    /* 유가추이 보더 삭제*/
+    border: none; /* 유가추이 보더 삭제 */
 }
 
 .lmiddlet {
@@ -96,6 +151,7 @@
     margin-top: 5px;
     color: rgb(97, 96, 96);
     font-weight: bold;
+    font-family: 'Arial', sans-serif; /* 깔끔한 서체 */
 }
 
 .todayContrainer .noBorder {
@@ -113,6 +169,8 @@
     margin-top: 15px;
     margin-right: 5%;
     border: 1px solid rgb(165, 165, 165);
+    border-radius: 5px; /* 둥근 테두리 추가 */
+    font-family: 'Noto Sans KR', sans-serif; /* 한국어 지원 서체 */
 }
 
 .cheapList {
@@ -129,6 +187,9 @@
     justify-content: space-between;
     align-items: center;
     padding: 12px;
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #f9f9f9;
+    border-radius: 5px;
 }
 
 .avgList div {
@@ -144,6 +205,7 @@
     text-align: center;
     width: 80px;
     font-size: 0.8rem;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .chart {
@@ -153,7 +215,6 @@
 .text {
     margin-top: 150px;
 }
-
 
 /* 공지사항 멤버십 부분 */
 .mainBottom {
@@ -177,6 +238,8 @@
 .lbottom .point_text,
 .rbottom .point_text {
     margin: 25px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #333;
 }
 
 .rbottom:hover {
@@ -184,11 +247,11 @@
     box-shadow: 10px 10px 20px rgba(88, 88, 88, 0.2);
 }
 
-
 /* 텍스트 강조 class */
 .point_text {
     font-size: 1.1rem;
     font-weight: bold;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 /* cursor */
@@ -220,14 +283,15 @@
     padding: 2px 4px;
     border-radius: 2px;
     white-space: nowrap;
-    transition: all 0.3s ease; 
+    transition: all 0.3s ease;
     z-index: 1;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 .item:hover {
     transform: translateY(-5px) scale(1.2);
-    box-shadow: 10px 10px 20px rgba(88, 88, 88, 0.2); 
-    z-index: 10; 
+    box-shadow: 10px 10px 20px rgba(88, 88, 88, 0.2);
+    z-index: 10;
 }
 
 .loading {
@@ -236,4 +300,35 @@
     left: 50%;
     transform: translate(-50%, -50%);
     color: black;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.membership img {
+    width: 100%;
+    height: 400px;
+    border-radius: 30px; /* 더 둥글게 */
+}
+
+/* 반응형 디자인 추가 */
+@media (max-width: 768px) {
+    .mainTop {
+        height: 300px;
+    }
+    .bg-video {
+        height: 300px;
+    }
+    .textOverlay {
+        top: 50px;
+        padding: 15px;
+        font-size: 1.2rem;
+    }
+    .textOverlay p:nth-child(1) {
+        font-size: 1.8rem;
+    }
+    .textOverlay p:nth-child(2) {
+        font-size: 1.2rem;
+    }
+    .textOverlay p:nth-child(3) {
+        font-size: 0.9rem;
+    }
 }
