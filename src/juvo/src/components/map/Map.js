@@ -26,6 +26,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             timeout = setTimeout(() => func.apply(this, args), wait);
         };
     }
+
     const [brands, setBrands] = useState({
         cheap: false,
         skEnergy: false,
@@ -62,19 +63,16 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 (!additionalInfo.convenience || station.cvsYn === "Y") &&
                 (!additionalInfo.self || station.selfYn === "Y" || (station.osNm && station.osNm.includes("셀프")));
     
-            // 거리 필터링 추가
             const address = station.NEW_ADR || station.newAdr || station.VAN_ADR || station.vanAdr;
             if (!address) return false;
     
-            // 비동기 처리를 여기서 하지 않고, stations에 좌표가 이미 포함되어 있다고 가정
-            // 실제로는 fetchFuelStations에서 좌표를 포함하도록 수정 필요
-            const coordsLat = station.lat; // 예시, 실제 데이터 구조에 맞게 수정
+            const coordsLat = station.lat;
             const coordsLng = station.lng;
             if (coordsLat && coordsLng) {
                 const distance = getDistance(lat, lng, coordsLat, coordsLng);
                 return brandMatches && additionalMatches && distance <= 5000;
             }
-            return brandMatches && additionalMatches; // 좌표 없으면 거리 필터링 생략
+            return brandMatches && additionalMatches;
         });
     
         console.log("Filtered stations:", filtered);
@@ -108,7 +106,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             setMarker(userMarker);
         });
     }, []);
-    
+
     // 마커 이동 및 경로 초기화
     useEffect(() => {
         if (!marker || !mapRef.current) return;
@@ -124,6 +122,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             if (routeLine) {
                 routeLine.setMap(null);
                 setRouteLine(null);
+                console.log("RouteLine cleared on marker move");
             }
             setSelectedStation(null);
             if (currentInfoWindow) {
@@ -135,10 +134,8 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             setLat(newLat);
             setLng(newLng);
             console.log("Marker moved to lat:", newLat, "lng:", newLng);
-            // fetchFuelStations 호출 제거
         };
-    
-        // 단일 디바운싱 핸들러
+
         const debounceHandleMarkerMove = debounce(handleMarkerMove, 500);
 
         kakao.maps.event.addListener(marker, "dragend", debounceHandleMarkerMove);
@@ -150,9 +147,9 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
         return () => {
             kakao.maps.event.removeListener(marker, "dragend", debounceHandleMarkerMove);
-            kakao.maps.event.removeListener(mapRef.current, "click");
+            kakao.maps.event.removeListener(mapRef.current, "click", debounceHandleMarkerMove); // 수정: 동일 함수 사용
         };
-    }, [marker, mapRef.current, setLat, setLng]);
+    }, [marker, mapRef.current, setLat, setLng, routeLine, setRouteLine, currentInfoWindow, setCurrentInfoWindow, setSelectedStation]);
 
     // stations가 변경될 때 filteredStations 업데이트
     useEffect(() => {
@@ -160,7 +157,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             const filtered = filterStations();
             console.log("Updated filteredStations after stations change:", filtered);
             setFilteredStations(filtered);
-            setIsDataLoaded(true); // 데이터 로드 완료
+            setIsDataLoaded(true);
             console.log("isDataLoaded set to true");
         } else {
             console.log("Stations is empty or not loaded yet");
@@ -192,7 +189,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             setCurrentInfoWindow(null);
         }
         window.activeInfoWindows = [];
-    
+
         const newFuelMarkers = [];
         const promises = filteredStations.map((station) => {
             return new Promise((resolve) => {
@@ -218,142 +215,142 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                             title: station.OS_NM || station.osNm,
                         });
 
-                    const infoWindowContent = `
-                        <div class="info-window">
-                            <div class="info-window-title" onclick="console.log('Name clicked for uniId: ${station.uniId}'); window.showDetail('${station.uniId}', ${coords.getLat()}, ${coords.getLng()})" style="cursor: pointer;">
-                                ${station.OS_NM || "이름 없음"} <span>(${station.pollDivCd || "이름 없음"})</span>
-                            </div>
-                            <div class="info-window-button-container">
-                                <button onclick="registerFavoriteStation('${station.uniId}')" class="info-window-button">
-                                    관심 주유소 등록
+                        const infoWindowContent = `
+                            <div class="info-window">
+                                <div class="info-window-title" onclick="console.log('Name clicked for uniId: ${station.uniId}'); window.showDetail('${station.uniId}', ${coords.getLat()}, ${coords.getLng()})" style="cursor: pointer;">
+                                    ${station.OS_NM || "이름 없음"} <span>(${station.pollDivCd || "이름 없음"})</span>
+                                </div>
+                                <div class="info-window-button-container">
+                                    <button onclick="registerFavoriteStation('${station.uniId}')" class="info-window-button">
+                                        관심 주유소 등록
+                                    </button>
+                                </div>
+                                <div class="info-window-divider"></div>
+                                <div class="info-window-details">
+                                    <div><span>📞</span> ${station.tel || "전화번호 없음"}</div>
+                                    <div><span>📍</span> ${station.newAdr || station.vanAdr || "주소 없음"}</div>
+                                </div>
+                                <div class="info-window-table-container">
+                                    <table class="info-window-table">
+                                        <thead><tr><th>유종</th><th>가격</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>휘발유</td><td class="info-window-price">${station.hoilPrice ? station.hoilPrice + '원' : '정보 없음'}</td></tr>
+                                            <tr><td>경유</td><td class="info-window-price">${station.doilPrice ? station.doilPrice + '원' : '정보 없음'}</td></tr>
+                                            <tr><td>고급 휘발유</td><td class="info-window-price">${station.goilPrice ? station.goilPrice + '원' : '정보 없음'}</td></tr>
+                                            <tr><td>실내 등유</td><td class="info-window-price">${station.ioilPrice ? station.ioilPrice + '원' : '정보 없음'}</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="info-window-icons">
+                                    <img src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_01_off.gif" alt="세차장" 
+                                        style="display: ${station.carWashYn === 'Y' ? 'inline-block' : 'none'};">
+                                    <img src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_02_01_off.gif" alt="충전소" 
+                                        style="display: ${station.lpgYn === 'Y' ? 'inline-block' : 'none'};">
+                                    <img src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_03_off.gif" alt="경정비" 
+                                        style="display: ${station.maintYn === 'Y' ? 'inline-block' : 'none'};">
+                                    <img src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_04_off.gif" alt="편의점" 
+                                        style="display: ${station.cvsYn === 'Y' ? 'inline-block' : 'none'};">
+                                </div>
+                                <div class="info-window-quality">
+                                    ${station.kpetroYn === "Y" ? "품질인증 주유소 ✅" : "품질인증 주유소 ❌"}
+                                </div>
+                                <button class="info-window-route-button" onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})">
+                                    경로찾기
                                 </button>
                             </div>
-                            <div class="info-window-divider"></div>
-                            <div class="info-window-details">
-                                <div><span>📞</span> ${station.tel || "전화번호 없음"}</div>
-                                <div><span>📍</span> ${station.newAdr || station.vanAdr || "주소 없음"}</div>
-                            </div>
-                            <div class="info-window-table-container">
-                                <table class="info-window-table">
-                                    <thead><tr><th>유종</th><th>가격</th></tr></thead>
-                                    <tbody>
-                                        <tr><td>휘발유</td><td class="info-window-price">${station.hoilPrice ? station.hoilPrice + '원' : '정보 없음'}</td></tr>
-                                        <tr><td>경유</td><td class="info-window-price">${station.doilPrice ? station.doilPrice + '원' : '정보 없음'}</td></tr>
-                                        <tr><td>고급 휘발유</td><td class="info-window-price">${station.goilPrice ? station.goilPrice + '원' : '정보 없음'}</td></tr>
-                                        <tr><td>실내 등유</td><td class="info-window-price">${station.ioilPrice ? station.ioilPrice + '원' : '정보 없음'}</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="info-window-icons">
-                                <img src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_01_off.gif" alt="세차장" 
-                                    style="display: ${station.carWashYn === 'Y' ? 'inline-block' : 'none'};">
-                                <img src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_02_01_off.gif" alt="충전소" 
-                                    style="display: ${station.lpgYn === 'Y' ? 'inline-block' : 'none'};">
-                                <img src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_03_off.gif" alt="경정비" 
-                                    style="display: ${station.maintYn === 'Y' ? 'inline-block' : 'none'};">
-                                <img src="https://www.opinet.co.kr/images/user/gis/oil_station_service1_04_off.gif" alt="편의점" 
-                                    style="display: ${station.cvsYn === 'Y' ? 'inline-block' : 'none'};">
-                            </div>
-                            <div class="info-window-quality">
-                                ${station.kpetroYn === "Y" ? "품질인증 주유소 ✅" : "품질인증 주유소 ❌"}
-                            </div>
-                            <button class="info-window-route-button" onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})">
-                                경로찾기
-                            </button>
-                        </div>
-                    `;
+                        `;
 
-                    const infoWindow = new kakao.maps.InfoWindow({
-                        content: infoWindowContent,
-                    });
+                        const infoWindow = new kakao.maps.InfoWindow({
+                            content: infoWindowContent,
+                        });
 
-                    kakao.maps.event.addListener(stationMarker, "click", () => {
-                        if (window.activeInfoWindows.length > 0) {
-                            window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
-                            window.activeInfoWindows = [];
-                        }
-                        if (currentInfoWindow) currentInfoWindow.close();
+                        kakao.maps.event.addListener(stationMarker, "click", () => {
+                            if (window.activeInfoWindows.length > 0) {
+                                window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
+                                window.activeInfoWindows = [];
+                            }
+                            if (currentInfoWindow) currentInfoWindow.close();
 
-                        infoWindow.open(mapRef.current, stationMarker);
-                        setCurrentInfoWindow(infoWindow);
-                        window.activeInfoWindows.push(infoWindow);
-                        setSelectedStation({ lat: coords.getLat(), lng: coords.getLng() });
-                    });
+                            infoWindow.open(mapRef.current, stationMarker);
+                            setCurrentInfoWindow(infoWindow);
+                            window.activeInfoWindows.push(infoWindow);
+                            setSelectedStation({ lat: coords.getLat(), lng: coords.getLng() });
+                        });
 
-                    stationMarker.infoWindow = infoWindow;
-                    newFuelMarkers.push(stationMarker);
-                    resolve(stationMarker);
-                } else {
-                    resolve(null);
-                }
+                        stationMarker.infoWindow = infoWindow;
+                        newFuelMarkers.push(stationMarker);
+                        resolve(stationMarker);
+                    } else {
+                        resolve(null);
+                    }
+                });
             });
         });
-    });
 
-    Promise.all(promises).then(newMarkers => {
-        const validMarkers = newMarkers.filter(marker => marker !== null);
-        setFuelMarkers(validMarkers);
-        console.log("Fuel markers updated:", validMarkers.length);
-    });
-
-    window.showDetail = (uniId, lat, lng) => {
-        console.log("Showing detail for uniId:", uniId);
-        const station = filteredStations.find(s => s.uniId === uniId);
-        console.log("Found station:", station);
-        if (!station) {
-            console.log("Station not found for uniId:", uniId);
-            return;
-        }
-        setSelectedDetailStation({ ...station, lat, lng });
-        if (currentInfoWindow) {
-            currentInfoWindow.close();
-            setCurrentInfoWindow(null);
-        }
-    };
-
-    window.registerFavoriteStation = function (uniId) {
-        console.log("Registering favorite station:", uniId);
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            alert('로그인이 필요합니다.');
-            return;
-        }
-
-        fetch('/api/favorite/juyuso', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ uniId: uniId })
-        })
-            .then(response => {
-                if (!response.ok) throw new Error('등록 실패');
-                return response.json();
-            })
-            .then(data => {
-                alert(data.message);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('로그인이 필요 합니다.');
-            });
-    };
-
-    return () => {
-        fuelMarkers.forEach(marker => {
-            if (marker) kakao.maps.event.removeListener(marker, "click");
+        Promise.all(promises).then(newMarkers => {
+            const validMarkers = newMarkers.filter(marker => marker !== null);
+            setFuelMarkers(validMarkers);
+            console.log("Fuel markers updated:", validMarkers.length);
         });
-        if (window.activeInfoWindows?.length > 0) {
-            window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
-        }
-        if (currentInfoWindow) currentInfoWindow.close();
-    };
-}, [filteredStations, mapRef.current, lat, lng]); // lat, lng 추가
+
+        window.showDetail = (uniId, lat, lng) => {
+            console.log("Showing detail for uniId:", uniId);
+            const station = filteredStations.find(s => s.uniId === uniId);
+            console.log("Found station:", station);
+            if (!station) {
+                console.log("Station not found for uniId:", uniId);
+                return;
+            }
+            setSelectedDetailStation({ ...station, lat, lng });
+            if (currentInfoWindow) {
+                currentInfoWindow.close();
+                setCurrentInfoWindow(null);
+            }
+        };
+
+        window.registerFavoriteStation = function (uniId) {
+            console.log("Registering favorite station:", uniId);
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                alert('로그인이 필요합니다.');
+                return;
+            }
+
+            fetch('/api/favorite/juyuso', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ uniId: uniId })
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('등록 실패');
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('로그인이 필요 합니다.');
+                });
+        };
+
+        return () => {
+            fuelMarkers.forEach(marker => {
+                if (marker) kakao.maps.event.removeListener(marker, "click");
+            });
+            if (window.activeInfoWindows?.length > 0) {
+                window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
+            }
+            if (currentInfoWindow) currentInfoWindow.close();
+        };
+    }, [filteredStations, mapRef.current, lat, lng]);
 
     const handleFetchStations = async () => {
         setIsDataLoaded(false);
-        setFilteredStations([]); // 조회 전 초기화
+        setFilteredStations([]);
         console.log("Fetching fuel stations for lat:", lat, "lng:", lng);
         await fetchFuelStations(lat, lng);
         console.log("Stations fetched:", stations);
