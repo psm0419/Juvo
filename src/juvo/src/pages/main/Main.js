@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import CheapJuyuso from "../../components/main/CheapJuyuso";
 import AvgByRegion from '../../components/main/AvgByRegion';
-import AvgPriceChart from './AvgPriceChart';
+import AvgPriceChart from '../../components/main/AvgPriceChart';
 import Membership from '../../assets/image/Membership.jpg';
 import mainbackground from '../../assets/image/mainbackground.mp4';
 

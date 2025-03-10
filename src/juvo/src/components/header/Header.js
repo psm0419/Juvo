@@ -32,7 +32,7 @@ function Header() {
 
     const menuItems = {
         '주유소찾기': [
-            { name: 'Region', label: '지역별', path: '/Juyuso' },
+            { name: 'Region', label: '주유소/충전소', path: '/Juyuso' },
         ],
         '유가관련정보': [
             { name: 'Conversion', label: '환산정보', path: '/detail/oilinfoDetail/Conversion' },
