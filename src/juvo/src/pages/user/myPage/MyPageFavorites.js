@@ -23,7 +23,7 @@ function MyPageFavorites() {
         }
 
         try {
-            const response = await axios.get("/api/favorites", {
+            const response = await axios.get("/favorites/station", {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             setFavorites(response.data);
@@ -70,15 +70,14 @@ function MyPageFavorites() {
                 <div className="favorites-list">
                     {favorites.map((juyuso) => (
                         <div key={juyuso.id} className="favorites-item">
-                            <h3>{juyuso.name}</h3>
-                            <p>주소: {juyuso.address}</p>
+                            <h3>{juyuso.osNm}</h3>
+                            <p>주소: {juyuso.vanAdr}</p>
+                            <p>주소: {juyuso.newAdr}</p>
                             <div className="price-info">
-                                <p>휘발유: {juyuso.gasolinePrice}원/L</p>
-                                <p>경유: {juyuso.dieselPrice}원/L</p>
+                                <p>휘발유: {juyuso.hoilPrice}원/L</p>
+                                <p>경유: {juyuso.doilPrice}원/L</p>
                             </div>
-                            <div className="last-updated">
-                                마지막 업데이트: {new Date(juyuso.lastUpdated).toLocaleString()}
-                            </div>
+                            
                             <button 
                                 className="remove-favorite"
                                 onClick={() => handleRemoveFavorite(juyuso.id)}

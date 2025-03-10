@@ -75,7 +75,7 @@ public class JuyusoDAOImpl implements JuyusoDAO {
         Integer count = sqlSessionTemplate.selectOne(NAMESPACE + "checkFavoriteStationExists", params);
         return count != null ? count : 0; // null 체크 후 기본값 0 반환
     }
-   
+
 
     @Override
     public List<Map<String, Object>> getReviewsByStationId(String uniId) {
@@ -117,4 +117,9 @@ public class JuyusoDAOImpl implements JuyusoDAO {
     public int deleteKeywordsByUserAndStation(Map<String, Object> param) {
         return sqlSessionTemplate.delete(NAMESPACE + "deleteKeywordsByUserAndStation", param);
     }
+
+	@Override
+	public List<String> getFavoriteJuyuso(String userId) {
+		return sqlSessionTemplate.selectList(NAMESPACE + "getFavoritesJuyuso", userId);
+	}
 }
