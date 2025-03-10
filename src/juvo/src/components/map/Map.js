@@ -60,7 +60,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             const additionalMatches = (!additionalInfo.carWash || station.carWashYn === "Y") &&
                 (!additionalInfo.maintenance || station.maintYn === "Y") &&
                 (!additionalInfo.convenience || station.cvsYn === "Y") &&
-                (!additionalInfo.self || station.selfYn === "Y");
+                (!additionalInfo.self || station.selfYn === "Y" || (station.osNm && station.osNm.includes("셀프")));
     
             // 거리 필터링 추가
             const address = station.NEW_ADR || station.newAdr || station.VAN_ADR || station.vanAdr;
