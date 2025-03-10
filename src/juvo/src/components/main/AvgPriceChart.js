@@ -2,26 +2,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
-function AvgPriceChart({ selectedProduct, selectedArea }) {
+function AvgPriceChart({ selectedProduct, selectedArea, productCodes, areaCodes }) {
     const [priceData, setPriceData] = useState([]);
 
     const minPrice = Math.min(...priceData.map(d => d.price));
     const maxPrice = Math.max(...priceData.map(d => d.price));
-
-    const productCodes = {
-        "휘발유": "B027",
-        "경유": "D047",
-        "고급휘발유": "B034",
-        "실내등유": "C004"
-    };
-
-    const areaCodes = {
-        "서울": "01", "경기": "02", "강원": "03", "충북": "04", "충남": "05",
-        "전북": "06", "전남": "07", "경북": "08", "경남": "09", "부산": "10",
-        "제주": "11", "대구": "14", "인천": "15", "광주": "16", "대전": "17",
-        "울산": "18", "세종": "19"
-    };
-    
 
     useEffect(() => {
         const prodcd = productCodes[selectedProduct] || "B027";

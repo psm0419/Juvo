@@ -6,6 +6,7 @@ import Login from './pages/user/Login';
 import Signup from './pages/user/Signup';
 import FindId from './pages/user/FindIdRequest';
 import MyPageProfile from './pages/user/myPage/MyPageProfile';
+import Admin from './pages/admin/Admin';
 import FindPassword from './pages/user/FindPasswordRequest';
 import Conversion from './pages/detail/oilinfoDetail/Conversion';
 import Tax from './pages/detail/oilinfoDetail/Tax';
@@ -38,6 +39,8 @@ function App() {
 				<Route path='/findIdRequest' element={<FindId />} />
 
 				<Route path="/user/myPage/profile" element={<MyPageProfile />} />
+
+				<Route path="/admin" element={<Admin />} />
 
 
 				<Route path="/detail/oilinfoDetail/Conversion" element={<Conversion />} />
