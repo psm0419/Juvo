@@ -6,6 +6,9 @@ import Login from './pages/user/Login';
 import Signup from './pages/user/Signup';
 import FindId from './pages/user/FindIdRequest';
 import MyPageProfile from './pages/user/myPage/MyPageProfile';
+import MyPageLayout from './pages/user/myPage/MyPageLayout';
+import MyPageFavorites from './pages/user/myPage/MyPageFavorites';
+import MyPageMembership from './pages/user/myPage/MyPageMembership';
 import FindPassword from './pages/user/FindPasswordRequest';
 import Conversion from './pages/detail/oilinfoDetail/Conversion';
 import Tax from './pages/detail/oilinfoDetail/Tax';
@@ -21,9 +24,6 @@ import FaqDetail from './pages/detail/guideDetail/FaqDetail';
 import FindPasswordRequest from './pages/user/FindPasswordRequest';
 import ResetPassword from './pages/user/ResetPassword';
 
-
-
-
 function App() {
 	return (
 		<div>
@@ -37,8 +37,11 @@ function App() {
 
 				<Route path='/findIdRequest' element={<FindId />} />
 
-				<Route path="/user/myPage/profile" element={<MyPageProfile />} />
-
+				<Route path="/mypage" element={<MyPageLayout />}>
+					<Route path="profile" element={<MyPageProfile />} />
+					<Route path="favorites" element={<MyPageFavorites />} />
+					<Route path="membership" element={<MyPageMembership />} />
+				</Route>
 
 				<Route path="/detail/oilinfoDetail/Conversion" element={<Conversion />} />
 				<Route path="/detail/oilinfoDetail/Tax" element={<Tax />} />

@@ -11,78 +11,93 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    /* 화면 전체 높이 사용 */
     padding: 20px;
-    /* 상하좌우 여백 */
     box-sizing: border-box;
 }
 
 /* 컨테이너 */
 .login-container {
-    max-width: 400px;
+    max-width: 460px;
     width: 100%;
-    padding: 40px 20px;
-    box-sizing: border-box;
+    margin: 40px auto;
+    padding: 30px 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(145deg, #ffffff, #f0f4f8);
+    border: 1px solid #e8ecef;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 /* 타이틀 */
 .login-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: #333;
     text-align: center;
-    margin-bottom: 30px;
-    font-family: 'Noto Sans KR', sans-serif;
+    color: #1e2a44;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 25px;
 }
 
 /* 폼 그룹 */
 .login-form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 /* 라벨 */
 .login-label {
     display: block;
     font-size: 14px;
-    color: #333;
+    color: #2b3a55;
     margin-bottom: 5px;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* 입력 필드 */
 .login-input {
     width: 100%;
-    padding: 11px 15px;
-    border: 1px solid #dadada;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #333;
-    font-family: 'Noto Sans KR', sans-serif;
+    padding: 12px 16px;
+    border: 2px solid #d1d9e6;
+    border-radius: 8px;
     box-sizing: border-box;
+    font-size: 14px;
+    color: #2b3a55;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.login-input:focus {
+    border: 2px solid #03c75a;
+    box-shadow: 0 0 0 3px rgba(3, 199, 90, 0.1);
+    outline: none;
 }
 
 /* 로그인 버튼 */
 .login-submit-btn {
     width: 100%;
-    padding: 11px 15px;
-    background-color: #03c75a;
+    padding: 14px;
+    background-color: #1a73e8;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    font-family: 'Noto Sans KR', sans-serif;
-    box-sizing: border-box;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
 }
 
 .login-submit-btn:disabled {
-    background-color: #d0d0d0;
+    background-color: #d1d9e6;
     cursor: not-allowed;
+    box-shadow: none;
 }
 
 .login-submit-btn:not(:disabled):hover {
-    background-color: #02b050;
+    background-color: #1557b0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* 아이디/비밀번호 찾기 버튼 그룹 */
@@ -90,47 +105,49 @@
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    /* 버튼 사이 간격 */
+    margin-top: 15px;
 }
 
 .find-btn {
     flex: 1;
-    /* 두 버튼이 동일한 너비를 가지도록 */
-    padding: 11px 15px;
+    padding: 12px 16px;
     background-color: #f5f5f5;
-    color: #333;
-    border: 1px solid #dadada;
-    border-radius: 4px;
+    color: #2b3a55;
+    border: 1px solid #e8ecef;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    font-family: 'Noto Sans KR', sans-serif;
-    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
 }
 
 .find-btn:hover {
-    background-color: #e0e0e0;
+    background-color: #e8ecef;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 /* 소셜 로그인 버튼 공통 */
 .login-social-btn {
     width: 100%;
-    padding: 11px 15px;
+    padding: 12px 16px;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
     box-sizing: border-box;
+    transition: all 0.3s ease;
 }
 
 /* 소셜 아이콘 공통 */
 .login-social-icon {
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
     margin-right: 10px;
     background-size: contain;
     background-repeat: no-repeat;
@@ -138,12 +155,14 @@
 
 /* 네이버 버튼 */
 .naver-login-btn {
-    background-color: #00c73c;
-    color: #fff;
+    background-color: #03c75a;
+    color: white;
 }
 
 .naver-login-btn:hover {
-    background-color: #00a933;
+    background-color: #02b050;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .naver-icon {
@@ -152,13 +171,15 @@
 
 /* 구글 버튼 */
 .google-login-btn {
-    background-color: #fff;
-    color: #333;
-    border: 1px solid #dadada;
+    background-color: white;
+    color: #2b3a55;
+    border: 1px solid #e8ecef;
 }
 
 .google-login-btn:hover {
     background-color: #f5f5f5;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .google-icon {
@@ -172,7 +193,9 @@
 }
 
 .kakao-login-btn:hover {
-    background-color: #efd600;
+    background-color: #fdd835;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .kakao-icon {

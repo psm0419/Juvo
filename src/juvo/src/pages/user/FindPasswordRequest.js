@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import '../../assets/css/user/FindPasswordRequest.css';
 
 function FindPasswordRequest() {
+    const navigate = useNavigate();
     const [form, setForm] = useState({
         email: "",
         id: "",
         tel: "",
     });
-    const [message, setMessage] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,9 +20,28 @@ function FindPasswordRequest() {
         e.preventDefault();
         try {
             const response = await axios.post("/findPassword/request", form);
-            setMessage(response.data.message || "비밀번호 재설정 링크가 이메일로 전송되었습니다.");
+            if (response.data === true) {
+                alert("비밀번호 재설정 링크가 이메일로 전송되었습니다.");
+                navigate("/user/login");
+            }
         } catch (error) {
-            setMessage(error.response?.data?.message || "오류가 발생했습니다.");
+            // 서버에서 전달된 에러 메시지 처리
+            let errorMessage = "오류가 발생했습니다. 다시 시도해주세요.";
+            
+            if (error.response) {
+                if (error.response.data && error.response.data.message) {
+                    // JSON 형식으로 온 경우
+                    errorMessage = error.response.data.message;
+                } else if (typeof error.response.data === 'string' && error.response.data.includes('RuntimeException')) {
+                    // HTML 형식으로 온 경우 메시지 추출
+                    const match = error.response.data.match(/RuntimeException: (.*?)</);
+                    if (match && match[1]) {
+                        errorMessage = match[1];
+                    }
+                }
+            }
+            
+            alert(errorMessage);
         }
     };
 
@@ -69,7 +89,14 @@ function FindPasswordRequest() {
                         </button>
                     </div>
                 </form>
-                {message && <p className="fp-message">{message}</p>}
+                <div className="fp-form-group">
+                    <button
+                        className="fp-login-btn"
+                        onClick={() => navigate("/user/login")}
+                    >
+                        로그인 페이지로 이동
+                    </button>
+                </div>
             </div>
         </div>
     );
