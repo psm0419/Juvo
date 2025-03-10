@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import CheapJuyuso from "../../components/main/CheapJuyuso";
 import AvgByRegion from '../../components/main/AvgByRegion';
-import AvgPriceChart from './AvgPriceChart';
+import AvgPriceChart from '../../components/main/AvgPriceChart';
 
 function Main() {	
 
@@ -141,19 +141,19 @@ function Main() {
 								</div>
 								<div className="todayContrainer">
 								<div className="box">
-									<h4>휘발유</h4>
+									<h5>휘발유</h5>
 									<p>{todayPrices["휘발유"]}</p>
 								</div>
 								<div className="box">
-									<h4>경유</h4>
+									<h5>경유</h5>
 									<p>{todayPrices["경유"]}</p>
 								</div>
 								<div className="box">
-									<h4>고급휘발유</h4>
+									<h5>고급휘발유</h5>
 									<p>{todayPrices["고급휘발유"]}</p>
 								</div>
 								<div className="box noBorder">
-									<h4>등유</h4>
+									<h5>등유</h5>
 									<p>{todayPrices["실내등유"]}</p>
 								</div>
 								</div>

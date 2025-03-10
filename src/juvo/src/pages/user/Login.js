@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../assets/css/user/Login.css';
+import Header from '../../components/header/Header';
 
 function Login() {
     const [id, setId] = useState('');
@@ -30,6 +31,7 @@ function Login() {
                 setPw('');
             } else {
                 localStorage.setItem('accessToken', accessToken);
+                window.dispatchEvent(new Event("storage")); // 강제로 storage 이벤트 발생
                 alert('로그인 성공');
                 navigate('/');
             }
