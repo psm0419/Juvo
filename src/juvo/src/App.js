@@ -52,7 +52,6 @@ function App() {
 				<Route path="/detail/guideDetail/LocationServiceTerms" element={<LocationServiceTerms />} />
 				<Route path="/detail/guideDetail/PrivacyPolicy" element={<PrivacyPolicy />} />
 				<Route path="/detail/guideDetail/RefundPolicy" element={<RefundPolicy />} />
-			
 				<Route path="/detail/guideDetail/faq" element={<Faq />} />
 				<Route path="/detail/guideDetail/faq/:id" element={<FaqDetail />} />
 				<Route path='/user/login' element={<Login />} />
