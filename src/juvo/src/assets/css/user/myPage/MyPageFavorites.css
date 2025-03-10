@@ -1,0 +1,78 @@
+.favorites-container {
+    padding: 20px;
+}
+
+.favorites-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #1a73e8;
+}
+
+.favorites-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.favorites-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.favorites-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.favorites-item h3 {
+    color: #1a73e8;
+    margin: 0 0 10px 0;
+    font-size: 18px;
+}
+
+.favorites-item p {
+    color: #666;
+    margin: 5px 0;
+}
+
+.price-info {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.last-updated {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 15px;
+}
+
+.remove-favorite {
+    width: 100%;
+    padding: 8px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.remove-favorite:hover {
+    background-color: #c82333;
+}
+
+.no-favorites {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    font-size: 16px;
+} 

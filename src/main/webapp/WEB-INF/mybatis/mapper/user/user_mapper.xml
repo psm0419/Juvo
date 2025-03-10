@@ -70,13 +70,13 @@
 		WHERE id = #{id}
 	</update>
 	
-	<select id="findIdByEmail" resultType="User" parameterType="User">
+	<select id="findIdRequest" resultType="User" parameterType="User">
 		select *
 		FROM users
 		WHERE email = #{email} and tel = #{tel}
 	</select>
 	
-	<select id="resetPasswordByEmail" resultType="User" parameterType="User">
+	<select id="resetPasswordRequest" resultType="User" parameterType="User">
 		select *
 		FROM users
 		WHERE id = #{id} and email = #{email} and tel = #{tel}

@@ -7,86 +7,95 @@
 
 .signup-container { 
     max-width: 460px;
-    margin: 50px auto;
-    padding: 30px 20px;
-    font-family: 'Noto Sans KR', sans-serif;
-    background-color: #fff;
-    border: 2px solid #ccc; /* 테두리 두께를 2px로 늘리고 색상 강화 */
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    margin: 40px auto;
+    padding: 30px 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(145deg, #ffffff, #f0f4f8);
+    border: 1px solid #e8ecef;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 .signup-title {
     text-align: center;
-    color: #333;
+    color: #1e2a44;
     font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 30px;
+    font-weight: 600;
+    margin-bottom: 25px;
 }
 
 .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .input-with-button {
     display: flex;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     width: 100%;
     position: relative; 
 }
 
 .input-field {
     width: 100%;
-    padding: 11px 15px;
-    border: 1px solid #dadada;
-    border-radius: 4px;
+    padding: 12px 16px;
+    border: 2px solid #d1d9e6;
+    border-radius: 8px;
     box-sizing: border-box;
     font-size: 14px;
-    color: #333;
-    font-family: 'Noto Sans KR', sans-serif;
-    transition: border-color 0.3s, color 0.3s; /* color 전환 추가 */
+    color: #2b3a55;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .input-field:disabled {
     background-color: #f7f7f7;
     cursor: not-allowed;
-    border-color: #dadada; /* 비활성화 시 기본 테두리 유지 */
+    border-color: #d1d9e6;
 }
 
 .input-field:focus {
-    border: 2px solid #03c75a; /* 포커스 시 녹색 테두리 */
+    border: 2px solid #03c75a;
+    box-shadow: 0 0 0 3px rgba(3, 199, 90, 0.1);
     outline: none;
 }
 
 /* 유효성 검증에 따른 테두리 색상 */
 .input-field.valid {
-    border-color: #03c75a; /* 유효할 때 녹색 */
+    border: 2px solid #03c75a;
+    background: rgba(3, 199, 90, 0.05);
 }
 
 .input-field.pending {
-    border-color: #ffa500; /* 인증 대기: 주황색 (또는 원하는 색상) */
+    border: 2px solid #ffa500;
+    background: rgba(255, 165, 0, 0.05);
 }
+
 .input-field.invalid {
-    border-color: #ff3d3d; /* 유효하지 않을 때 빨간색 */
+    border: 2px solid #ff3d3d;
+    background: rgba(255, 61, 61, 0.05);
 }
 
 .check-button, .auth-button {
-    padding: 8px 12px;
-    margin-left: 8px;
-    background-color: #03c75a;
+    padding: 10px 15px;
+    margin-left: 10px;
+    background-color: #1a73e8;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     flex-shrink: 0;
-    opacity: 0; /* 처음엔 보이지 않음 */
-    transform: translateX(20px); /* 오른쪽에서 시작 */
-    animation: fadeInFromRight 0.3s ease-out forwards; /* 애니메이션 적용 */
+    opacity: 0;
+    transform: translateX(20px);
+    animation: fadeInFromRight 0.3s ease-out forwards;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
 }
+
 @keyframes fadeInFromRight {
     from {
         opacity: 0;
@@ -99,52 +108,84 @@
 }
 
 .check-button:hover, .auth-button:hover {
-    background-color: #02b050;
+    background-color: #1557b0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .auth-code-group {
     margin-top: 10px;
     width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-code-group:not([hidden]) {
+    max-height: 100px;
+    opacity: 1;
+    transform: translateY(0);
+    margin-bottom: 15px;
 }
 
 .validation-msg {
     display: block;
-    font-size: 12px;
-    margin-top: 6px;
-    min-height: 18px;
-    color: #8e8e8e;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 11px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    height: 16px;
+    line-height: 16px;
+    color: #666;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.validation-msg:not(:empty) {
+    opacity: 1;
 }
 
 .validation-msg.valid {
     color: #03c75a;
+    opacity: 1;
 }
+
 .validation-msg.pending {
-    color: #ffa500; /* 대기 메시지: 주황색 */
+    color: #ffa500;
+    opacity: 1;
 }
+
 .validation-msg.invalid {
     color: #ff3d3d;
+    opacity: 1;
 }
 
 .signup-button {
     width: 100%;
-    padding: 13px;
-    background-color: #03c75a;
+    padding: 14px;
+    background-color: #1a73e8;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    font-weight: 700;
-    font-family: 'Noto Sans KR', sans-serif;
-    transition: background-color 0.3s;
+    font-weight: 600;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
 }
 
 .signup-button:disabled {
-    background-color: #d0d0d0;
+    background-color: #d1d9e6;
     cursor: not-allowed;
+    box-shadow: none;
 }
 
 .signup-button:not(:disabled):hover {
-    background-color: #02b050;
+    background-color: #1557b0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }

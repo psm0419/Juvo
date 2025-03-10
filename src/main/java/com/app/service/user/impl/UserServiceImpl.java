@@ -73,14 +73,14 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public User findIdByEmail(User requestUser) {
-		User user = userDAO.findIdByEmail(requestUser);
+	public User findIdByRequest(User requestUser) {
+		User user = userDAO.findIdRequest(requestUser);
 		return user;
 	}
 
 	@Override
-	public User resetPasswordByEmail(User requestUser) {
-		User user = userDAO.resetPasswordByEmail(requestUser);
+	public User resetPasswordRequest(User requestUser) {
+		User user = userDAO.resetPasswordRequest(requestUser);
 		return user;
 	}
 
