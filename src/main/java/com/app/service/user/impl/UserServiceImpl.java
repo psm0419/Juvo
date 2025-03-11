@@ -3,10 +3,13 @@ package com.app.service.user.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.app.dao.user.UserDAO;
 import com.app.dto.user.User;
 import com.app.service.user.UserService;
+
+import java.util.Random;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -16,71 +19,78 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	public User checkUserLogin(User user) {
-		User loginUser = userDAO.checkUserLogin(user);
-		return loginUser;
+		return userDAO.checkUserLogin(user);
 	}
 
 	@Override
 	public int signupUser(User user) {
-		int result = userDAO.signupUser(user);
-		return result;
+		return userDAO.signupUser(user);
 	}
 
 	@Override
 	public boolean checkDupId(String id) {
-		User checkDupId = userDAO.checkDupId(id);
-		System.out.println(checkDupId);
-		if(checkDupId == null) {	//객체가 없다 -> 중복X
-			return false;
-		} else { //해당 아이디와 동일한 객체가 있다 -> 중복O
-			return true;
-		}
+		return userDAO.checkDupId(id) != null;
 	}
 
 	@Override
 	public boolean checkDupNickname(String nickname) {
-		User checkDupNickname = userDAO.checkDupNickname(nickname);
-		System.out.println(checkDupNickname);
-		if(checkDupNickname == null) {	//객체가 없다 -> 중복X
-			return false;
-		} else { //해당 아이디와 동일한 객체가 있다 -> 중복O
-			return true;
-		}
+		return userDAO.checkDupNickname(nickname) != null;
 	}
 
 	@Override
 	public User checkUserByToken(String id) {
-		User user = userDAO.checkUserByToken(id);
-		return user;
+		return userDAO.checkUserByToken(id);
 	}
 
 	@Override
 	public int changePassword(User user) {
-		int result = userDAO.changePassword(user);
-		return result;
+		return userDAO.changePassword(user);
 	}
 
 	@Override
 	public User findUserById(String id) {
-		User user = userDAO.findUserById(id);
-		return user;
+		return userDAO.findUserById(id);
 	}
 
 	@Override
 	public int changeNickname(User user) {
-		int result = userDAO.changeNickname(user);
-		return result;
+		return userDAO.changeNickname(user);
 	}
 
 	@Override
 	public User findIdByRequest(User requestUser) {
-		User user = userDAO.findIdRequest(requestUser);
-		return user;
+		return userDAO.findIdRequest(requestUser);
 	}
 
 	@Override
 	public User resetPasswordRequest(User requestUser) {
-		User user = userDAO.resetPasswordRequest(requestUser);
+		return userDAO.resetPasswordRequest(requestUser);
+	}
+
+	@Override
+	public User findByEmail(String email) {
+		return userDAO.findByEmail(email);
+	}
+
+	@Override
+	public int insertUser(User user) {
+		return userDAO.insertUser(user);
+	}
+
+	@Transactional
+	@Override
+	public User findOrCreateGoogleUser(String email, String name) {
+		User user = userDAO.findByEmail(email);
+		if (user == null) {
+			user = new User();
+			user.setEmail(email);
+			user.setUsername(name);
+
+			String randomId = email.split("@")[0] + "_" + String.format("%04d", new Random().nextInt(10000));
+			user.setId(randomId);
+
+			userDAO.insertUser(user);
+		}
 		return user;
 	}
 

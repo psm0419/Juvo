@@ -27,4 +27,8 @@ public interface UserDAO {
 	
 	public User resetPasswordRequest(User requestUser);
 	
+	public User findByEmail(String email);
+	
+	public int insertUser(User user);
+
 }

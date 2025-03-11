@@ -37,6 +37,11 @@
 	<select id="getAllJuyuso" resultType="Juyuso">
 		SELECT * FROM juyuso
 	</select>
+	
+	<!-- MyPage 즐겨찾기 한 주유소 데이터 조회 -->
+	<select id="getFavoritesJuyuso" resultType="String">
+		SELECT UNI_ID FROM like_juyuso where user_id = #{userId}
+	</select>
 
 	<!-- 주유소 정보 업데이트 -->
 	<update id="updateJuyuso" parameterType="Juyuso">
@@ -180,5 +185,10 @@
 		DELETE FROM user_keyword
 		WHERE USER_ID = #{userId}
 		AND UNI_ID = #{uniId}
+	</delete>
+
+	<delete id="deleteFavoriteStation" parameterType="map">
+		DELETE FROM like_juyuso 
+		WHERE user_id = #{userId} AND uni_id = #{uniId}
 	</delete>
 </mapper>

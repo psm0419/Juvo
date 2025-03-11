@@ -1,10 +1,14 @@
 package com.app.controller.user;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,9 +28,10 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
+
+
 	@PostMapping("/user/loginJWT") // 로그인 시 토큰 발급
-	public String loginJWT(@RequestBody User user, HttpServletRequest request) {
-		// member 값 DB 비교
+	public Map<String, String> loginJWT(@RequestBody User user, HttpServletRequest request) {
 		System.out.println("로그인 시도 : " + user.getId());
 
 		try {
@@ -38,19 +43,24 @@ public class UserController {
 
 		User loginUser = userService.checkUserLogin(user);
 
+		Map<String, String> tokens = new HashMap<>();
 		if (loginUser == null) { // 로그인 실패
 			System.out.println("로그인 실패");
-			return "fail";
-		} else {// 로그인 과정
+			tokens.put("accessToken", "fail");
+		} else { // 로그인 성공
 			String accessToken = JwtProvider.createAccessToken(user.getId());
+			String refreshToken = JwtProvider.createRefreshToken();
 			System.out.println("로그인 아이디 : " + user.getId());
 			System.out.println("발행 access Token : " + accessToken);
-			return accessToken;
-		}
+			System.out.println("발행 refresh Token : " + refreshToken);
 
+			tokens.put("accessToken", accessToken);
+			tokens.put("refreshToken", refreshToken);
+		}
+		return tokens;
 	}
 
-	@PostMapping("/api/loginCheckJWT")
+	@PostMapping("/user/loginCheckJWT")
 	public String loginCheckJWT(@RequestBody User user, HttpServletRequest request) {
 
 		// token 열어보고 -> 유효한 토큰인지 -> 누가 로그인했는지 -> 로직실행(DB정보조회) -> return
@@ -70,7 +80,7 @@ public class UserController {
 	@PostMapping("/user/signup") // 회원가입 요청
 	public String signup(@RequestBody User user, HttpServletRequest request) {
 
-		user.setUser_type("CUS");
+		user.setUserType("CUS");
 
 		try {
 			String encryptPw = SHA256Encryptor.encrypt(user.getPw());
@@ -199,6 +209,21 @@ public class UserController {
 			System.out.println("닉네임 변경 실패");
 			return false;
 
+		}
+	}
+
+	@PostMapping("/user/refreshToken")
+	public ResponseEntity<Map<String, String>> refreshAccessToken(@RequestHeader("Authorization") String refreshToken) {
+		String token = refreshToken.replace("Bearer ", "");
+		String userId = JwtProvider.getUserIdFromToken(token);
+		String newAccessToken = JwtProvider.refreshAccessToken(token, userId);
+
+		if (newAccessToken != null) {
+			Map<String, String> tokens = new HashMap<>();
+			tokens.put("accessToken", newAccessToken);
+			return ResponseEntity.ok(tokens);
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 		}
 	}
 }

@@ -25,8 +25,10 @@ import FindPasswordRequest from './pages/user/FindPasswordRequest';
 import ResetPassword from './pages/user/ResetPassword';
 import Membership from './pages/detail/guideDetail/Membership';
 import MembershipDetail from './pages/detail/guideDetail/MembershipDetail';
+import { useTokenCleanup } from './util/AxiosConfig';
 
 function App() {
+	useTokenCleanup();
 	return (
 		<div>
 			<Routes>

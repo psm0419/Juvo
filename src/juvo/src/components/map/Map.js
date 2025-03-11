@@ -276,6 +276,49 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             console.log("Fuel markers updated:", validMarkers.length);
         });
 
+        window.showDetail = (uniId, lat, lng) => {
+            console.log("Showing detail for uniId:", uniId);
+            const station = filteredStations.find(s => s.uniId === uniId);
+            if (!station) return;
+            setSelectedDetailStation({ ...station, lat, lng });
+            if (currentInfoWindow) {
+                currentInfoWindow.close();
+                setCurrentInfoWindow(null);
+            }
+        };
+
+        window.registerFavoriteStation = function (uniId) {
+            console.log("Registering favorite station:", uniId);
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                alert('로그인이 필요합니다.');
+                // 현재 페이지 URL 저장
+                sessionStorage.setItem('redirectUrl', window.location.pathname);
+                window.location.href = '/user/login'; // 로그인 페이지로 이동
+                return;
+            }
+
+            fetch('/api/favorite/juyuso', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ uniId: uniId })
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('등록 실패');
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('로그인이 필요 합니다.');
+                });
+        };
+
         return () => {
             fuelMarkers.forEach(marker => {
                 if (marker && kakao.maps.event) {

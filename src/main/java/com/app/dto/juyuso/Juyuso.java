@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Juyuso {
-	 String uniId;
+     String uniId;
      String pollDivCd;
      String osNm;
      String vanAdr;
@@ -22,5 +22,5 @@ public class Juyuso {
      Double gOilPrice; // B034: 고급휘발유
      Double dOilPrice; // D047: 경유
      Double iOilPrice; // C004: 실내등유
-     Integer operatation;     
+     Integer operatation;
 }

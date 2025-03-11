@@ -26,4 +26,6 @@ public interface JuyusoDAO {
     int insertKeyword(Map<String, Object> param);
     int deleteReview(Map<String, Object> param);
     int deleteKeywordsByUserAndStation(Map<String, Object> param);
+	List<String> getFavoriteJuyuso(String userId);
+	boolean deleteFavoriteStation(String userId, String uniId);
 }

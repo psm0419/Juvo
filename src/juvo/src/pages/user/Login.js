@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../assets/css/user/Login.css';
 import Header from '../../components/header/Header';
+import axiosInstance from '../../util/AxiosConfig';
+import GoogleLoginButton from './socialLogin/GoogleLogin';
 
 function Login() {
     const [id, setId] = useState('');
@@ -12,18 +14,18 @@ function Login() {
     const isValid = id.trim() && pw.trim();
 
     const handleLogin = async () => {
-        if (!isValid) {
+        if (!id || !pw) {
             alert('아이디와 비밀번호를 입력해주세요.');
             return;
         }
 
         try {
-            const response = await axios.post(
+            const response = await axiosInstance.post(
                 '/user/loginJWT',
                 { id, pw },
                 { headers: { 'Content-Type': 'application/json' } }
             );
-            const accessToken = response.data;
+            const { accessToken, refreshToken } = response.data;
 
             if (accessToken === 'fail') {
                 alert('로그인 실패: 아이디 또는 비밀번호를 확인해주세요.');
@@ -31,13 +33,18 @@ function Login() {
                 setPw('');
             } else {
                 localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
                 window.dispatchEvent(new Event("storage")); // 강제로 storage 이벤트 발생
                 alert('로그인 성공');
-                navigate('/');
+
+                // 이전 URL로 리다이렉트
+                const redirectUrl = sessionStorage.getItem('redirectUrl') || '/';
+                sessionStorage.removeItem('redirectUrl'); // 사용 후 제거
+                navigate(redirectUrl);
             }
         } catch (error) {
             console.error('로그인 오류:', error);
-            const errorMsg = error.response?.data?.message || '로그인 중 오류가 발생했습니다.';
+            const errorMsg = error.response?.data?.message || '로그인 중 통신오류가 발생했습니다.';
             alert(errorMsg);
             setId('');
             setPw('');
@@ -98,10 +105,9 @@ function Login() {
                         <span className="login-social-icon naver-icon" />
                         <span>네이버로 로그인</span>
                     </button>
-                    <button className="login-social-btn google-login-btn">
-                        <span className="login-social-icon google-icon" />
-                        <span>구글로 로그인</span>
-                    </button>
+                    <div className="google-login-wrapper">
+                        <GoogleLoginButton />
+                    </div>
                     <button className="login-social-btn kakao-login-btn">
                         <span className="login-social-icon kakao-icon" />
                         <span>카카오계정으로 로그인</span>

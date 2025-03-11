@@ -11,6 +11,6 @@ public class User {
 	String email;
 	String tel;
 	String jumin;
-	String user_type;
+	String userType;
 	int membership;
 }

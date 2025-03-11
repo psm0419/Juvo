@@ -24,11 +24,21 @@ function Header() {
 
     const handleLogout = () => {
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         setIsLogin(false);
         alert('로그아웃 되었습니다.');
         navigate('/');
     };
 
+    const handleMyPageClick = () => {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            alert('로그인이 필요합니다.');
+            window.location.href = '/login'; // 로그인 페이지로 이동
+            return;
+        }
+        navigate("/myPage/profile");
+    };
 
     const menuItems = {
         '주유소찾기': [
@@ -79,7 +89,7 @@ function Header() {
             <div className="btns">
                 {isLogin ? (
                     <>
-                        <div className="mypage" onClick={() => navigate("/user/myPage/profile")}>마이페이지</div>
+                        <div className="mypage" onClick={handleMyPageClick}>마이페이지</div>
                         <div className="logout" onClick={handleLogout}>로그아웃</div>
                     </>
                 ) : (
