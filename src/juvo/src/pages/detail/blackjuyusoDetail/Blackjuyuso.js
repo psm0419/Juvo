@@ -3,21 +3,21 @@ import '../../../assets/css/detail/Blackjuyuso.css';
 
 export default function Blackjuyuso() {
     const allData = [
-        { type: "용도외판매", industry: "주유소", name: "장화주유소", address: "전북 김제시 벽골제로 637 (장화동)", owner: "김소희" },
-        { type: "가짜석유취급", industry: "주유소", name: "칠송정주유소", address: "경북 칠곡군 가산면 인동가산로 827", owner: "이태근,최진원" },
-        { type: "용도외판매", industry: "일반판매소", name: "SK동방에너지", address: "부산광역시 북구 백양대로1016번나길 76-11", owner: "강성현" },
-        { type: "용도외판매", industry: "일반판매소", name: "연수에너지", address: "인천광역시 중구 제물량로241번길 24", owner: "허정옥" },
-        { type: "용도외판매", industry: "일반판매소", name: "대구에너지", address: "대구광역시 서구 당산로67길 8", owner: "박성준" },
-        { type: "가짜석유취급", industry: "일반판매소", name: "작전석유", address: "경기도 부천시 소사구 경인로216번길 61 (심곡본동)", owner: "안미경" },
-        { type: "가짜석유취급", industry: "주유소", name: "㈜케이씨 양주주유소", address: "경기 양주시 은현면 화합로 1174", owner: "김정제" },
-        { type: "가짜석유취급", industry: "주유소", name: "수동주유소", address: "경기 남양주시 수동면 비룡로 815", owner: "이남혁" },
-        { type: "용도외판매", industry: "일반판매소", name: "태성에너지", address: "경상북도 문경시 영순면 사근왕태길 24-1", owner: "장영도" },
-        { type: "가짜석유취급", industry: "일반판매소", name: "대성석유", address: "인천광역시 미추홀구 미추홀대로697번길16 (주안동)", owner: "김의준" },
-        { type: "용도외판매", industry: "일반판매소", name: "행복에너지", address: "경기도 여주시 대신면 하림3길 24, 113호", owner: "이혜련" },
-        { type: "용도외판매", industry: "주유소", name: "성곡IC주유소", address: "경북 포항시 북구 흥해읍 동해대로 1119", owner: "장선" },
-        { type: "용도외판매", industry: "일반판매소", name: "원에너지", address: "대구광역시 서구 국채보상로81길 11", owner: "채호재" },
-        { type: "용도외판매", industry: "일반판매소", name: "덕산에너지", address: "경상남도 창원시 의창구 동읍 용잠로 17", owner: "황재현" },
-        { type: "용도외판매", industry: "일반판매소", name: "신화에너지", address: "경기도 파주시 적성면 율곡로 1455-4", owner: "안진" },
+        { type: "용도외판매", industry: "주유소", name: "장화주유소", address: "전북 김제시 벽골제로 637 (장화동)"},
+        { type: "가짜석유취급", industry: "주유소", name: "칠송정주유소", address: "경북 칠곡군 가산면 인동가산로 827"},
+        { type: "용도외판매", industry: "일반판매소", name: "SK동방에너지", address: "부산광역시 북구 백양대로1016번나길 76-11"},
+        { type: "용도외판매", industry: "일반판매소", name: "연수에너지", address: "인천광역시 중구 제물량로241번길 24"},
+        { type: "용도외판매", industry: "일반판매소", name: "대구에너지", address: "대구광역시 서구 당산로67길 8"},
+        { type: "가짜석유취급", industry: "일반판매소", name: "작전석유", address: "경기도 부천시 소사구 경인로216번길 61 (심곡본동)"},
+        { type: "가짜석유취급", industry: "주유소", name: "㈜케이씨 양주주유소", address: "경기 양주시 은현면 화합로 1174"},
+        { type: "가짜석유취급", industry: "주유소", name: "수동주유소", address: "경기 남양주시 수동면 비룡로 815"},
+        { type: "용도외판매", industry: "일반판매소", name: "태성에너지", address: "경상북도 문경시 영순면 사근왕태길 24-1"},
+        { type: "가짜석유취급", industry: "일반판매소", name: "대성석유", address: "인천광역시 미추홀구 미추홀대로697번길16 (주안동)"},
+        { type: "용도외판매", industry: "일반판매소", name: "행복에너지", address: "경기도 여주시 대신면 하림3길 24, 113호"},
+        { type: "용도외판매", industry: "주유소", name: "성곡IC주유소", address: "경북 포항시 북구 흥해읍 동해대로 1119" },
+        { type: "용도외판매", industry: "일반판매소", name: "원에너지", address: "대구광역시 서구 국채보상로81길 11"},
+        { type: "용도외판매", industry: "일반판매소", name: "덕산에너지", address: "경상남도 창원시 의창구 동읍 용잠로 17"},
+        { type: "용도외판매", industry: "일반판매소", name: "신화에너지", address: "경기도 파주시 적성면 율곡로 1455-4"},
     ];
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -98,16 +98,6 @@ export default function Blackjuyuso() {
                     />
                 </div>
                 <div className="bj-filter-item">
-                    <label>대표자</label>
-                    <input
-                        type="text"
-                        name="owner"
-                        value={filters.owner}
-                        onChange={handleFilterChange}
-                        placeholder="대표자 입력"
-                    />
-                </div>
-                <div className="bj-filter-item">
                     <label>위반유형</label>
                     <select name="type" value={filters.type} onChange={handleFilterChange}>
                         <option value="">전체</option>
@@ -131,7 +121,6 @@ export default function Blackjuyuso() {
                             <th className="bj-table-header">업종</th>
                             <th className="bj-table-header">업체명</th>
                             <th className="bj-table-header">주소</th>
-                            <th className="bj-table-header">대표자</th>
                         </tr>
                     </thead>
                     <tbody>
