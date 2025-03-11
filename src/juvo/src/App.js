@@ -23,8 +23,10 @@ import Faq from './pages/detail/guideDetail/Faq';
 import FaqDetail from './pages/detail/guideDetail/FaqDetail';
 import FindPasswordRequest from './pages/user/FindPasswordRequest';
 import ResetPassword from './pages/user/ResetPassword';
+import { useTokenCleanup } from './util/AxiosConfig';
 
 function App() {
+	useTokenCleanup();
 	return (
 		<div>
 			<Routes>

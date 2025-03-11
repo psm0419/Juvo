@@ -24,6 +24,7 @@ function Header() {
 
     const handleLogout = () => {
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         setIsLogin(false);
         alert('로그아웃 되었습니다.');
         navigate('/');

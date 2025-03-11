@@ -105,7 +105,7 @@ public class JwtProvider {
 	/**
 	 * Refresh Token 생성
 	 */
-	public String createRefreshToken() {
+	public static String createRefreshToken() {
 		return Jwts.builder().issuedAt(new Date()).issuer("spring server")
 				.expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
 				.signWith(getSigningKey(), Jwts.SIG.HS256).compact();
@@ -114,7 +114,7 @@ public class JwtProvider {
 	/**
 	 * Refresh Token을 이용한 새로운 Access Token 발급
 	 */
-	public String refreshAccessToken(String refreshToken, String userId) {
+	public static String refreshAccessToken(String refreshToken, String userId) {
 		if (isVaildToken(refreshToken)) {
 			return createAccessToken(userId);
 		}
