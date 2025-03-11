@@ -21,7 +21,9 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [activeTab, setActiveTab] = useState("주유소");
     const [sidoList, setSidoList] = useState([]);
-
+    // 상태 추가
+    const [originalChargingStations, setOriginalChargingStations] = useState([]); // 원본 데이터
+    const [filteredChargingStations, setFilteredChargingStations] = useState([]); // 필터링된 데이터
     const [brands, setBrands] = useState({
         cheap: false,
         skEnergy: false,
@@ -116,7 +118,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             }
 
             setLat(newLat);
-            setLng(newLng);            
+            setLng(newLng);
         };
 
         const debounceHandleMarkerMove = debounce(handleMarkerMove, 500);
@@ -175,7 +177,8 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         const kakao = window.kakao;
         const geocoder = new kakao.maps.services.Geocoder();
 
-        fuelMarkers.forEach(marker => marker?.setMap(null));
+        fuelMarkers.forEach(marker => marker?.setMap(null)); //기존 마커 제거
+
         const promises = filteredStations.map(station => {
             const address = station.NEW_ADR || station.newAdr || station.VAN_ADR || station.vanAdr;
             if (!address) return Promise.resolve(null);
@@ -288,73 +291,93 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
     // 충전소 마커 업데이트
     useEffect(() => {
-        if (activeTab !== "충전소" || !mapRef.current || !chargingStations.length) return;
+        if (activeTab !== "충전소" || !mapRef.current || !originalChargingStations.length) return;
 
         const kakao = window.kakao;
         const geocoder = new kakao.maps.services.Geocoder();
 
         chargingMarkers.forEach(marker => marker?.setMap(null));
-        const promises = chargingStations.map(station => {
-            const address = station.address;
-            if (!address) return Promise.resolve(null);
 
-            return new Promise(resolve => {
-                geocoder.addressSearch(address, (result, status) => {
-                    if (status === kakao.maps.services.Status.OK) {
-                        const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                        const marker = new kakao.maps.Marker({
-                            position: coords,
-                            map: mapRef.current,
-                            title: station.stationName,
-                        });
+        const filterStationsByDistance = async () => {
+            const maxDistance = 5000; // 5km (미터 단위)
+            const limitedStations = originalChargingStations.slice(0, 200); // 원본에서 200개 제한
 
-                        const infoWindowContent = `
-                            <div class="charging-info-window">
-                                <div class="charging-info-title">${station.stationName}</div>
-                                <div class="charging-info-details">
-                                    <div><span>📍</span> ${station.address}</div>
-                                    <div><span>충전기 타입</span> ${station.chargerType || "정보 없음"}</div>
-                                    <div><span>운영기관</span> ${station.operatorLarge || "정보 없음"}</div>
-                                    <div><span>급속 충전량</span> ${station.rapidChargeAmount || "정보 없음"}</div>
-                                </div>
-                                <button class="charging-info-route-button" onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})">
-                                    경로찾기
-                                </button>
-                            </div>
-                        `;
+            const filteredPromises = limitedStations.map(station => {
+                const address = station.address;
+                if (!address) return Promise.resolve(null);
 
-                        const infoWindow = new kakao.maps.InfoWindow({
-                            content: infoWindowContent,
-                        });
-
-                        kakao.maps.event.addListener(marker, "click", () => {
-                            if (!window.activeInfoWindows) window.activeInfoWindows = [];
-                            if (window.activeInfoWindows.length > 0) {
-                                window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
-                                window.activeInfoWindows = [];
+                return new Promise(resolve => {
+                    geocoder.addressSearch(address, (result, status) => {
+                        if (status === kakao.maps.services.Status.OK) {
+                            const stationLat = result[0].y;
+                            const stationLng = result[0].x;
+                            const distance = getDistance(lat, lng, stationLat, stationLng);
+                            if (distance <= maxDistance) {
+                                return resolve({ station, lat: stationLat, lng: stationLng });
                             }
-                            if (currentInfoWindow) currentInfoWindow.close();
-
-                            infoWindow.open(mapRef.current, marker);
-                            setCurrentInfoWindow(infoWindow);
-                            window.activeInfoWindows.push(infoWindow);
-                            setSelectedStation({ lat: coords.getLat(), lng: coords.getLng() });
-                        });
-
-                        marker.infoWindow = infoWindow;
-                        resolve(marker);
-                    } else {
+                        }
                         resolve(null);
-                    }
+                    });
                 });
             });
-        });
 
-        Promise.all(promises).then(markers => {
-            const validMarkers = markers.filter(m => m);
-            setChargingMarkers(validMarkers);
-            console.log("Charging markers updated:", validMarkers.length);
-        });
+            const filteredResults = await Promise.all(filteredPromises);
+            const validStations = filteredResults.filter(result => result !== null);
+
+            // 마커 생성
+            const markers = validStations.map(({ station, lat: stationLat, lng: stationLng }) => {
+                const coords = new kakao.maps.LatLng(stationLat, stationLng);
+                const marker = new kakao.maps.Marker({
+                    position: coords,
+                    map: mapRef.current,
+                    title: station.stationName,
+                });
+
+                const infoWindowContent = `
+                <div class="charging-info-window">
+                    <div class="charging-info-title">${station.stationName}</div>
+                    <div class="charging-info-details">
+                        <div><span>📍</span> ${station.address}</div>
+                        <div><span>충전기 타입</span> ${station.chargerType || "정보 없음"}</div>
+                        <div><span>운영기관</span> ${station.operatorLarge || "정보 없음"}</div>
+                        <div><span>급속 충전량</span> ${station.rapidChargeAmount || "정보 없음"}</div>
+                    </div>
+                    <button class="charging-info-route-button" onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})">
+                        경로찾기
+                    </button>
+                </div>
+            `;
+
+                const infoWindow = new kakao.maps.InfoWindow({
+                    content: infoWindowContent,
+                });
+
+                kakao.maps.event.addListener(marker, "click", () => {
+                    if (!window.activeInfoWindows) window.activeInfoWindows = [];
+                    if (window.activeInfoWindows.length > 0) {
+                        window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
+                        window.activeInfoWindows = [];
+                    }
+                    if (currentInfoWindow) currentInfoWindow.close();
+
+                    infoWindow.open(mapRef.current, marker);
+                    setCurrentInfoWindow(infoWindow);
+                    window.activeInfoWindows.push(infoWindow);
+                    setSelectedStation({ lat: coords.getLat(), lng: coords.getLng() });
+                });
+
+                marker.infoWindow = infoWindow;
+                return marker;
+            });
+
+            // 필터링된 충전소 데이터 업데이트 (리스트용)
+            const filteredStationsData = validStations.map(item => item.station);
+            setFilteredChargingStations(filteredStationsData);
+            setChargingMarkers(markers);
+            console.log("Charging markers updated:", markers.length);
+        };
+
+        filterStationsByDistance();
 
         return () => {
             chargingMarkers.forEach(marker => {
@@ -367,7 +390,19 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             }
             if (currentInfoWindow) currentInfoWindow.close();
         };
-    }, [chargingStations, lat, lng, activeTab]);
+    }, [originalChargingStations, activeTab, lat, lng]);
+
+    //마커 이동시 정보창 닫기
+    useEffect(() => {
+        if (activeTab === "충전소" && currentInfoWindow) {
+            currentInfoWindow.close();
+            setCurrentInfoWindow(null);
+            if (window.activeInfoWindows?.length > 0) {
+                window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
+                window.activeInfoWindows = [];
+            }
+        }
+    }, [lat, lng, activeTab]);
 
     // 주유소/충전소 데이터 조회
     const handleFetchStations = async () => {
@@ -396,7 +431,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 if (!response.ok) throw new Error("Failed to fetch charging stations");
                 const data = await response.json();
                 console.log("Fetched charging stations:", data);
-                setChargingStations(data);
+                setOriginalChargingStations(data);
                 setIsDataLoaded(true);
             } catch (error) {
                 console.error("Error fetching charging stations:", error);
@@ -604,12 +639,30 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
     const handleTabChange = tab => {
         setActiveTab(tab);
-        setIsDataLoaded(false);
-        setFilteredStations([]);
+        setIsDataLoaded(false); // 데이터 로드 상태 초기화
+        setFilteredStations([]); // 주유소 데이터 초기화
+        setOriginalChargingStations([]);
+        setFilteredChargingStations([]);
         setChargingStations([]);
+
+        // 주유소 마커 제거
+        console.log("Removing fuel markers:", fuelMarkers.length);
+        fuelMarkers.forEach(marker => {
+            if (marker && marker.setMap) {
+                marker.setMap(null);
+            }
+        });
         setFuelMarkers([]);
-        fuelMarkers.forEach(marker => marker.setMap(null));
+
+        // 충전소 마커 제거
+        console.log("Removing charging markers:", chargingMarkers.length);
+        chargingMarkers.forEach(marker => {
+            if (marker && marker.setMap) {
+                marker.setMap(null);
+            }
+        });
         setChargingMarkers([]);
+
         setBrands({ cheap: false, skEnergy: false, gsCaltex: false, hyundaiOilbank: false, sOil: false, nOil: false });
         setAdditionalInfo({ carWash: false, maintenance: false, convenience: false, self: false });
         setRegions(prev => Object.keys(prev).reduce((acc, key) => ({ ...acc, [key]: false }), {}));
@@ -707,7 +760,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
                 <div className="map-station-list">
                     <FuelStationList
-                        stations={activeTab === "주유소" ? filteredStations : chargingStations}
+                        stations={activeTab === "주유소" ? filteredStations : filteredChargingStations}
                         loading={loading || !isDataLoaded}
                         onStationClick={handleStationClick}
                         isChargingStation={activeTab === "충전소"}

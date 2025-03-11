@@ -42,7 +42,7 @@ const FuelStationList = ({ stations, loading, onStationClick, isChargingStation 
 
                     {stations.map((station, index) => (
                         <div
-                            key={station.station_name + index} // uniId가 없으므로 station_name과 index로 고유성 보장
+                        key={`${station.stationName || "unknown"}-${index}`} // uniId가 없으므로 station_name과 index로 고유성 보장
                             style={{
                                 display: "flex",
                                 justifyContent: "space-between",
@@ -57,12 +57,12 @@ const FuelStationList = ({ stations, loading, onStationClick, isChargingStation 
                                     style={{ cursor: "pointer", color: "#007bff" }}
                                     onClick={() => onStationClick(station)}
                                 >
-                                    {station.station_name || "이름 없음"}
+                                    {station.stationName || "이름 없음"}
                                 </span>
                             </div>
                             <div style={{ display: "flex", gap: "20px", fontWeight: "bold" }}>
-                                <span>{station.model_large || "-"} ({station.model_small || "-"})</span>
-                                <span>{station.user_restriction || "-"}</span>
+                                <span>{station.modelLarge || "-"} ({station.modelSmall || "-"})</span>
+                                <span>{station.userRestriction || "-"}</span>
                             </div>
                         </div>
                     ))}
