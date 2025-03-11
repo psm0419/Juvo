@@ -72,36 +72,36 @@ class MembershipDetail extends Component {
         }
 
         return (
-            <div className="membership-detail-container">
-                <h1 className="title">JUVO 멤버십 가입</h1>
-                <form onSubmit={this.handleSubmit} className="membership-form">
-                    <div className="form-group">
-                        <label>이름</label>
-                        <input type="text" name="name" onChange={this.handleChange} />
-                        {this.state.errors.name && <p className="error">{this.state.errors.name}</p>}
+            <div className="mbd-membership-detail-container">
+                <h1 className="mbd-title">JUVO 멤버십 가입</h1>
+                <form onSubmit={this.handleSubmit} className="mbd-membership-form">
+                    <div className="mbd-form-group">
+                        <label className="mbd-label">이름</label>
+                        <input type="text" name="name" className="mbd-input" onChange={this.handleChange} />
+                        {this.state.errors.name && <p className="mbd-error">{this.state.errors.name}</p>}
                     </div>
 
-                    <div className="form-group">
-                        <label>전화번호</label>
-                        <input type="tel" name="phone" onChange={this.handleChange} />
-                        {this.state.errors.phone && <p className="error">{this.state.errors.phone}</p>}
+                    <div className="mbd-form-group">
+                        <label className="mbd-label">전화번호</label>
+                        <input type="tel" name="phone" className="mbd-input" onChange={this.handleChange} />
+                        {this.state.errors.phone && <p className="mbd-error">{this.state.errors.phone}</p>}
                     </div>
 
-                    <div className="form-group">
-                        <label>카드 배송 받을 주소</label>
-                        <input type="text" name="address" onChange={this.handleChange} />
-                        {this.state.errors.address && <p className="error">{this.state.errors.address}</p>}
+                    <div className="mbd-form-group">
+                        <label className="mbd-label">카드 배송 받을 주소</label>
+                        <input type="text" name="address" className="mbd-input" onChange={this.handleChange} />
+                        {this.state.errors.address && <p className="mbd-error">{this.state.errors.address}</p>}
                     </div>
 
-                    <div className="form-group">
-                        <label>상세 주소</label>
-                        <input type="text" name="detailAddress" onChange={this.handleChange} />
-                        {this.state.errors.detailAddress && <p className="error">{this.state.errors.detailAddress}</p>}
+                    <div className="mbd-form-group">
+                        <label className="mbd-label">상세 주소</label>
+                        <input type="text" name="detailAddress" className="mbd-input" onChange={this.handleChange} />
+                        {this.state.errors.detailAddress && <p className="mbd-error">{this.state.errors.detailAddress}</p>}
                     </div>
 
-                    <div className="form-group">
-                        <label>카드사 선택</label>
-                        <select name="cardCompany" onChange={this.handleChange}>
+                    <div className="mbd-form-group">
+                        <label className="mbd-label">카드사 선택</label>
+                        <select name="cardCompany" className="mbd-select" onChange={this.handleChange}>
                             <option value="">카드사를 선택하세요</option>
                             <option value="KB국민카드">KB국민카드</option>
                             <option value="신한카드">신한카드</option>
@@ -114,27 +114,27 @@ class MembershipDetail extends Component {
                         </select>
                     </div>
 
-                    <div className="form-group">
-                        <label>카드번호</label>
-                        <input type="text" name="cardNumber" value={this.state.cardNumber} onChange={this.handleCardNumberChange} maxLength="16" />
-                        {this.state.errors.cardNumber && <p className="error">{this.state.errors.cardNumber}</p>}
+                    <div className="mbd-form-group">
+                        <label className="mbd-label">카드번호</label>
+                        <input type="text" name="cardNumber" className="mbd-input" value={this.state.cardNumber} onChange={this.handleCardNumberChange} maxLength="16" />
+                        {this.state.errors.cardNumber && <p className="mbd-error">{this.state.errors.cardNumber}</p>}
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group small-input">
-                            <label>CVC</label>
-                            <input type="text" name="cvc" value={this.state.cvc} onChange={this.handleCvcChange} maxLength="3" />
-                            {this.state.errors.cvc && <p className="error">{this.state.errors.cvc}</p>}
+                    <div className="mbd-form-row">
+                        <div className="mbd-form-group mbd-small-input">
+                            <label className="mbd-label">CVC</label>
+                            <input type="text" name="cvc" className="mbd-input" value={this.state.cvc} onChange={this.handleCvcChange} maxLength="3" />
+                            {this.state.errors.cvc && <p className="mbd-error">{this.state.errors.cvc}</p>}
                         </div>
 
-                        <div className="form-group small-input">
-                            <label>유효기간 (MM/YY)</label>
-                            <input type="text" name="expiry" value={this.state.expiry} onChange={this.handleExpiryChange} maxLength="5" />
-                            {this.state.errors.expiry && <p className="error">{this.state.errors.expiry}</p>}
+                        <div className="mbd-form-group mbd-small-input">
+                            <label className="mbd-label">유효기간 (MM/YY)</label>
+                            <input type="text" name="expiry" className="mbd-input" value={this.state.expiry} onChange={this.handleExpiryChange} maxLength="5" />
+                            {this.state.errors.expiry && <p className="mbd-error">{this.state.errors.expiry}</p>}
                         </div>
                     </div>
 
-                    <button type="submit" className="submit-button">가입 완료</button>
+                    <button type="submit" className="mbd-submit-button">가입 완료</button>
                 </form>
             </div>
         );

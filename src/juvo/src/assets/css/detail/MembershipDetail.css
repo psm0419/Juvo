@@ -1,4 +1,4 @@
-.membership-detail-container {
+.mbd-membership-detail-container {
     max-width: 420px;
     margin: 50px auto;
     padding: 25px;
@@ -9,31 +9,31 @@
     color: white;
 }
 
-.title {
+.mbd-title {
     font-size: 26px;
     font-weight: bold;
     margin-bottom: 20px;
 }
 
-.membership-form {
+.mbd-membership-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.form-group {
+.mbd-form-group {
     display: flex;
     flex-direction: column;
     text-align: left;
 }
 
-label {
+.mbd-label {  /* 접두사 추가 */
     font-weight: bold;
     margin-bottom: 5px;
     color: #fff;
 }
 
-input, select {
+.mbd-input, .mbd-select {
     padding: 10px;
     border: none;
     border-radius: 8px;
@@ -42,16 +42,16 @@ input, select {
     transition: all 0.3s ease-in-out;
 }
 
-.form-row {
+.mbd-form-row {
     display: flex;
     justify-content: space-between;
 }
 
-.small-input {
+.mbd-small-input {
     width: 48%;
 }
 
-.submit-button {
+.mbd-submit-button {
     background: #f89400 ;
     color: #333;
     font-size: 18px;
@@ -63,6 +63,6 @@ input, select {
     transition: background 0.3s ease-in-out;
 }
 
-.submit-button:hover {
+.mbd-submit-button:hover {
     background: #FFA000;
 }
