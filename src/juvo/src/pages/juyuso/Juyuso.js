@@ -41,7 +41,6 @@ const Juyuso = () => {
                 setLat={setLat} 
                 setLng={setLng} // 부모 상태 업데이트용
             />
-            <button onClick={handleFetchStations}>조회</button> {/* 플라이박스 버튼 */}
         </div>
     );
 };

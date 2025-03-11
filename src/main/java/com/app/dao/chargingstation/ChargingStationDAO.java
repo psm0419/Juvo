@@ -1,7 +1,12 @@
 package com.app.dao.chargingstation;
 
-import com.app.dto.chargingstation.ChargingStationDTO;
+import java.util.List;
+
+import com.app.dto.chargingstation.ChargingStation;
 
 public interface ChargingStationDAO {
-	void insertChargingStation(ChargingStationDTO dto);
+	void insertChargingStation(ChargingStation dto);
+	
+	List<ChargingStation> selectBySido(List<String> sidoList);
+    List<String> selectAllSido();
 }

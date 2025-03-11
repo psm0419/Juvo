@@ -4,8 +4,11 @@ import { useState, useEffect } from 'react';
 import CheapJuyuso from "../../components/main/CheapJuyuso";
 import AvgByRegion from '../../components/main/AvgByRegion';
 import AvgPriceChart from '../../components/main/AvgPriceChart';
+import Membership from '../../assets/image/Membership.jpg';
+import mainbackground from '../../assets/image/mainbackground.mp4';
 
-function Main() {	
+
+function Main() {
 
 	//저렴한 주유소, 시도별평균
 	const [cheapJuyusoList, setCheapJuyusoList] = useState([]);
@@ -20,7 +23,7 @@ function Main() {
 		"고급휘발유": 0,
 		"실내등유": 0
 	});
-	
+
 
 	//제품코드
 	const productCodes = {
@@ -49,24 +52,24 @@ function Main() {
 		"대전": "17",
 		"울산": "18",
 		"세종": "19"
-    };
+	};
 
 	// 제품 선택 시 상태 업데이트
 	const handleProductChange = (event) => {
-		setSelectedProduct(event.target.value); 
+		setSelectedProduct(event.target.value);
 	};
 
 	// 지역 선택 시 상태 업데이트
 	const handleAreaChange = (event) => {
-        setSelectedArea(event.target.value); 
-    };
+		setSelectedArea(event.target.value);
+	};
 
 	//전국평균값
 	useEffect(() => {
 		const fetchNationwidePrices = async () => {
 			const productKeys = Object.keys(productCodes); // ["휘발유", "경유", "고급휘발유", "실내등유"]
 			const prices = { "휘발유": 0, "경유": 0, "고급휘발유": 0, "실내등유": 0 };
-	
+
 			try {
 				for (const product of productKeys) {
 					const prodcd = productCodes[product];
@@ -81,15 +84,15 @@ function Main() {
 				console.error('전국 평균 유가 가져오기 실패:', error);
 			}
 		};
-	
+
 		fetchNationwidePrices();
 	}, []); // 한 번만 실행되도록 빈 배열 사용
 
 	//저렴한 주유소
 	useEffect(() => {
-		const areaCode = selectedArea ? areaCodes[selectedArea] : ""; 
-		const prodcd = productCodes[selectedProduct] || "B027";  
-	
+		const areaCode = selectedArea ? areaCodes[selectedArea] : "";
+		const prodcd = productCodes[selectedProduct] || "B027";
+
 		axios.get(`/api/cheapJuyuso?prodcd=${prodcd}&area=${areaCode}`)
 			.then(response => {
 				if (Array.isArray(response.data)) {
@@ -119,20 +122,23 @@ function Main() {
 				console.error('API 호출 중 오류 발생:', error);
 			});
 	}, [selectedProduct]);
-	
+
 
 	return (
 		<>
 			<div className='containerM'>
 				<div className='mainTop'>
 					<div className="textOverlay">
-						<p style={{ fontSize: "2.3rem", fontWeight: "bold" }}> 기름값 아끼는 지름길 </p>
-						<p style={{ fontSize: "1.6rem", fontWeight: "500" }}> 휴먼교육센터 JUVO 에 있습니다. </p>
-						<p style={{ fontSize: "0.9rem", fontWeight: "400" }}> 국내유가 안정과 국민 경제 체험에 앞장서겠습니다. </p>
+						<p style={{ fontSize: "2.3rem", fontWeight: "bold" }}> JUVO </p>
+						<p style={{ fontSize: "1.6rem", fontWeight: "500" }}> 최저가 주유, 최적 경로를 JUVO와 함께! </p>
+						<p style={{ fontSize: "0.9rem", fontWeight: "400" }}> 지금 시작하고 연료비를 절약하세요.</p>
 					</div>
-					<img src ="https://www.opinet.co.kr/images/user/main/main_visual2.jpg"></img>
-                </div>
-                <div className='mainMiddle'>
+					{/* <img src ="https://www.opinet.co.kr/images/user/main/main_visual2.jpg"></img> */}
+					<video autoPlay muted loop className="bg-video">
+						<source src={mainbackground} type="video/mp4" />
+					</video>
+				</div>
+				<div className='mainMiddle'>
 					<div className="middleContainer">
 						<div className="lmiddle middle">
 							<div className="lmiddlet">
@@ -140,22 +146,22 @@ function Main() {
 									<p className="point_text2">오늘의 유가 <span>(전국평균)</span> </p>
 								</div>
 								<div className="todayContrainer">
-								<div className="box">
-									<h5>휘발유</h5>
-									<p>{todayPrices["휘발유"]}</p>
-								</div>
-								<div className="box">
-									<h5>경유</h5>
-									<p>{todayPrices["경유"]}</p>
-								</div>
-								<div className="box">
-									<h5>고급휘발유</h5>
-									<p>{todayPrices["고급휘발유"]}</p>
-								</div>
-								<div className="box noBorder">
-									<h5>등유</h5>
-									<p>{todayPrices["실내등유"]}</p>
-								</div>
+									<div className="box">
+										<h4>휘발유</h4>
+										<p>{todayPrices["휘발유"]}</p>
+									</div>
+									<div className="box">
+										<h4>경유</h4>
+										<p>{todayPrices["경유"]}</p>
+									</div>
+									<div className="box">
+										<h4>고급휘발유</h4>
+										<p>{todayPrices["고급휘발유"]}</p>
+									</div>
+									<div className="box noBorder">
+										<h4>등유</h4>
+										<p>{todayPrices["실내등유"]}</p>
+									</div>
 								</div>
 							</div>
 							<div className="lmiddleb">
@@ -163,7 +169,7 @@ function Main() {
 									<p className="point_text">저렴한 주유소 Top 5</p>
 									<select className="region" onChange={handleAreaChange} value={selectedArea}>
 										<option value="">지역 선택</option>
-                                        <option value="서울">서울</option>
+										<option value="서울">서울</option>
 										<option value="경기">경기</option>
 										<option value="강원">강원</option>
 										<option value="충북">충북</option>
@@ -206,22 +212,22 @@ function Main() {
 							</div>
 						</div>
 					</div>
-                </div>
-                <div className='mainBottom'>
-					<div className="lbottom bottom"> 
+				</div>
+				<div className='mainBottom'>
+					<div className="lbottom bottom">
 						<p className="point_text">공지사항</p>
 						<div className="notice">
 
 						</div>
 					</div>
 					<div className="rbottom bottom cursor">
-						<p className="point_text">멤버십 유도 베너</p>
 						<div className="membership">
+							<img src={Membership}></img>
 
 						</div>
 					</div>
-                </div>
-            </div>
+				</div>
+			</div>
 		</>
 	);
 }
