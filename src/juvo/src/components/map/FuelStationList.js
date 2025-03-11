@@ -2,7 +2,7 @@ import React from "react";
 
 const FuelStationList = ({ stations, loading, onStationClick, isChargingStation = false }) => {
     if (loading) {
-        return <div style={{ padding: "10px", textAlign: "center" }}>로딩 중...</div>;
+        return <div style={{ padding: "10px", textAlign: "center" }}>검색 결과가 없습니다.</div>;
     }
 
     if (!stations || stations.length === 0) {
