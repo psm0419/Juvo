@@ -1,7 +1,7 @@
 package com.app.dto.chargingstation;
 import lombok.Data;
 @Data
-public class ChargingStationDTO {
+public class ChargingStation {
     private int installYear;
     private String sido;
     private String gungu;
