@@ -23,7 +23,7 @@ public class ArplApiService {
         // 공공 API URL 구성
         StringBuilder urlBuilder = new StringBuilder("http://www.opinet.co.kr/api/lowTop10.do");
         urlBuilder.append("?" + URLEncoder.encode("out","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("code","UTF-8") + "=F250306159");
+        urlBuilder.append("&" + URLEncoder.encode("code","UTF-8") + "=F250220122");
         urlBuilder.append("&" + URLEncoder.encode("prodcd","UTF-8") + "=" + URLEncoder.encode(prodcd, "UTF-8")); // 제품구분
         urlBuilder.append("&" + URLEncoder.encode("area","UTF-8") + "=" + URLEncoder.encode(area, "UTF-8")); // 지역구분
         urlBuilder.append("&" + URLEncoder.encode("cnt","UTF-8") + "=" + URLEncoder.encode("5", "UTF-8")); //최저가순 결과 건수

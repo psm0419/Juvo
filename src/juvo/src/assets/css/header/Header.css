@@ -1,3 +1,4 @@
+
 /* 헤더 전체 컨테이너 스타일 */
 .containerHD {
     width: 100%;
@@ -12,6 +13,7 @@
     align-items: center;
     padding: 10px 40px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    
 }
 
 /* 로고 영역 스타일 */
@@ -40,28 +42,30 @@
     justify-content: space-around;
     align-items: center;
     position: relative;
+    
 }
 
 /* 네비게이션 메뉴 각 항목 스타일 */
 .nav-item {
     padding: 10px 0;
+    
 }
 
 /* 네비게이션 메뉴 링크 스타일 */
 .nav a {
     text-decoration: none;
     cursor: pointer;
-    color: #1e2a44;
+    color: #374051;
     transition: color 0.3s ease, transform 0.2s ease;
-    padding: 8px 12px;
+    padding: 5px 10px;
     border-radius: 5px;
 }
 
 /* 네비게이션 메뉴 링크 호버 시 효과 */
 .nav a:hover {
-    color: #1a73e8;
-    background: rgba(26, 115, 232, 0.05);
+    color: #f89400;
     transform: translateY(-2px);
+    border-bottom: 1px solid #f89400;
 }
 
 /* 드롭다운 메뉴 전체 컨테이너 스타일 */

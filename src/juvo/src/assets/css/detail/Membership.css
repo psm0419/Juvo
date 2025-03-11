@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Candal&display=swap');
+
+/* 다크 테마 배경 설정 */
+.membership-page {
+    background-color: #ffffff;
+    color: #FFF;
+    padding: 50px 0;
+    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+}
+
+/* 헤더 섹션 */
+.membership-header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: black;
+    font-family: 'Candal', sans-serif;
+}
+
+.membership-header h1 {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.toggle-switch {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.toggle-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.toggle-button.active {
+    background-color: #f89400;
+    color: #FFF;
+}
+
+.toggle-button:not(.active) {
+    background-color: #FFF;
+    color: #000;
+}
+
+/* 멤버십 티어 카드 섹션 */
+.membership-tiers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    font-family: 'Candal', sans-serif;
+}
+
+.tier-card {
+    background-color:  #374051;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.tier-card:hover {
+    transform: translateY(-10px);
+}
+
+.tier-card.highlighted {
+    background-color: #1E3A8A;
+    border: 2px solid #3B82F6;
+}
+
+/* 티어 아이콘 */
+.tier-icon img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+}
+
+/* 티어 제목 */
+.tier-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* 티어 부제목 */
+.tier-subtitle {
+    font-size: 14px;
+    color: #D1D5DB;
+    margin-bottom: 20px;
+}
+
+/* 티어 가격 */
+.tier-price {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* 버튼 */
+.tier-button {
+    background-color: #000;
+    color: #FFF;
+    border: 2px solid  #374051 ;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+    opacity: 0.5; /* 기본적으로 비활성화 상태로 설정 */
+    border-radius: 50px;
+    font-family: 'Candal', sans-serif;
+}
+
+
+.tier-button.active {
+    background-color: #f89400 ; /* 활성화 시 녹색 배경 */
+    opacity: 1; /* 활성화 시 클릭 가능하게 */
+    cursor: pointer; /* 클릭 가능 표시 */
+}
+
+.tier-button:hover {
+    background-color:  #374051;
+}
+
+/* 기능 목록 */
+.tier-features {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+.tier-features li {
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.checkmark {
+    color: #10B981;
+    margin-right: 10px;
+    font-size: 18px;
+}
