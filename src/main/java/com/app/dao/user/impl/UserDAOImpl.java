@@ -76,6 +76,14 @@ public class UserDAOImpl implements UserDAO {
 		
 		return user;
 	}
-	
 
+	@Override
+	public User findByEmail(String email) {
+		return sqlSessionTemplate.selectOne("user_mapper.findByEmail", email);
+	}
+
+	@Override
+	public int insertUser(User user) {
+		return sqlSessionTemplate.insert("user_mapper.insertUser", user);
+	}
 }

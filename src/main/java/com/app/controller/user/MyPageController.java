@@ -7,11 +7,13 @@ import com.app.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class MyPageController {
@@ -39,11 +41,25 @@ public class MyPageController {
 		return favoriteStations;
 	}
 
-//	@DeleteMapping("/favorites/delete/")
-//	public ResponseEntity<Void> removeFavorite(@PathVariable int juyusoId,
-//			@RequestHeader("Authorization") String token) {
-//		String userId = jwtUtil.extractUsername(token.substring(7));
-//		juyusoService.removeFavorite(userId, juyusoId);
-//		return ResponseEntity.ok().build();
-//	}
+	@PostMapping("/favorites/station/remove")
+	public ResponseEntity<?> removeFavoriteStation(
+			@RequestBody Map<String, String> request,
+			@RequestHeader("Authorization") String token) {
+		try {
+			String extractToken = token.substring(7);
+			String userId = JwtProvider.getUserIdFromToken(extractToken);
+			String uniId = request.get("uniId");
+			
+			boolean result = juyusoService.deleteFavoriteStation(userId, uniId);
+			
+			if (result) {
+				return ResponseEntity.ok().body("즐겨찾기가 해제되었습니다.");
+			} else {
+				return ResponseEntity.badRequest().body("즐겨찾기 해제에 실패했습니다.");
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+							   .body("서버 오류가 발생했습니다.");
+		}
+	}
 }

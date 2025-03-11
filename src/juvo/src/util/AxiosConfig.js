@@ -27,10 +27,28 @@ class TokenManager {
             if (token) {
                 const expiration = this.getExpirationFromToken(token);
                 if (expiration) {
-                    this.setTokenExpireTime(expiration);
+                    if (expiration < new Date().getTime()) {
+                        // 토큰이 이미 만료된 경우
+                        this.logout();
+                    } else {
+                        this.setTokenExpireTime(expiration);
+                    }
                 }
+            } else {
+                // 토큰이 없는 경우
+                this.logout();
             }
         };
+
+        // 주기적인 세션 체크 추가 (5분마다)
+        const sessionCheckInterval = setInterval(() => {
+            this.checkSession();
+        }, 5 * 60 * 1000);
+
+        this.eventListeners.push({
+            type: 'interval',
+            handler: sessionCheckInterval
+        });
 
         events.forEach(event => {
             window.addEventListener(event, activityHandler, { passive: true });
@@ -40,8 +58,12 @@ class TokenManager {
 
     cleanup() {
         // 이벤트 리스너 제거
-        this.eventListeners.forEach(({ event, handler }) => {
-            window.removeEventListener(event, handler);
+        this.eventListeners.forEach(({ event, handler, type }) => {
+            if (type === 'interval') {
+                clearInterval(handler);
+            } else {
+                window.removeEventListener(event, handler);
+            }
         });
         this.eventListeners = [];
 
@@ -128,12 +150,54 @@ class TokenManager {
         return timeUntilExpire < 5 * 60 * 1000; // 5분 이내로 남은 경우
     }
 
-    logout() {
+    shouldRedirectToLogin(currentPath) {
+        // 마이페이지 관련 경로들을 배열로 정의
+        const myPagePaths = [
+            '/mypage',
+            '/mypage/favorites',
+            '/mypage/membership',
+            '/mypage/reviews',
+            '/mypage/settings'
+            // 필요한 마이페이지 경로 추가
+        ];
+        
+        // 현재 경로가 마이페이지 관련 경로인지 확인
+        return myPagePaths.some(path => currentPath.startsWith(path));
+    }
+
+    logout(forceRedirect = false) {
         this.cleanup(); // 이벤트 리스너와 타이머 정리
+        
+        // 현재 페이지 URL 확인
+        const currentPath = window.location.pathname;
+        
+        // 마이페이지이거나 강제 리다이렉트가 true인 경우에만 리다이렉트 처리
+        if (this.shouldRedirectToLogin(currentPath) || forceRedirect) {
+            if (currentPath !== '/login') {
+                sessionStorage.setItem('redirectUrl', currentPath);
+            }
+            window.location.href = '/login';
+        }
+
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         this.tokenExpireTime = null;
-        window.location.href = '/login';
+    }
+
+    checkSession() {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            this.logout(false);  // 강제 리다이렉트 없이 로그아웃
+            return false;
+        }
+
+        const expiration = this.getExpirationFromToken(token);
+        if (!expiration || expiration < new Date().getTime()) {
+            this.logout(false);  // 강제 리다이렉트 없이 로그아웃
+            return false;
+        }
+
+        return true;
     }
 }
 
@@ -193,7 +257,22 @@ instance.interceptors.response.use(
             if (token) {
                 const expiration = tokenManager.getExpirationFromToken(token);
                 if (expiration) {
+                    if (expiration < new Date().getTime()) {
+                        // 현재 경로가 마이페이지인 경우에만 로그아웃 처리
+                        const currentPath = window.location.pathname;
+                        if (tokenManager.shouldRedirectToLogin(currentPath)) {
+                            tokenManager.logout(true);  // 강제 리다이렉트와 함께 로그아웃
+                            return Promise.reject(new Error('세션이 만료되었습니다.'));
+                        }
+                    }
                     tokenManager.setTokenExpireTime(expiration);
+                }
+            } else {
+                // 현재 경로가 마이페이지인 경우에만 로그아웃 처리
+                const currentPath = window.location.pathname;
+                if (tokenManager.shouldRedirectToLogin(currentPath)) {
+                    tokenManager.logout(true);  // 강제 리다이렉트와 함께 로그아웃
+                    return Promise.reject(new Error('인증이 필요합니다.'));
                 }
             }
             return response;
@@ -205,7 +284,6 @@ instance.interceptors.response.use(
     async (error) => {
         try {
             if (error.response?.status === 401) {
-                // 토큰 갱신 시도
                 try {
                     const newToken = await tokenManager.refreshToken();
                     if (newToken) {
@@ -214,8 +292,12 @@ instance.interceptors.response.use(
                     }
                 } catch (refreshError) {
                     console.error('토큰 갱신 실패:', refreshError);
-                    tokenManager.logout();
-                    return Promise.reject(refreshError);
+                    // 현재 경로가 마이페이지인 경우에만 로그아웃 처리
+                    const currentPath = window.location.pathname;
+                    if (tokenManager.shouldRedirectToLogin(currentPath)) {
+                        tokenManager.logout(true);  // 강제 리다이렉트와 함께 로그아웃
+                        return Promise.reject(new Error('세션이 만료되었습니다. 다시 로그인해주세요.'));
+                    }
                 }
             }
             return Promise.reject(error);

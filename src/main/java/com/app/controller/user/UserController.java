@@ -80,7 +80,7 @@ public class UserController {
 	@PostMapping("/user/signup") // 회원가입 요청
 	public String signup(@RequestBody User user, HttpServletRequest request) {
 
-		user.setUser_type("CUS");
+		user.setUserType("CUS");
 
 		try {
 			String encryptPw = SHA256Encryptor.encrypt(user.getPw());

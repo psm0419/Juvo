@@ -122,4 +122,13 @@ public class JuyusoDAOImpl implements JuyusoDAO {
 	public List<String> getFavoriteJuyuso(String userId) {
 		return sqlSessionTemplate.selectList(NAMESPACE + "getFavoritesJuyuso", userId);
 	}
+
+	@Override
+	public boolean deleteFavoriteStation(String userId, String uniId) {
+		Map<String, Object> deleteStation = new HashMap<>();
+		deleteStation.put("userId", userId);
+		deleteStation.put("uniId", uniId);
+		return sqlSessionTemplate.delete(NAMESPACE + "deleteFavoriteStation", deleteStation) > 0;
+	}
+	
 }

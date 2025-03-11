@@ -425,4 +425,14 @@ public class JuyusoServiceImpl implements JuyusoService {
 		return juyusoDAO.getFavoriteJuyuso(userId);
 		
 	}
+
+	@Override
+	public boolean deleteFavoriteStation(String userId, String uniId) {
+		try {
+			return juyusoDAO.deleteFavoriteStation(userId, uniId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

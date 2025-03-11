@@ -29,7 +29,7 @@
 			#{email},
 			#{tel},
 			#{jumin},
-			#{user_type},
+			#{userType},
 			0
 		)
 	</insert>
@@ -81,5 +81,14 @@
 		FROM users
 		WHERE id = #{id} and email = #{email} and tel = #{tel}
 	</select>
+	
+	<select id="findByEmail" parameterType="String" resultType="User">
+		SELECT * FROM users WHERE email = #{email}
+	</select>
+	
+	<insert id="insertUser" parameterType="User">
+		INSERT INTO users (id, email, userName)
+		VALUES (#{id}, #{email}, #{username})
+	</insert>
 	
 	</mapper>

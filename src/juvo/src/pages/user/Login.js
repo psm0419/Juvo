@@ -4,6 +4,8 @@ import axios from 'axios';
 import '../../assets/css/user/Login.css';
 import Header from '../../components/header/Header';
 import axiosInstance from '../../util/AxiosConfig';
+import GoogleLoginButton from './socialLogin/GoogleLogin';
+
 function Login() {
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
@@ -34,7 +36,11 @@ function Login() {
                 localStorage.setItem('refreshToken', refreshToken);
                 window.dispatchEvent(new Event("storage")); // 강제로 storage 이벤트 발생
                 alert('로그인 성공');
-                navigate('/');
+
+                // 이전 URL로 리다이렉트
+                const redirectUrl = sessionStorage.getItem('redirectUrl') || '/';
+                sessionStorage.removeItem('redirectUrl'); // 사용 후 제거
+                navigate(redirectUrl);
             }
         } catch (error) {
             console.error('로그인 오류:', error);
@@ -99,10 +105,9 @@ function Login() {
                         <span className="login-social-icon naver-icon" />
                         <span>네이버로 로그인</span>
                     </button>
-                    <button className="login-social-btn google-login-btn">
-                        <span className="login-social-icon google-icon" />
-                        <span>구글로 로그인</span>
-                    </button>
+                    <div className="google-login-wrapper">
+                        <GoogleLoginButton />
+                    </div>
                     <button className="login-social-btn kakao-login-btn">
                         <span className="login-social-icon kakao-icon" />
                         <span>카카오계정으로 로그인</span>

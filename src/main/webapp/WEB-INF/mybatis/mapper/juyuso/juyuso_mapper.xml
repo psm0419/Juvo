@@ -186,4 +186,9 @@
 		WHERE USER_ID = #{userId}
 		AND UNI_ID = #{uniId}
 	</delete>
+
+	<delete id="deleteFavoriteStation" parameterType="map">
+		DELETE FROM like_juyuso 
+		WHERE user_id = #{userId} AND uni_id = #{uniId}
+	</delete>
 </mapper>

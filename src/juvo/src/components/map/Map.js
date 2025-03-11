@@ -302,6 +302,9 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             const token = localStorage.getItem('accessToken');
             if (!token) {
                 alert('로그인이 필요합니다.');
+                // 현재 페이지 URL 저장
+                sessionStorage.setItem('redirectUrl', window.location.pathname);
+                window.location.href = '/user/login'; // 로그인 페이지로 이동
                 return;
             }
 

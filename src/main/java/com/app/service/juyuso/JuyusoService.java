@@ -23,4 +23,5 @@ public interface JuyusoService {
     boolean saveKeywords(String userId, String uniId, List<Integer> keywords);
     boolean deleteReview(String userId, String uniId, String content);
 	List<String> getFavoritesJuyuso(String userId);
+	boolean deleteFavoriteStation(String userId, String uniId);
 }

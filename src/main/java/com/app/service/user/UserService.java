@@ -17,6 +17,7 @@ public interface UserService {
 	public int changeNickname(User findUser);
 	public User findIdByRequest(User requestUser);
 	public User resetPasswordRequest(User requestUser);
-	
-	
+	public User findByEmail(String email);
+	public int insertUser(User user);
+	public User findOrCreateGoogleUser(String email, String name);
 }
