@@ -6,7 +6,7 @@ import AvgByRegion from '../../components/main/AvgByRegion';
 import AvgPriceChart from '../../components/main/AvgPriceChart';
 import Membership from '../../assets/image/Membership.jpg';
 import mainbackground from '../../assets/image/mainbackground.mp4';
-
+import { Link } from 'react-router-dom';
 
 function Main() {
 
@@ -129,7 +129,7 @@ function Main() {
 			<div className='containerM'>
 				<div className='mainTop'>
 					<div className="textOverlay">
-						<p style={{ fontSize: "2.3rem", fontWeight: "bold" }}> JUVO </p>
+						<p style={{ fontSize: "2.3rem", fontWeight: "bold" }}> J U V O </p>
 						<p style={{ fontSize: "1.6rem", fontWeight: "500" }}> 최저가 주유, 최적 경로를 JUVO와 함께! </p>
 						<p style={{ fontSize: "0.9rem", fontWeight: "400" }}> 지금 시작하고 연료비를 절약하세요.</p>
 					</div>
@@ -222,8 +222,9 @@ function Main() {
 					</div>
 					<div className="rbottom bottom cursor">
 						<div className="membership">
-							<img src={Membership}></img>
-
+							<Link to="/detail/guideDetail/Membership">
+								<img src={Membership} alt="Membership" />
+							</Link>
 						</div>
 					</div>
 				</div>

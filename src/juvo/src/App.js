@@ -23,6 +23,8 @@ import Faq from './pages/detail/guideDetail/Faq';
 import FaqDetail from './pages/detail/guideDetail/FaqDetail';
 import FindPasswordRequest from './pages/user/FindPasswordRequest';
 import ResetPassword from './pages/user/ResetPassword';
+import Membership from './pages/detail/guideDetail/Membership';
+import MembershipDetail from './pages/detail/guideDetail/MembershipDetail';
 
 function App() {
 	return (
@@ -54,7 +56,11 @@ function App() {
 				<Route path="/detail/guideDetail/RefundPolicy" element={<RefundPolicy />} />
 				<Route path="/detail/guideDetail/faq" element={<Faq />} />
 				<Route path="/detail/guideDetail/faq/:id" element={<FaqDetail />} />
+				<Route path="/detail/guideDetail/Membership" element={<Membership />} />
+				<Route path="/detail/guideDetail/MembershipDetail" element={<MembershipDetail />} />
+
 				<Route path='/user/login' element={<Login />} />
+
 			</Routes >
 		</div>
 	);
