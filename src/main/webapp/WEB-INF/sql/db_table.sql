@@ -44,6 +44,12 @@ CREATE TABLE juyuso_review (
     create_at DATE
 );
 
+CREATE SEQUENCE juyuso_review_seq
+START WITH 1  -- 시작 번호
+INCREMENT BY 1  -- 증가 단위
+NOCACHE  -- 캐싱 비활성화
+NOCYCLE;
+
 -- 최저가 주유소 테이블
 CREATE TABLE lowest_cost (
     UNI_ID VARCHAR2(32) PRIMARY KEY,

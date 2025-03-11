@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.app.dao.chargingstation.ChargingStationDAO;
-import com.app.dto.chargingstation.ChargingStationDTO;
+import com.app.dto.chargingstation.ChargingStation;
 import com.app.service.chargingstation.ChargingStationService;
 
 @Service
@@ -20,7 +20,7 @@ public class ChargingStationServiceImpl implements ChargingStationService {
     @Override
     public void importExcelToDB(String csvFilePath) throws Exception {
         System.out.println("CSV 파일 읽기 시작: " + csvFilePath);
-        List<ChargingStationDTO> stations = new ArrayList<>();
+        List<ChargingStation> stations = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(new FileInputStream(csvFilePath), "UTF-8"))) {
@@ -37,7 +37,7 @@ public class ChargingStationServiceImpl implements ChargingStationService {
                     continue;
                 }
 
-                ChargingStationDTO dto = new ChargingStationDTO();
+                ChargingStation dto = new ChargingStation();
                 dto.setInstallYear(Integer.parseInt(data[0].trim())); // 설치년도
                 dto.setSido(data[1].trim()); // 시도
                 dto.setGungu(data[2].trim()); // 군구
@@ -61,9 +61,19 @@ public class ChargingStationServiceImpl implements ChargingStationService {
         }
 
         System.out.println("데이터 파싱 완료, 저장할 행 수: " + stations.size());
-        for (ChargingStationDTO dto : stations) {
+        for (ChargingStation dto : stations) {
             chargingStationDAO.insertChargingStation(dto);
         }
         System.out.println("DB 저장 완료");
+    }
+
+    @Override
+    public List<ChargingStation> getChargingStationsBySido(List<String> sidoList) {
+        return chargingStationDAO.selectBySido(sidoList);
+    }
+    
+    @Override
+    public List<String> getAllSido() {
+        return chargingStationDAO.selectAllSido();
     }
 }

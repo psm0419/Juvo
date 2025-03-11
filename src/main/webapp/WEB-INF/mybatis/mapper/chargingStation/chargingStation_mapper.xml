@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chargingStation_mapper">
+
+<insert id="insertChargingStation" parameterType="ChargingStation">
+        INSERT INTO CHARGING_STATION (
+            INSTALL_YEAR, SIDO, GUNGU, ADDRESS, STATION_NAME,
+            FACILITY_TYPE_LARGE, FACILITY_TYPE_SMALL, MODEL_LARGE, MODEL_SMALL,
+            OPERATOR_LARGE, OPERATOR_SMALL, RAPID_CHARGE_AMOUNT, CHARGER_TYPE,
+            USER_RESTRICTION
+        ) VALUES (
+            #{installYear}, #{sido}, #{gungu}, #{address}, #{stationName},
+            #{facilityTypeLarge}, #{facilityTypeSmall}, #{modelLarge}, #{modelSmall},
+            #{operatorLarge}, #{operatorSmall}, #{rapidChargeAmount}, #{chargerType},
+            #{userRestriction}
+        )
+    </insert>
+    
+<!-- DTO 클래스와 매핑될 결과 맵 -->
+    <resultMap id="chargingStationMap" type="com.example.domain.ChargingStation">
+        <result property="installYear" column="INSTALL_YEAR"/>
+        <result property="sido" column="SIDO"/>
+        <result property="gungu" column="GUNGU"/>
+        <result property="address" column="ADDRESS"/>
+        <result property="stationName" column="STATION_NAME"/>
+        <result property="facilityTypeLarge" column="FACILITY_TYPE_LARGE"/>
+        <result property="facilityTypeSmall" column="FACILITY_TYPE_SMALL"/>
+        <result property="modelLarge" column="MODEL_LARGE"/>
+        <result property="modelSmall" column="MODEL_SMALL"/>
+        <result property="operatorLarge" column="OPERATOR_LARGE"/>
+        <result property="operatorSmall" column="OPERATOR_SMALL"/>
+        <result property="rapidChargeAmount" column="RAPID_CHARGE_AMOUNT"/>
+        <result property="chargerType" column="CHARGER_TYPE"/>
+        <result property="userRestriction" column="USER_RESTRICTION"/>
+    </resultMap>
+    
+    <!-- SIDO로 조회 -->
+    <select id="selectBySido" parameterType="list" resultMap="chargingStationMap">
+        SELECT *
+        FROM CHARGING_STATION
+        WHERE SIDO IN
+        <foreach collection="list" item="sido" open="(" separator="," close=")">
+            #{sido}
+        </foreach>
+    </select>
+    
+    <!-- 모든 SIDO 목록 조회 -->
+    <select id="selectAllSido" resultType="string">
+        SELECT DISTINCT SIDO
+        FROM CHARGING_STATION
+        ORDER BY SIDO
+    </select>
+</mapper>
