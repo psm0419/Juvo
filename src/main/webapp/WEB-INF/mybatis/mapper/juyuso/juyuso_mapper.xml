@@ -181,4 +181,21 @@
 		WHERE USER_ID = #{userId}
 		AND UNI_ID = #{uniId}
 	</delete>
+	
+	<!-- 관리자 -->
+	
+	<select id="findBlackList" resultType="Black">
+		SELECT UNI_ID, black_type, LPG_YN, OS_NM, NEW_ADR FROM black_juyuso
+	</select>
+	
+	<insert id="saveBlack" parameterType="Black">
+		INSERT INTO
+		black_juyuso (UNI_ID, black_type, LPG_YN, OS_NM, NEW_ADR)
+		VALUES (#{uniId}, #{blackType}, #{lpgYn}, #{osNm}, #{newAdr})
+	</insert>
+	
+	<delete id="removeBlack" parameterType="String">
+		DELETE FROM black_juyuso
+		WHERE UNI_ID = #{uniId}
+	</delete>
 </mapper>

@@ -1,5 +1,7 @@
 package com.app.service.user;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,11 @@ public interface UserService {
 	public int changeNickname(User findUser);
 	public User findIdByRequest(User requestUser);
 	public User resetPasswordRequest(User requestUser);
+	
+	//	관리자
+	public List<User> findUserList();
+	//modifyUser
+	public int removeUser(String id);
 	
 	
 }

@@ -1,12 +1,12 @@
-// 관리자 관리 컴포넌트
+import MyPageProfile from '../../pages/user/myPage/MyPageProfile';
+
 function AdminManagement() {
-    return (
-        <div>
-            <h2>관리자 관리</h2>
-            {/* 관리자 정보 */}
-        
-        </div>
-    );
+    
+    // return(
+
+    //     <MyPageProfile/>
+
+    // );
 }
 
 export default AdminManagement;

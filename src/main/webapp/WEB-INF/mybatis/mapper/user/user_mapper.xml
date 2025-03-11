@@ -82,4 +82,15 @@
 		WHERE id = #{id} and email = #{email} and tel = #{tel}
 	</select>
 	
+	<!-- 관리자 -->
+	
+	<select id="findUserList" resultType="User">
+		SELECT * FROM users
+	</select>
+	
+	<delete id="removeUser" parameterType="String">
+		DELETE FROM users
+		WHERE id = #{id}
+	</delete>
+	
 	</mapper>

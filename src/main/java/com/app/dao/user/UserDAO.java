@@ -1,5 +1,7 @@
 package com.app.dao.user;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,12 +21,18 @@ public interface UserDAO {
 
 	public User findUserById(String id);
 
-	public int changePassword(User user);
+	 int changePassword(User user);
 
 	public int changeNickname(User user);
 
 	public User findIdRequest(User requestUser);
 	
 	public User resetPasswordRequest(User requestUser);
+	
+	//	관리자
+	
+	public List<User> findUserList();
+	
+	public int removeUser(String id);
 	
 }

@@ -1,5 +1,7 @@
 package com.app.service.user.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -82,6 +84,24 @@ public class UserServiceImpl implements UserService{
 	public User resetPasswordRequest(User requestUser) {
 		User user = userDAO.resetPasswordRequest(requestUser);
 		return user;
+	}
+	
+	//관리자	
+	
+	@Override
+	public List<User> findUserList() {
+		
+		List<User> userList = userDAO.findUserList();
+
+		return userList;
+	}
+
+	@Override
+	public int removeUser(String id) {
+		
+		int result  = userDAO.removeUser(id);
+		
+		return result;
 	}
 
 	

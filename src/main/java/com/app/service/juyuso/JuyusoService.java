@@ -3,6 +3,7 @@ package com.app.service.juyuso;
 import java.util.List;
 import java.util.Map;
 
+import com.app.dto.juyuso.BlackJuyuso;
 import com.app.dto.juyuso.Juyuso;
 
 public interface JuyusoService {
@@ -22,4 +23,9 @@ public interface JuyusoService {
     boolean saveReview(String userId, String uniId, String content, double starCnt);
     boolean saveKeywords(String userId, String uniId, List<Integer> keywords);
     boolean deleteReview(String userId, String uniId, String content);
+    
+    //관리자
+    public List<BlackJuyuso> findBlackList();
+    public int saveBlack(BlackJuyuso blackJuyuso);
+	public int removeBlack(String uniId);
 }

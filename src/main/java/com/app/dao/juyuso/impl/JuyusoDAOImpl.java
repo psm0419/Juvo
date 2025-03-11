@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.app.dao.juyuso.JuyusoDAO;
+import com.app.dto.juyuso.BlackJuyuso;
 import com.app.dto.juyuso.Juyuso;
 import com.app.dto.juyuso.LikeJuyuso;
 
@@ -117,4 +118,28 @@ public class JuyusoDAOImpl implements JuyusoDAO {
     public int deleteKeywordsByUserAndStation(Map<String, Object> param) {
         return sqlSessionTemplate.delete(NAMESPACE + "deleteKeywordsByUserAndStation", param);
     }
+
+	@Override
+	public List<BlackJuyuso> findBlackList() {
+		
+		List<BlackJuyuso> blackList = sqlSessionTemplate.selectList("juyuso_mapper.findBlackList");
+		
+		return blackList;
+	}
+
+	@Override
+	public int saveBlack(BlackJuyuso blackJuyuso) {
+		
+		int result = sqlSessionTemplate.insert("juyuso_mapper.saveBlack", blackJuyuso);
+		
+		return result;
+	}
+
+	@Override
+	public int removeBlack(String uniId) {
+		
+		int result = sqlSessionTemplate.delete("juyuso_mapper.removeBlack", uniId); 
+		
+		return result;
+	}
 }

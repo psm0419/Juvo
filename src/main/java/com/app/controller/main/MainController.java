@@ -19,12 +19,6 @@ import com.app.service.main.api.ArplApiService3;
 
 @Controller
 public class MainController {
-	
-	@GetMapping("/")
-	public String main() {
-		
-		return "home";
-	}
 
 	@GetMapping("/api/cheapJuyuso")
 	@ResponseBody
