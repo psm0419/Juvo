@@ -116,8 +116,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             }
 
             setLat(newLat);
-            setLng(newLng);
-            handleFetchStations();
+            setLng(newLng);            
         };
 
         const debounceHandleMarkerMove = debounce(handleMarkerMove, 500);
@@ -609,6 +608,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         setFilteredStations([]);
         setChargingStations([]);
         setFuelMarkers([]);
+        fuelMarkers.forEach(marker => marker.setMap(null));
         setChargingMarkers([]);
         setBrands({ cheap: false, skEnergy: false, gsCaltex: false, hyundaiOilbank: false, sOil: false, nOil: false });
         setAdditionalInfo({ carWash: false, maintenance: false, convenience: false, self: false });
