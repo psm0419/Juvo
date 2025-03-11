@@ -17,7 +17,7 @@
     </insert>
     
 <!-- DTO 클래스와 매핑될 결과 맵 -->
-    <resultMap id="chargingStationMap" type="com.example.domain.ChargingStation">
+    <resultMap id="chargingStationMap" type="ChargingStation">
         <result property="installYear" column="INSTALL_YEAR"/>
         <result property="sido" column="SIDO"/>
         <result property="gungu" column="GUNGU"/>
