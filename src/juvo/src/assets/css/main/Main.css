@@ -57,7 +57,7 @@
 .textOverlay p:nth-child(2) {
     font-size: 1.8rem; /* 보조 텍스트 크기 조정 */
     font-weight: 500;
-    color: #374051 ; /* JUVO 오렌지 톤 */
+    color: #374051; /* JUVO 오렌지 톤 */
     margin-bottom: 15px;
     font-family: 'Candal', sans-serif;
 }
@@ -65,7 +65,7 @@
 .textOverlay p:nth-child(3) {
     font-size: 1.1rem; /* 세부 설명 크기 조정 */
     font-weight: 400;
-    color: #374051 ;
+    color: #374051;
     max-width: 80%; /* 텍스트 너비 제한 */
     margin-left: auto;
     margin-right: auto;
@@ -191,7 +191,7 @@
     align-items: center;
     padding: 12px;
     font-family: 'Noto Sans KR', sans-serif;
-    background: #f9f9f9;
+    /* background: #f9f9f9; */
     border-radius: 5px;
 }
 
@@ -228,15 +228,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
 }
 
 .lbottom {
     width: 40%;
     padding: 20px;
 }
-
-
 
 .main-Notice-item {
     margin-bottom: 10px;
@@ -252,12 +249,11 @@
     text-decoration: underline;
 }
 
-
 .membership img {
     height: 200px;
     border-radius: 5%; /* 더 둥글게 */
-    
 }
+
 .rbottom:hover {
     transform: translateY(-5px);
     box-shadow: 10px 10px 20px rgba(88, 88, 88, 0.2);
@@ -268,11 +264,6 @@
     font-size: 1.1rem;
     font-weight: bold;
     font-family: 'Noto Sans KR', sans-serif;
-}
-
-/* cursor */
-.cursor {
-    cursor: pointer;
 }
 
 /* 차트.css */
@@ -319,7 +310,6 @@
     font-family: 'Noto Sans KR', sans-serif;
 }
 
-
 /* 반응형 디자인 추가 */
 @media (max-width: 768px) {
     .mainTop {
@@ -341,5 +331,54 @@
     }
     .textOverlay p:nth-child(3) {
         font-size: 0.9rem;
+    }
+}
+
+/* 공지사항 스타일 추가 */
+.mainotice {
+    width: 100%;
+    padding: 20px; /* 여백 추가 */
+    background-color: #ffffff; /* 배경색 설정 */
+}
+
+.notice-item {
+    display: block; /* 블록 요소로 설정 */
+    width: 100%; /* 전체 너비 */
+    padding: 15px; /* 내부 여백으로 클릭 영역 확보 */
+    margin-bottom: 10px; /* 항목 간 간격 */
+    background-color: #f9f9f9; /* 배경색으로 구분 */
+    border-radius: 5px; /* 둥근 모서리 */
+    text-decoration: none; /* 링크 기본 밑줄 제거 */
+    color: inherit; /* 텍스트 색상 상속 */
+    transition: background-color 0.3s ease; /* 호버 효과 부드럽게 */
+}
+
+.notice-item:hover {
+    background-color: #eceaea; /* 호버 시 배경색 변경 */
+}
+
+.notice-title {
+    font-size: 1rem; /* 텍스트 크기 */
+    font-weight: bold; /* 굵게 */
+    color: #374051; /* JUVO 색상 톤에 맞춤 */
+    font-family: 'Noto Sans KR', sans-serif; /* 일관된 폰트 */
+}
+
+/* cursor */
+.cursor {
+    cursor: pointer;
+}
+
+/* 반응형 디자인 - 공지사항 */
+@media (max-width: 768px) {
+    .mainotice {
+        padding: 10px; /* 모바일에서 여백 축소 */
+    }
+    .notice-item {
+        padding: 10px; /* 모바일에서 내부 여백 축소 */
+        margin-bottom: 8px; /* 간격 축소 */
+    }
+    .notice-title {
+        font-size: 0.9rem; /* 모바일에서 텍스트 크기 조정 */
     }
 }
