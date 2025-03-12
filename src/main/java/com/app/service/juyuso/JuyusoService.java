@@ -30,7 +30,7 @@ public interface JuyusoService {
     public List<BlackJuyuso> findProcessedAllBlackList();
     public List<BlackJuyuso> findProcessedBlackList();
     public List<BlackJuyuso> findBlackList();
-    public int modifyBlack(BlackJuyuso blackJuyuso);
+    public int modifyBlack(String uniId);
 	public int removeBlack(String uniId);
 	
 	boolean registerBlackStation(String userId, String uniId, int blackType);

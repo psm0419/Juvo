@@ -462,9 +462,9 @@ public class JuyusoServiceImpl implements JuyusoService {
 	}
 
 	@Override
-	public int modifyBlack(BlackJuyuso blackJuyuso) {
+	public int modifyBlack(String uniId) {
 		
-		int result = juyusoDAO.modifyBlack(blackJuyuso);
+		int result = juyusoDAO.modifyBlack(uniId);
 		
 		return result;
 	}
