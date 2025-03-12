@@ -1,6 +1,7 @@
 package com.app.controller.admin;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -124,22 +125,22 @@ public class AdminController {
 	//신고처리 완료로 블랙 주유소로 전환
 	@PostMapping("/api/admin/modifyBlack")
 	@ResponseBody
-	public String saveBlack(@RequestBody BlackJuyuso blackJuyuso) {
-		
-		try {
-			int result = juyusoService.modifyBlack(blackJuyuso);
-			if (result > 0) {
-				System.out.println("Black modified: " + blackJuyuso);
-				return "success";
-			} else {
-				System.out.println("Black not modified: " + blackJuyuso);
-				return "failure";
-			}
-		} catch (Exception e) {
-			System.err.println("Error in removeBlack: " + e.getMessage());
-			e.printStackTrace();
-			return "error";
-		}
+	public String saveBlack(@RequestBody Map<String, String> request) {
+	    try {
+	        String uniId = request.get("uniId");
+	        int result = juyusoService.modifyBlack(uniId);
+	        if (result > 0) {
+	            System.out.println("Black modified: " + uniId);
+	            return "success";
+	        } else {
+	            System.out.println("Black not modified: " + uniId);
+	            return "failure";
+	        }
+	    } catch (Exception e) {
+	        System.err.println("Error in modifyBlack: " + e.getMessage());
+	        e.printStackTrace();
+	        return "error";
+	    }
 	}
 	
 	//신고처리 불가로 불법으로 인정되지 않아 블래 주유소에서 제거

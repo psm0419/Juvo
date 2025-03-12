@@ -144,9 +144,9 @@ public class JuyusoDAOImpl implements JuyusoDAO {
 	}
 
 	@Override
-	public int modifyBlack(BlackJuyuso blackJuyuso) {
+	public int modifyBlack(String uniId) {
 		
-		int result = sqlSessionTemplate.update("juyuso_mapper.modifyBlack", blackJuyuso);
+		int result = sqlSessionTemplate.update("juyuso_mapper.modifyBlack", uniId);
 		
 		return result;
 	}

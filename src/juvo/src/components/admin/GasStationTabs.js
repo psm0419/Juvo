@@ -24,11 +24,11 @@ function GasStationTabs({ activeTab, handleTabChange }) {
             </div>
             <div className="rightTabs">
                 <button
-                    key="completed"
-                    className={activeTab === 'completed' ? 'active' : ''}
-                    onClick={() => handleTabChange('completed')}
+                    key="reported"
+                    className={activeTab === 'reported' ? 'active' : ''}
+                    onClick={() => handleTabChange('reported')}
                 >
-                    처리 완료된 블랙주유소
+                    신고접수된 주유소
                 </button>
             </div>
         </div>
