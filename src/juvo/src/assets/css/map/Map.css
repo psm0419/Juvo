@@ -186,7 +186,14 @@
     border-radius: 5px;
     cursor: pointer;
 }
-
+.info-window-button2 {
+    padding: 5px 10px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
 .info-window-divider {
     border-bottom: 1px solid #eee;
     margin-bottom: 8px;
@@ -271,4 +278,58 @@
     z-index: 10;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     font-size: 20px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.report-options label {
+    display: block;
+    margin: 10px 0;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-buttons button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-buttons button:first-child {
+    background-color: #ff4500;
+    color: white;
+}
+
+.modal-buttons button:last-child {
+    background-color: #ccc;
 }

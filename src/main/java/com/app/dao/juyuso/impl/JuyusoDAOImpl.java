@@ -170,4 +170,18 @@ public class JuyusoDAOImpl implements JuyusoDAO {
 		
 		return result;
 	}
+
+	@Override
+    public int checkBlackStationExists(String userId, String uniId) {
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("uniId", uniId);
+        Integer count = sqlSessionTemplate.selectOne(NAMESPACE + "checkBlackStationExists", params);
+        return count != null ? count : 0;
+    }
+
+    @Override
+    public boolean insertBlackStation(BlackJuyuso blackJuyuso) {
+        return sqlSessionTemplate.insert(NAMESPACE + "insertBlackStation", blackJuyuso) > 0;
+    }
 }

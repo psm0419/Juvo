@@ -476,4 +476,35 @@ public class JuyusoServiceImpl implements JuyusoService {
 		
 		return result;
 	}
+
+	@Override
+    public boolean registerBlackStation(String userId, String uniId, int blackType) {
+        try {
+            // 중복 신고 체크
+            int exists = juyusoDAO.checkBlackStationExists(userId, uniId);
+            if (exists > 0) {
+                System.out.println("Already reported: userId=" + userId + ", uniId=" + uniId);
+                return false;
+            }
+
+            Juyuso juyuso = juyusoDAO.getJuyusoById(uniId);
+            if (juyuso == null) {
+                System.out.println("Juyuso not found: uniId=" + uniId);
+                return false;
+            }
+
+            BlackJuyuso blackJuyuso = new BlackJuyuso();
+            blackJuyuso.setUniId(uniId);
+            blackJuyuso.setBlackType(blackType);
+            blackJuyuso.setLpgYn(juyuso.getLpgYn());
+            blackJuyuso.setOsNm(juyuso.getOsNm());
+            blackJuyuso.setNewAdr(juyuso.getNewAdr());
+            blackJuyuso.setStatus(0); // 미처리 상태로 초기화
+
+            return juyusoDAO.insertBlackStation(blackJuyuso);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

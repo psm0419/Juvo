@@ -230,4 +230,41 @@ public class JuyusoController {
 			return ResponseEntity.status(500).body(Map.of("status", "error", "message", e.getMessage()));
 		}
 	}
+	
+	// 불법 주유소 신고
+	@PostMapping("/registerblack")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> registerBlack(HttpServletRequest request,
+            @RequestBody Map<String, Object> requestBody) {
+        String token = JwtProvider.extractToken(request);
+        if (token == null || !JwtProvider.isVaildToken(token)) {
+            return ResponseEntity.status(401).body(Map.of("status", "error", "message", "유효하지 않은 토큰입니다."));
+        }
+
+        String userId = JwtProvider.getUserIdFromToken(token);
+        if (userId == null || userId.trim().isEmpty()) {
+            return ResponseEntity.status(401).body(Map.of("status", "error", "message", "사용자 ID를 가져올 수 없습니다."));
+        }
+
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            return ResponseEntity.status(400).body(Map.of("status", "error", "message", "유효하지 않은 사용자입니다."));
+        }
+
+        String uniId = (String) requestBody.get("uniId");
+        int blackType;
+        try {
+            blackType = Integer.parseInt(requestBody.get("blackType").toString());
+            if (blackType < 1 || blackType > 4) throw new NumberFormatException();
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(Map.of("status", "error", "message", "유효하지 않은 신고 유형입니다."));
+        }
+
+        boolean success = juyusoService.registerBlackStation(userId, uniId, blackType);
+        if (success) {
+            return ResponseEntity.ok(Map.of("status", "success", "message", "불법 주유소로 신고되었습니다."));
+        } else {
+            return ResponseEntity.status(400).body(Map.of("status", "error", "message", "이미 신고된 주유소입니다."));
+        }
+    }
 }

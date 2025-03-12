@@ -24,6 +24,13 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const [routeInfo, setRouteInfo] = useState({ distance: null, time: null });
     const [originalChargingStations, setOriginalChargingStations] = useState([]); // 원본 데이터
     const [filteredChargingStations, setFilteredChargingStations] = useState([]); // 필터링된 데이터
+    const [showReportModal, setShowReportModal] = useState(false);
+    const [reportUniId, setReportUniId] = useState(null);
+    const [selectedBlackType, setSelectedBlackType] = useState(null);
+    const openReportModal = (uniId) => {
+        setReportUniId(uniId);
+        setShowReportModal(true);
+    };
     const [brands, setBrands] = useState({
         cheap: false,
         skEnergy: false,
@@ -47,7 +54,43 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             timeout = setTimeout(() => func.apply(this, args), wait);
         };
     }
+// 불법 주유소 신고 제출
+const handleReportSubmit = () => {
+    if (!selectedBlackType) {
+        alert("신고 유형을 선택해주세요.");
+        return;
+    }
 
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+        alert("로그인이 필요합니다.");
+        sessionStorage.setItem("redirectUrl", window.location.pathname);
+        window.location.href = "/user/login";
+        return;
+    }
+
+    fetch("/registerblack", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ uniId: reportUniId, blackType: selectedBlackType }),
+    })
+        .then(response => {
+            if (!response.ok) throw new Error("신고 실패");
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message);
+            setShowReportModal(false);
+            setSelectedBlackType(null);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("신고 처리 중 오류가 발생했습니다.");
+        });
+};
     // SIDO 데이터 가져오기
     useEffect(() => {
         const fetchSidoList = async () => {
@@ -203,8 +246,11 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                                     ${station.OS_NM || "이름 없음"} <span>(${station.pollDivCd || "이름 없음"})</span>
                                 </div>
                                 <div class="info-window-button-container">
-                                    <button onclick="registerFavoriteStation('${station.uniId}')" class="info-window-button">
-                                        관심 주유소 등록
+                                <button onclick="registerFavoriteStation('${station.uniId}')" class="info-window-button">
+                                    관심 주유소 등록
+                                </button>
+                                <button onclick="registerBlack('${station.uniId}')" class="info-window-button2">
+                                        신고
                                     </button>
                                 </div>
                                 <div class="info-window-divider"></div>
@@ -316,6 +362,11 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                     console.error('Error:', error);
                     alert('로그인이 필요 합니다.');
                 });
+        };
+
+        window.registerBlack = function (uniId) {
+            console.log("Opening report modal for uniId:", uniId);
+            openReportModal(uniId);
         };
 
         return () => {
@@ -831,6 +882,55 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                     />
                 </div>
             </div>
+            {showReportModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>불법 주유소 신고</h3>
+                        <div className="report-options">
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="blackType"
+                                    value="1"
+                                    onChange={(e) => setSelectedBlackType(parseInt(e.target.value))}
+                                />
+                                용도 외 판매
+                            </label>
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="blackType"
+                                    value="2"
+                                    onChange={(e) => setSelectedBlackType(parseInt(e.target.value))}
+                                />
+                                품질 기준 부적합
+                            </label>
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="blackType"
+                                    value="3"
+                                    onChange={(e) => setSelectedBlackType(parseInt(e.target.value))}
+                                />
+                                가짜 석유 취급
+                            </label>
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="blackType"
+                                    value="4"
+                                    onChange={(e) => setSelectedBlackType(parseInt(e.target.value))}
+                                />
+                                정량 미달 판매
+                            </label>
+                        </div>
+                        <div className="modal-buttons">
+                            <button onClick={handleReportSubmit}>신고 제출</button>
+                            <button onClick={() => setShowReportModal(false)}>취소</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

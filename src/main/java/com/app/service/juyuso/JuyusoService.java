@@ -32,4 +32,6 @@ public interface JuyusoService {
     public List<BlackJuyuso> findBlackList();
     public int modifyBlack(BlackJuyuso blackJuyuso);
 	public int removeBlack(String uniId);
+	
+	boolean registerBlackStation(String userId, String uniId, int blackType);
 }
