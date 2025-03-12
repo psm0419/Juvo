@@ -4,8 +4,7 @@ import axios from 'axios';
 import '../../assets/css/user/Login.css';
 import Header from '../../components/header/Header';
 import axiosInstance from '../../util/AxiosConfig';
-import GoogleLoginButton from './socialLogin/GoogleLogin';
-
+import NaverLogin from './socialLogin/NaverLogin';
 function Login() {
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
@@ -104,10 +103,8 @@ function Login() {
                     <button className="login-social-btn naver-login-btn">
                         <span className="login-social-icon naver-icon" />
                         <span>네이버로 로그인</span>
+                        
                     </button>
-                    <div className="google-login-wrapper">
-                        <GoogleLoginButton />
-                    </div>
                     <button className="login-social-btn kakao-login-btn">
                         <span className="login-social-icon kakao-icon" />
                         <span>카카오계정으로 로그인</span>
