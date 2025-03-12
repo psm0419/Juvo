@@ -132,3 +132,17 @@ CREATE TABLE card (
     USER_ID VARCHAR2(32) NOT NULL,
     card_info VARCHAR2(512)
 );
+
+--------------공지사항 DB 테이블 및 시퀀스------------
+
+CREATE TABLE NOTICE (
+  NOTICE_ID    NUMBER(10) PRIMARY KEY,   -- 공지사항 번호
+  TITLE        VARCHAR2(200) NOT NULL,    -- 제목
+  CONTENT      CLOB NOT NULL,             -- 상세 내용
+  CREATED_DATE DATE DEFAULT SYSDATE         -- 작성일 (기본값: 현재 날짜)
+);
+
+CREATE SEQUENCE NOTICE_SEQ
+START WITH 1
+INCREMENT BY 1
+NOCACHE;

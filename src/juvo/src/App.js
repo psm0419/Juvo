@@ -27,6 +27,9 @@ import ResetPassword from './pages/user/ResetPassword';
 import Membership from './pages/detail/guideDetail/Membership';
 import MembershipDetail from './pages/detail/guideDetail/MembershipDetail';
 import { useTokenCleanup } from './util/AxiosConfig';
+import Notice from './pages/detail/guideDetail/Notice';
+import NoticeDetail from './pages/detail/guideDetail/NoticeDetail';
+
 
 function App() {
 	useTokenCleanup();
@@ -63,7 +66,8 @@ function App() {
 				<Route path="/detail/guideDetail/faq/:id" element={<FaqDetail />} />
 				<Route path="/detail/guideDetail/Membership" element={<Membership />} />
 				<Route path="/detail/guideDetail/MembershipDetail" element={<MembershipDetail />} />
-
+				<Route path="/detail/guideDetail/Notice" element={<Notice />} />
+				<Route path="/detail/guideDetail/Notice/detail/:noticeId" element={<NoticeDetail />} />
 				<Route path='/user/login' element={<Login />} />
 
 			</Routes >

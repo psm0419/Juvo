@@ -52,8 +52,10 @@ function Header() {
             { name: 'Blackjuyuso', label: '불법주유소', path: '/detail/blackjuyusoDetail/Blackjuyuso' },
         ],
         '이용안내': [
+            { name: 'Notice', label: '공지사항', path: '/detail/guideDetail/Notice' },
             { name: 'Guide', label: 'JUVO이용안내', path: '/detail/guideDetail/Guide' },
             { name: 'Faq', label: '자주묻는질문', path: '/detail/guideDetail/Faq' },
+            { name: 'Membership', label: 'JUVO 멤버십', path: '/detail/guideDetail/Membership' },
         ],
     };
 

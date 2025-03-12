@@ -9,21 +9,21 @@ import mainbackground from '../../assets/image/mainbackground.mp4';
 import { Link } from 'react-router-dom';
 
 function Main() {
-
 	//저렴한 주유소, 시도별평균
 	const [cheapJuyusoList, setCheapJuyusoList] = useState([]);
 	const [avgList, setAvgList] = useState([]);
 	const [selectedProduct, setSelectedProduct] = useState("휘발유");
 	const [selectedArea, setSelectedArea] = useState("");
-
-	//오늘의 유가
 	const [todayPrices, setTodayPrices] = useState({
+		//오늘의 유가
 		"휘발유": 0,
 		"경유": 0,
 		"고급휘발유": 0,
 		"실내등유": 0
 	});
 
+	// 공지사항 상태 추가
+	const [notices, setNotices] = useState([]);
 
 	//제품코드
 	const productCodes = {
@@ -32,8 +32,7 @@ function Main() {
 		"고급휘발유": "B034",
 		"실내등유": "C004"
 	};
-
-	//지역코드
+	//지역코드	
 	const areaCodes = {
 		"서울": "01",
 		"경기": "02",
@@ -53,12 +52,10 @@ function Main() {
 		"울산": "18",
 		"세종": "19"
 	};
-
 	// 제품 선택 시 상태 업데이트
 	const handleProductChange = (event) => {
 		setSelectedProduct(event.target.value);
 	};
-
 	// 지역 선택 시 상태 업데이트
 	const handleAreaChange = (event) => {
 		setSelectedArea(event.target.value);
@@ -67,9 +64,8 @@ function Main() {
 	//전국평균값
 	useEffect(() => {
 		const fetchNationwidePrices = async () => {
-			const productKeys = Object.keys(productCodes); // ["휘발유", "경유", "고급휘발유", "실내등유"]
+			const productKeys = Object.keys(productCodes);
 			const prices = { "휘발유": 0, "경유": 0, "고급휘발유": 0, "실내등유": 0 };
-
 			try {
 				for (const product of productKeys) {
 					const prodcd = productCodes[product];
@@ -84,15 +80,13 @@ function Main() {
 				console.error('전국 평균 유가 가져오기 실패:', error);
 			}
 		};
-
 		fetchNationwidePrices();
-	}, []); // 한 번만 실행되도록 빈 배열 사용
+	}, []); //한 번만 실행되도록 빈 배열 사용 
 
-	//저렴한 주유소
+	// 저렴한 주유소 데이터 가져오기
 	useEffect(() => {
 		const areaCode = selectedArea ? areaCodes[selectedArea] : "";
 		const prodcd = productCodes[selectedProduct] || "B027";
-
 		axios.get(`/api/cheapJuyuso?prodcd=${prodcd}&area=${areaCode}`)
 			.then(response => {
 				if (Array.isArray(response.data)) {
@@ -109,7 +103,6 @@ function Main() {
 	//시도별 평균
 	useEffect(() => {
 		const prodcd = productCodes[selectedProduct] || "B027";
-
 		axios.get(`/api/avgByRegion?prodcd=${prodcd}`)
 			.then(response => {
 				if (Array.isArray(response.data)) {
@@ -123,6 +116,18 @@ function Main() {
 			});
 	}, [selectedProduct]);
 
+	// 공지사항 데이터 가져오기
+	useEffect(() => {
+		const fetchNotices = async () => {
+			try {
+				const response = await axios.get('http://localhost:3000/notice/list');
+				setNotices(response.data);
+			} catch (error) {
+				console.error('공지사항을 불러오는 중 오류 발생:', error);
+			}
+		};
+		fetchNotices();
+	}, []);
 
 	return (
 		<>
@@ -133,7 +138,6 @@ function Main() {
 						<p style={{ fontSize: "1.6rem", fontWeight: "500" }}> 최저가 주유, 최적 경로를 JUVO와 함께! </p>
 						<p style={{ fontSize: "0.9rem", fontWeight: "400" }}> 지금 시작하고 연료비를 절약하세요.</p>
 					</div>
-					{/* <img src ="https://www.opinet.co.kr/images/user/main/main_visual2.jpg"></img> */}
 					<video autoPlay muted loop className="bg-video">
 						<source src={mainbackground} type="video/mp4" />
 					</video>
@@ -216,8 +220,21 @@ function Main() {
 				<div className='mainBottom'>
 					<div className="lbottom bottom">
 						<p className="point_text">공지사항</p>
-						<div className="notice">
-
+						<div className="mainotice">
+							{notices.length > 0 ? (
+								notices.map((notice) => (
+									<div key={notice.noticeId} className="notice-item">
+										<Link
+											to={`/detail/guideDetail/Notice/detail/${notice.noticeId}`}
+											className="notice-title"
+										>
+											{notice.title}
+										</Link>
+									</div>
+								))
+							) : (
+								<p>현재 공지사항이 없습니다.</p>
+							)}
 						</div>
 					</div>
 					<div className="rbottom bottom cursor">
