@@ -193,6 +193,11 @@
 	</delete>
 	<!-- 관리자 -->
 	
+	<select id="findProcessedAllBlackList" resultType="Black">
+		SELECT UNI_ID, black_type, LPG_YN, OS_NM, NEW_ADR 
+		FROM black_juyuso
+	</select>
+	
 	<select id="findProcessedBlackList" resultType="Black">
 		SELECT UNI_ID, black_type, LPG_YN, OS_NM, NEW_ADR 
 		FROM black_juyuso

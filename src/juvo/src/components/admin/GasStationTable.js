@@ -1,6 +1,6 @@
 import React from 'react';
 
-function GasStationTable({ currentItems, modifyBlack, removeBlack }) {
+function GasStationTable({ currentItems, modifyBlack, removeBlack, activeTab }) {
     const getBlackTypeLabel = (blackType) => {
         switch (blackType) {
             case 0: return '용도외판매';
@@ -12,7 +12,7 @@ function GasStationTable({ currentItems, modifyBlack, removeBlack }) {
     };
 
     return (
-        <table>
+        <table className="gasContainer">
             <thead>
                 <tr>
                     <th>주유소 코드</th>
@@ -24,16 +24,18 @@ function GasStationTable({ currentItems, modifyBlack, removeBlack }) {
                 </tr>
             </thead>
             <tbody>
-                {currentItems.length > 0 ? (
+                {currentItems && currentItems.length > 0 ? (
                     currentItems.map((station) => (
-                        <tr key={station.uniId}>
-                            <td>{station.uniId}</td>
+                        <tr key={station.uniId || Math.random().toString(36).substr(2, 9)}>
+                            <td>{station.uniId || 'N/A'}</td>
                             <td>{getBlackTypeLabel(station.blackType)}</td>
                             <td>{station.lpgYn === 'Y' ? 'LPG' : '주유소'}</td>
-                            <td>{station.osNm}</td>
-                            <td>{station.newAdr}</td>
+                            <td>{station.osNm || 'N/A'}</td>
+                            <td>{station.newAdr || 'N/A'}</td>
                             <td>
-                                <button onClick={() => modifyBlack(station.uniId)}>추가</button>
+                                {activeTab !== 'completed' && (
+                                    <button onClick={() => modifyBlack(station.uniId)}>추가</button>
+                                )}
                                 <button onClick={() => removeBlack(station.uniId)}>삭제</button>
                             </td>
                         </tr>

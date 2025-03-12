@@ -120,6 +120,14 @@ public class JuyusoDAOImpl implements JuyusoDAO {
     }
     
     @Override
+	public List<BlackJuyuso> findProcessedAllBlackList() {
+		
+		List<BlackJuyuso> blackList = sqlSessionTemplate.selectList("juyuso_mapper.findProcessedAllBlackList");
+		
+		return blackList;
+	}
+    
+    @Override
 	public List<BlackJuyuso> findProcessedBlackList() {
 		
 		List<BlackJuyuso> blackList = sqlSessionTemplate.selectList("juyuso_mapper.findProcessedBlackList");

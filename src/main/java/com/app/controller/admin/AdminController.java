@@ -64,6 +64,26 @@ public class AdminController {
 		}
 	}
 	
+	//블랙 주유소 관리를 위해 블랙주유소 전체 조회
+		@GetMapping("/api/admin/findBlackAll")
+		@ResponseBody
+		public List<BlackJuyuso> findBlackAll() {
+			try {
+		        List<BlackJuyuso> blackList = juyusoService.findProcessedAllBlackList();
+		        if (blackList == null) {
+		            System.out.println(" processed blackList is null");
+		            return List.of(); // null 대신 빈 리스트 반환
+		        }
+		        System.out.println(blackList);
+		        return blackList;
+		    } catch (Exception e) {
+		        System.err.println("Error in get processed blackList: " + e.getMessage());
+		        e.printStackTrace();
+		        return List.of(); // 오류 발생 시 빈 리스트 반환
+		    }
+		}
+	
+	//신고처리 완료로 불법으로 인정된 불법 주유소 리스트
 	@GetMapping("/api/admin/findProcessedBlack")
 	@ResponseBody
 	public List<BlackJuyuso> findProcessedBlack() {
@@ -82,6 +102,7 @@ public class AdminController {
 	    }
 	}
 	
+	//신고 접수된 주유소 리스트
 	@GetMapping("/api/admin/findBlack")
 	@ResponseBody
 	public List<BlackJuyuso> findBlack() {
@@ -100,6 +121,7 @@ public class AdminController {
 	    }
 	}
 	
+	//신고처리 완료로 블랙 주유소로 전환
 	@PostMapping("/api/admin/modifyBlack")
 	@ResponseBody
 	public String saveBlack(@RequestBody BlackJuyuso blackJuyuso) {
@@ -120,6 +142,7 @@ public class AdminController {
 		}
 	}
 	
+	//신고처리 불가로 불법으로 인정되지 않아 블래 주유소에서 제거
 	@GetMapping("/api/admin/removeBlack")
 	@ResponseBody
 	public  String removeBlack(@RequestParam("uniId")String uniId) {

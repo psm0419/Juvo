@@ -9,12 +9,15 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         if (currentPage < totalPages) onPageChange(currentPage + 1);
     };
 
+    const isPrevDisabled = currentPage === 1 || totalPages === 0;
+    const isNextDisabled = currentPage === totalPages || totalPages === 0;
+
     return (
         <div className="pagination">
-            <button onClick={handlePrev} disabled={currentPage === 1}>
+            <button onClick={handlePrev} disabled={isPrevDisabled}>
                 ◁
             </button>
-            <button onClick={handleNext} disabled={currentPage === totalPages}>
+            <button onClick={handleNext} disabled={isNextDisabled}>
                 ▷
             </button>
         </div>

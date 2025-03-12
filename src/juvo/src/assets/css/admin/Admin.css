@@ -59,7 +59,7 @@
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-} 
+}
 
 /* 사용할 색상
 background-color: #2196F3;
@@ -82,7 +82,7 @@ h2 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.customerContainer th, 
+.customerContainer th,
 .customerContainer td {
     border: 1px solid #e0e0e0;
     padding: 10px;
@@ -102,11 +102,12 @@ h2 {
 /* 탭 버튼 스타일 */
 .tabButtons {
     margin-bottom: 20px;
+    display: flex; /* flex로 레이아웃 유지 */
+    align-items: center; /* 세로 정렬 */
 }
 
 .tabButtons button {
     padding: 8px 16px;
-    margin-right: 10px;
     border: none;
     border-radius: 4px;
     background-color: #e5e7eb;
@@ -115,6 +116,8 @@ h2 {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap; 
+    min-width: 80px; 
 }
 
 .tabButtons button:hover {
@@ -124,6 +127,16 @@ h2 {
 .tabButtons button.active {
     background-color: #6b7280;
     color: white;
+}
+
+.leftTabs,
+.rightTabs {
+    display: flex;
+    gap: 0; 
+}
+
+.rightTabs {
+    margin-left: auto; 
 }
 
 /* 관리 버튼 스타일 */
@@ -166,17 +179,24 @@ h2 {
 .pagination {
     margin-top: 20px;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 .pagination button {
     padding: 6px 12px;
-    margin: 0 5px;
     border: 1px solid #e0e0e0;
     background-color: white;
     cursor: pointer;
     border-radius: 4px;
     font-weight: 500;
     transition: all 0.3s ease;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .pagination button:disabled {
@@ -185,15 +205,15 @@ h2 {
     opacity: 0.6;
 }
 
+.pagination button:hover:not(:disabled) {
+    background-color: #f1f5f9;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 .pagination button.active {
     background-color: #3b82f6;
     color: white;
     border-color: #3b82f6;
-}
-
-.pagination button:hover:not(:disabled) {
-    background-color: #f1f5f9;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* 주유소 관리 */
@@ -208,7 +228,7 @@ h2 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.gasContainer th, 
+.gasContainer th,
 .gasContainer td {
     border: 1px solid #e0e0e0;
     padding: 10px;
@@ -227,33 +247,6 @@ h2 {
 
 .gasContainer td {
     font-size: 0.8rem;
-}
-
-/* 탭 버튼 스타일 */
-.tabButtons {
-    margin-bottom: 20px;
-}
-
-.tabButtons button {
-    padding: 8px 16px;
-    margin-right: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #e5e7eb;
-    color: #444;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.tabButtons button:hover {
-    background-color: #d1d5db;
-}
-
-.tabButtons button.active {
-    background-color: #6b7280;
-    color: white;
 }
 
 /* 추가/삭제 버튼 스타일 */
@@ -287,38 +280,4 @@ h2 {
 .gasContainer td button:last-child:hover {
     background-color: #7c8899;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-}
-
-/* 페이지네이션 */
-.pagination {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.pagination button {
-    padding: 6px 12px;
-    margin: 0 5px;
-    border: 1px solid #e0e0e0;
-    background-color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.pagination button:disabled {
-    background-color: #f5f5f5;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.pagination button.active {
-    background-color: #3b82f6;
-    color: white;
-    border-color: #3b82f6;
-}
-
-.pagination button:hover:not(:disabled) {
-    background-color: #f1f5f9;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
