@@ -21,7 +21,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [activeTab, setActiveTab] = useState("주유소");
     const [sidoList, setSidoList] = useState([]);
-    // 상태 추가
+    const [routeInfo, setRouteInfo] = useState({ distance: null, time: null });
     const [originalChargingStations, setOriginalChargingStations] = useState([]); // 원본 데이터
     const [filteredChargingStations, setFilteredChargingStations] = useState([]); // 필터링된 데이터
     const [brands, setBrands] = useState({
@@ -116,7 +116,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 currentInfoWindow.close();
                 setCurrentInfoWindow(null);
             }
-
+            setRouteInfo({ distance: null, time: null });
             setLat(newLat);
             setLng(newLng);
         };
@@ -377,19 +377,21 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 });
 
                 const infoWindowContent = `
-                <div class="charging-info-window">
-                    <div class="charging-info-title">${station.stationName}</div>
-                    <div class="charging-info-details">
-                        <div><span>📍</span> ${station.address}</div>
-                        <div><span>충전기 타입</span> ${station.chargerType || "정보 없음"}</div>
-                        <div><span>운영기관</span> ${station.operatorLarge || "정보 없음"}</div>
-                        <div><span>급속 충전량</span> ${station.rapidChargeAmount || "정보 없음"}</div>
+                    <div class="info-window">
+                        <div class="info-window-title">${station.stationName}</div>
+                        <div class="info-window-details">
+                            <div><span>📍</span> ${station.address}</div>
+                            <div><span>운영기관 : </span> ${station.operatorLarge || "정보 없음"}</div>
+                            <div><span>시설 타입 : </span> ${station.facilityTypeSmall || "정보 없음"}</div>
+                            <div><span>충전기 타입 : </span> ${station.chargerType || "정보 없음"}</div>
+                            <div><span>세부 타입 : </span> ${station.modelSmall || "정보 없음"}</div>
+                            <div><span>이용 가능 여부 : </span> ${station.userRestriction || "정보 없음"}</div>
+                        </div>
+                        <button class="info-window-route-button" onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})">
+                            경로찾기
+                        </button>
                     </div>
-                    <button class="charging-info-route-button" onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})">
-                        경로찾기
-                    </button>
-                </div>
-            `;
+                `;
 
                 const infoWindow = new kakao.maps.InfoWindow({
                     content: infoWindowContent,
@@ -520,7 +522,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             })
             .catch(error => {
                 console.error("Error:", error);
-                alert("로그인이 필요 합니다.");
+                alert("이미 등록된 주유소 입니다.");
             });
     };
 
@@ -625,6 +627,18 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             return;
         }
 
+        // 거리와 시간 계산
+        const totalDistance = routeData[0]?.properties?.totalDistance || 0; // 미터 단위
+        const totalTime = routeData[0]?.properties?.totalTime || 0; // 초 단위
+
+        const distanceInKm = (totalDistance / 1000).toFixed(2); // km로 변환
+        const timeInMinutes = Math.ceil(totalTime / 60); // 분으로 변환 후 올림
+
+        setRouteInfo({
+            distance: distanceInKm,
+            time: timeInMinutes,
+        });
+
         if (routeLine) {
             routeLine.setMap(null);
         }
@@ -713,7 +727,14 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
     return (
         <div className="map-container">
-            <div ref={mapContainer} className="map"></div>
+            <div ref={mapContainer} className="map">
+                {routeInfo.distance && routeInfo.time && (
+                        <div className="route-info">
+                            <span>거리: {routeInfo.distance} km | </span>
+                            <span>소요 시간: {routeInfo.time} 분</span>
+                        </div>
+                    )}
+            </div>
             {selectedDetailStation && <FuelStationDetail station={selectedDetailStation} onClose={handleCloseDetail} />}
             <div className="map-sidebar">
                 <div className="map-tabs">
