@@ -74,9 +74,9 @@ const FuelStationList = ({ stations, loading, onStationClick, isChargingStation 
                                     {station.stationName || "이름 없음"}
                                 </span>
                             </div>
-                            <div style={{ display: "flex", gap: "20px", fontWeight: "bold" }}>
+                            <div style={{ display: "flex", gap: "10px", fontWeight: "bold" }}>
                                 <span>
-                                    {station.modelLarge || "-"} ({station.modelSmall || "-"})
+                                    {station.modelSmall || "-"}
                                 </span>
                                 <span>{station.userRestriction || "-"}</span>
                             </div>
