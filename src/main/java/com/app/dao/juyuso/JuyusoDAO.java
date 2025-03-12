@@ -30,6 +30,7 @@ public interface JuyusoDAO {
     int deleteKeywordsByUserAndStation(Map<String, Object> param);
     
     //관리자
+    public List<BlackJuyuso> findProcessedAllBlackList();
     public List<BlackJuyuso> findProcessedBlackList();
     public List<BlackJuyuso> findBlackList();
     public int modifyBlack(BlackJuyuso blackJuyuso);

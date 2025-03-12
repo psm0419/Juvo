@@ -416,6 +416,14 @@ public class JuyusoServiceImpl implements JuyusoService {
     }
     
     @Override
+	public List<BlackJuyuso> findProcessedAllBlackList() {
+		
+		List<BlackJuyuso> blackList = juyusoDAO.findProcessedAllBlackList();
+		
+		return blackList;
+	}
+    
+    @Override
 	public List<BlackJuyuso> findProcessedBlackList() {
 		
 		List<BlackJuyuso> blackList = juyusoDAO.findProcessedBlackList();

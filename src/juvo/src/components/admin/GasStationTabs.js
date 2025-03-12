@@ -11,15 +11,26 @@ function GasStationTabs({ activeTab, handleTabChange }) {
 
     return (
         <div className="tabButtons">
-            {tabs.map((tab) => (
+            <div className="leftTabs">
+                {tabs.map((tab) => (
+                    <button
+                        key={tab.id}
+                        className={activeTab === tab.id ? 'active' : ''}
+                        onClick={() => handleTabChange(tab.id)}
+                    >
+                        {tab.label}
+                    </button>
+                ))}
+            </div>
+            <div className="rightTabs">
                 <button
-                    key={tab.id}
-                    className={activeTab === tab.id ? 'active' : ''}
-                    onClick={() => handleTabChange(tab.id)}
+                    key="completed"
+                    className={activeTab === 'completed' ? 'active' : ''}
+                    onClick={() => handleTabChange('completed')}
                 >
-                    {tab.label}
+                    처리 완료된 블랙주유소
                 </button>
-            ))}
+            </div>
         </div>
     );
 }

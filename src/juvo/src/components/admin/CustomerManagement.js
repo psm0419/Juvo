@@ -6,23 +6,33 @@ function CustomerManagement() {
     const [customerList, setCustomerList] = useState([]);
     const [activeTab, setActiveTab] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(true);
     const itemsPerPage = 10;
 
-    const fetchCustomerList = () => {
-        axios.get('/api/admin/user')
-            .then(response => {
-                console.log(response.data);
-                setCustomerList(response.data);
-            })
-            .catch(error => console.error('Error fetching user list:', error));
+    const fetchCustomerList = async () => {
+        setIsLoading(true);
+        try {
+            const response = await axios.get('/api/admin/user');
+            console.log(response.data);
+            setCustomerList(response.data || []);
+        } catch (error) {
+            console.error('Error fetching user list:', error);
+            setCustomerList([]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     useEffect(() => {
         fetchCustomerList();
     }, []);
 
+    useEffect(() => {
+        setCurrentPage(1); // 데이터가 변경될 때마다 첫 페이지로 초기화
+    }, [activeTab, customerList]);
+
     const filteredCustomerList = customerList.filter(customer => {
-        if (customer.userType !== 'CUS') return false;
+        if (!customer || customer.userType !== 'CUS') return false;
         if (activeTab === 'all') return true;
         if (activeTab === 'normal') return customer.membership === 0;
         if (activeTab === 'pass') return customer.membership === 1;
@@ -59,13 +69,17 @@ function CustomerManagement() {
     const currentItems = filteredCustomerList.slice(startIndex, endIndex);
 
     const pageChange = (page) => {
-        setCurrentPage(page);
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
 
     const tabChange = (tab) => {
         setActiveTab(tab);
         setCurrentPage(1);
     };
+
+    if (isLoading) return <div>Loading...</div>;
 
     return (
         <div>
@@ -100,10 +114,10 @@ function CustomerManagement() {
                         {currentItems.length > 0 ? (
                             currentItems.map(customer => (
                                 <tr key={customer.id}>
-                                    <td>{customer.id}</td>
-                                    <td>{customer.username}</td>
+                                    <td>{customer.id || 'N/A'}</td>
+                                    <td>{customer.username || 'N/A'}</td>
                                     <td>{customer.membership === 0 ? '일반회원' : 'Pass가입회원'}</td>
-                                    <td>{customer.email}</td>
+                                    <td>{customer.email || 'N/A'}</td>
                                     <td>
                                         <button onClick={() => removeUser(customer.id)}>삭제</button>
                                     </td>

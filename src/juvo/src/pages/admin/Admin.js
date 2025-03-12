@@ -22,7 +22,7 @@ function Admin() {
                     <p className={`user cusor ${activeTab === 'customer' ? 'active' : ''}`}
                         onClick={() => setActiveTab('customer')}> 고객 관리  </p>
                     <p className={`juyuso cusor ${activeTab === 'gasstation' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('gasstation')}>  불법 주유소 관리  </p>
+                        onClick={() => setActiveTab('gasstation')}>  불법 주유소 신고 관리  </p>
                 </div>
             </div>
 
