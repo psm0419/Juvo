@@ -39,7 +39,7 @@ public class JwtProvider {
 	/*
 	 * AccessToken 생성. 현재 로그인 처리할 사용자의 아이디를 기준으로 토큰 생성
 	 */
-	public static String createAccessToken(String userId) {
+	public static String createAccessToken(String userId, String userType) {
 		Date now = new Date(System.currentTimeMillis());
 
 // SecretKey 는 binary 데이터
@@ -47,7 +47,11 @@ public class JwtProvider {
 
 		/* 토큰이 보관할 회원ID */
 // 비공개 클레임
-		Claims claims = Jwts.claims().add("userId", userId).build();
+		Claims claims = Jwts.claims()
+				.add("userId", userId)
+				.add("userType", userType)
+				.build();
+		//claims = Jwts.claims().add("userType", userType).build();
 
 		return Jwts.builder().header().add("typ", "JWT").and().subject("accessToken").issuedAt(now)
 				.issuer("spring server").expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
@@ -55,7 +59,7 @@ public class JwtProvider {
 	}
 
 	public static String createAccessToken(User user) {
-		return createAccessToken(user.getId());
+		return createAccessToken(user.getId(), user.getUserType());
 	}
 
 	/* 토큰 해석 메소드 - 토큰을 해석하여 저장된 userId 를 획득한다 */
@@ -74,6 +78,23 @@ public class JwtProvider {
 		System.out.println("토큰 해석 userId value : " + userId);
 
 		return userId;
+	}
+	
+	public static String getUserTypeFromToken(String token) { // throws CustomException {
+
+		String userType = null;
+		try {
+			userType = Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload()
+					.get("userType", String.class);
+		} catch (ExpiredJwtException e) {
+			System.out.println(e.getMessage());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		System.out.println("토큰 해석 userType value : " + userType);
+
+		return userType;
 	}
 
 	/* 유효성 확인(해독된 jwt) */
@@ -114,9 +135,9 @@ public class JwtProvider {
 	/**
 	 * Refresh Token을 이용한 새로운 Access Token 발급
 	 */
-	public static String refreshAccessToken(String refreshToken, String userId) {
+	public static String refreshAccessToken(String refreshToken, String userId, String userType) {
 		if (isVaildToken(refreshToken)) {
-			return createAccessToken(userId);
+			return createAccessToken(userId,userType);
 		}
 //throw new RuntimeException("유효하지 않은 Refresh Token");
 //exception 처리 하거나
