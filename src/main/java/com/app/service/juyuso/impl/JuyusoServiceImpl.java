@@ -434,19 +434,9 @@ public class JuyusoServiceImpl implements JuyusoService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
-		}
-    @Transactional
-    @Override
-    public boolean deleteReview(String userId, String uniId, String content) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("userId", userId);
-        param.put("uniId", uniId);
-        param.put("content", content);
-        int result = juyusoDAO.deleteReview(param);
-        System.out.println("Deleted review for userId: " + userId + ", uniId: " + uniId + ", result: " + result);
-        return result > 0;
-    }
-    
+		}    
+	}
+	
     @Override
 	public List<BlackJuyuso> findProcessedBlackList() {
 		

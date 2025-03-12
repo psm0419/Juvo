@@ -190,7 +190,7 @@
 	<delete id="deleteFavoriteStation" parameterType="map">
 		DELETE FROM like_juyuso 
 		WHERE user_id = #{userId} AND uni_id = #{uniId}
-	
+	</delete>
 	<!-- 관리자 -->
 	
 	<select id="findProcessedBlackList" resultType="Black">
