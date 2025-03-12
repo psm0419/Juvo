@@ -6,26 +6,33 @@ import { useState, useEffect } from 'react';
 function Header() {
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(false);
+    const [userType, setUserType] = useState(null); // userType 상태 추가
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
+        const type = localStorage.getItem('userType'); // userType 가져오기
         setIsLogin(!!token);
+        setUserType(type); // userType 설정
     }, []);
-    
+
     useEffect(() => {
         const handleStorageChange = () => {
-            setIsLogin(!!localStorage.getItem('accessToken'));
+            const token = localStorage.getItem('accessToken');
+            const type = localStorage.getItem('userType');
+            setIsLogin(!!token);
+            setUserType(type); // storage 변경 시 userType도 업데이트
         };
-    
+
         window.addEventListener("storage", handleStorageChange);
         return () => window.removeEventListener("storage", handleStorageChange);
     }, []);
-    
 
     const handleLogout = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userType'); // userType도 제거
         setIsLogin(false);
+        setUserType(null); // 상태 초기화
         alert('로그아웃 되었습니다.');
         navigate('/');
     };
@@ -39,10 +46,20 @@ function Header() {
         const token = localStorage.getItem('accessToken');
         if (!token) {
             alert('로그인이 필요합니다.');
-            window.location.href = '/login'; // 로그인 페이지로 이동
+            navigate('/login'); // 로그인 페이지로 이동
             return;
         }
-        navigate("/myPage/profile");
+        navigate("/myPage/profile"); // CUS용 마이페이지 경로
+    };
+
+    const handleAdminClick = () => {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            alert('로그인이 필요합니다.');
+            navigate('/login');
+            return;
+        }
+        navigate("/admin"); // ADM용 관리자 페이지 경로
     };
 
     const menuItems = {
@@ -96,7 +113,12 @@ function Header() {
             <div className="btns">
                 {isLogin ? (
                     <>
-                        <div className="mypage" onClick={handleMyPageClick}>마이페이지</div>
+                        {userType === 'CUS' && (
+                            <div className="mypage" onClick={handleMyPageClick}>마이페이지</div>
+                        )}
+                        {userType === 'ADM' && (
+                            <div className="admin" onClick={handleAdminClick}>관리자 페이지</div>
+                        )}
                         <div className="logout" onClick={handleLogout}>로그아웃</div>
                     </>
                 ) : (
@@ -111,3 +133,4 @@ function Header() {
 }
 
 export default Header;
+

@@ -96,7 +96,6 @@ function FindId() {
             focusInvalidField();
             return;
         }
-        console.log(email);
         axios
             .post(
                 "/user/findId",
@@ -105,7 +104,8 @@ function FindId() {
             )
             .then((response) => {
                 const userId = response.data.id; // 서버에서 ID 반환 가정
-                if (userId) {
+                
+                if (userId != null) {
                     setFoundId(userId);
                     alert("아이디를 성공적으로 찾았습니다.");
                 } else {
