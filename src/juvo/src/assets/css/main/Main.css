@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Candal&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -11,7 +13,7 @@
 .mainTop {
     position: relative;
     width: 100%;
-    height: 400px; /* 동영상 높이 고정 */
+    height: 900px; /* 동영상 높이 고정 */
     overflow: hidden; /* 동영상이 넘치지 않도록 */
 }
 
@@ -47,24 +49,27 @@
 .textOverlay p:nth-child(1) {
     font-size: 2.5rem; /* 주요 텍스트 크기 증가 */
     font-weight: 700; /* 더 굵게 */
-    color: #FFC107; /* JUVO 노랑 톤 */
+    color: #f89400; /* JUVO 노랑 톤 */
     margin-bottom: 10px;
+    font-family: 'Candal', sans-serif;
 }
 
 .textOverlay p:nth-child(2) {
     font-size: 1.8rem; /* 보조 텍스트 크기 조정 */
     font-weight: 500;
-    color: #000000; /* JUVO 오렌지 톤 */
+    color: #374051 ; /* JUVO 오렌지 톤 */
     margin-bottom: 15px;
+    font-family: 'Candal', sans-serif;
 }
 
 .textOverlay p:nth-child(3) {
     font-size: 1.1rem; /* 세부 설명 크기 조정 */
     font-weight: 400;
-    color: #000000;
+    color: #374051 ;
     max-width: 80%; /* 텍스트 너비 제한 */
     margin-left: auto;
     margin-right: auto;
+    font-family: 'Candal', sans-serif;
 }
 
 /* 애니메이션 정의 */
@@ -217,8 +222,8 @@
 /* 공지사항 멤버십 부분 */
 .mainBottom {
     width: 100%;
-    height: 250px;
-    background: rgba(245, 5, 5, 0.05);
+    height: 50%;
+    background-color: #ffffff;
     padding: 30px;
     display: flex;
     justify-content: space-between;
@@ -228,15 +233,23 @@
 
 .lbottom {
     width: 40%;
-    height: 90%;
-    background-color: rgb(223, 14, 14);
-    border-radius: 5%;
+    padding: 20px;
 }
 
 
-.lbottom:hover {
-    transform: translateY(-5px);
-    box-shadow: 10px 10px 20px rgba(88, 88, 88, 0.2);
+
+.main-Notice-item {
+    margin-bottom: 10px;
+}
+
+.notice-title {
+    color: #fff; /* 배경이 빨간색이므로 흰색으로 설정 */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.notice-title:hover {
+    text-decoration: underline;
 }
 
 

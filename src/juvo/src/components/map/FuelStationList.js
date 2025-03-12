@@ -1,12 +1,17 @@
 import React from "react";
 
+
 const FuelStationList = ({ stations, loading, onStationClick, isChargingStation = false }) => {
     if (loading) {
-        return <div style={{ padding: "10px", textAlign: "center" }}>로딩 중...</div>;
+        return <div style={{ padding: "10px", textAlign: "center" }}>검색 결과가 없습니다.</div>;
     }
 
     if (!stations || stations.length === 0) {
-        return <div style={{ padding: "10px", textAlign: "center" }}>{isChargingStation ? "충전소가 없습니다." : "주유소가 없습니다."}</div>;
+        return (
+            <div style={{ padding: "10px", textAlign: "center" }}>
+                {isChargingStation ? "충전소가 없습니다." : "주유소가 없습니다."}
+            </div>
+        );
     }
 
     const getBrandLogo = (pollDivCd) => {
@@ -22,17 +27,26 @@ const FuelStationList = ({ stations, loading, onStationClick, isChargingStation 
     };
 
     return (
-        <div style={{ marginTop: "10px" }}>
+        <div
+            style={{
+                marginTop: "10px",
+                maxHeight: "calc(100% - 60px)", // 플라이박스 높이에 맞게 조정 (하단 여백 고려)
+                overflowY: "auto", // 스크롤바 항상 활성화
+                paddingBottom: "20px", // 하단 패딩 추가로 마지막 항목이 잘 보이게
+            }}
+        >
             {isChargingStation ? (
                 <>
-                    <div style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        padding: "5px 10px",
-                        borderBottom: "1px solid #e0e0e0",
-                        fontWeight: "bold",
-                        fontSize: "14px",
-                    }}>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            padding: "5px 10px",
+                            borderBottom: "1px solid #e0e0e0",
+                            fontWeight: "bold",
+                            fontSize: "14px",
+                        }}
+                    >
                         <span>충전소명</span>
                         <div style={{ display: "flex", gap: "20px" }}>
                             <span>모델</span>
@@ -42,7 +56,7 @@ const FuelStationList = ({ stations, loading, onStationClick, isChargingStation 
 
                     {stations.map((station, index) => (
                         <div
-                            key={station.station_name + index} // uniId가 없으므로 station_name과 index로 고유성 보장
+                            key={`${station.stationName || "unknown"}-${index}`}
                             style={{
                                 display: "flex",
                                 justifyContent: "space-between",
@@ -57,26 +71,30 @@ const FuelStationList = ({ stations, loading, onStationClick, isChargingStation 
                                     style={{ cursor: "pointer", color: "#007bff" }}
                                     onClick={() => onStationClick(station)}
                                 >
-                                    {station.station_name || "이름 없음"}
+                                    {station.stationName || "이름 없음"}
                                 </span>
                             </div>
-                            <div style={{ display: "flex", gap: "20px", fontWeight: "bold" }}>
-                                <span>{station.model_large || "-"} ({station.model_small || "-"})</span>
-                                <span>{station.user_restriction || "-"}</span>
+                            <div style={{ display: "flex", gap: "10px", fontWeight: "bold" }}>
+                                <span>
+                                    {station.modelSmall || "-"}
+                                </span>
+                                <span>{station.userRestriction || "-"}</span>
                             </div>
                         </div>
                     ))}
                 </>
             ) : (
                 <>
-                    <div style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        padding: "5px 10px",
-                        borderBottom: "1px solid #e0e0e0",
-                        fontWeight: "bold",
-                        fontSize: "14px",
-                    }}>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            padding: "5px 10px",
+                            borderBottom: "1px solid #e0e0e0",
+                            fontWeight: "bold",
+                            fontSize: "14px",
+                        }}
+                    >
                         <span>주유소명</span>
                         <div style={{ display: "flex", gap: "20px" }}>
                             <span>휘발유</span>

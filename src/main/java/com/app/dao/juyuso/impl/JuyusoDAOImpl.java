@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.app.dao.juyuso.JuyusoDAO;
+import com.app.dto.juyuso.BlackJuyuso;
 import com.app.dto.juyuso.Juyuso;
 import com.app.dto.juyuso.LikeJuyuso;
 
@@ -117,6 +118,22 @@ public class JuyusoDAOImpl implements JuyusoDAO {
     public int deleteKeywordsByUserAndStation(Map<String, Object> param) {
         return sqlSessionTemplate.delete(NAMESPACE + "deleteKeywordsByUserAndStation", param);
     }
+    
+    @Override
+	public List<BlackJuyuso> findProcessedAllBlackList() {
+		
+		List<BlackJuyuso> blackList = sqlSessionTemplate.selectList("juyuso_mapper.findProcessedAllBlackList");
+		
+		return blackList;
+	}
+    
+    @Override
+	public List<BlackJuyuso> findProcessedBlackList() {
+		
+		List<BlackJuyuso> blackList = sqlSessionTemplate.selectList("juyuso_mapper.findProcessedBlackList");
+		
+		return blackList;
+	}
 
 	@Override
 	public List<String> getFavoriteJuyuso(String userId) {
@@ -131,4 +148,40 @@ public class JuyusoDAOImpl implements JuyusoDAO {
 		return sqlSessionTemplate.delete(NAMESPACE + "deleteFavoriteStation", deleteStation) > 0;
 	}
 	
+	public List<BlackJuyuso> findBlackList() {
+		
+		List<BlackJuyuso> blackList = sqlSessionTemplate.selectList("juyuso_mapper.findBlackList");
+		
+		return blackList;
+	}
+
+	@Override
+	public int modifyBlack(String uniId) {
+		
+		int result = sqlSessionTemplate.update("juyuso_mapper.modifyBlack", uniId);
+		
+		return result;
+	}
+
+	@Override
+	public int removeBlack(String uniId) {
+		
+		int result = sqlSessionTemplate.delete("juyuso_mapper.removeBlack", uniId); 
+		
+		return result;
+	}
+
+	@Override
+    public int checkBlackStationExists(String userId, String uniId) {
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("uniId", uniId);
+        Integer count = sqlSessionTemplate.selectOne(NAMESPACE + "checkBlackStationExists", params);
+        return count != null ? count : 0;
+    }
+
+    @Override
+    public boolean insertBlackStation(BlackJuyuso blackJuyuso) {
+        return sqlSessionTemplate.insert(NAMESPACE + "insertBlackStation", blackJuyuso) > 0;
+    }
 }

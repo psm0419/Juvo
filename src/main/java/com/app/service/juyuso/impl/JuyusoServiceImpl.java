@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.app.controller.juyuso.GeoTrans;
 import com.app.dao.juyuso.JuyusoDAO;
+import com.app.dto.juyuso.BlackJuyuso;
 import com.app.dto.juyuso.Juyuso;
 import com.app.dto.juyuso.LikeJuyuso;
 import com.app.service.api.ArplApiService;
@@ -433,6 +434,77 @@ public class JuyusoServiceImpl implements JuyusoService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
-		}
+		}    
 	}
+	
+    @Override
+	public List<BlackJuyuso> findProcessedAllBlackList() {
+		
+		List<BlackJuyuso> blackList = juyusoDAO.findProcessedAllBlackList();
+		
+		return blackList;
+	}
+    
+    @Override
+	public List<BlackJuyuso> findProcessedBlackList() {
+		
+		List<BlackJuyuso> blackList = juyusoDAO.findProcessedBlackList();
+		
+		return blackList;
+	}
+
+	@Override
+	public List<BlackJuyuso> findBlackList() {
+		
+		List<BlackJuyuso> blackList = juyusoDAO.findBlackList();
+		
+		return blackList;
+	}
+
+	@Override
+	public int modifyBlack(String uniId) {
+		
+		int result = juyusoDAO.modifyBlack(uniId);
+		
+		return result;
+	}
+
+	@Override
+	public int removeBlack(String uniId) {
+		
+		int result = juyusoDAO.removeBlack(uniId);
+		
+		return result;
+	}
+
+	@Override
+    public boolean registerBlackStation(String userId, String uniId, int blackType) {
+        try {
+            // 중복 신고 체크
+            int exists = juyusoDAO.checkBlackStationExists(userId, uniId);
+            if (exists > 0) {
+                System.out.println("Already reported: userId=" + userId + ", uniId=" + uniId);
+                return false;
+            }
+
+            Juyuso juyuso = juyusoDAO.getJuyusoById(uniId);
+            if (juyuso == null) {
+                System.out.println("Juyuso not found: uniId=" + uniId);
+                return false;
+            }
+
+            BlackJuyuso blackJuyuso = new BlackJuyuso();
+            blackJuyuso.setUniId(uniId);
+            blackJuyuso.setBlackType(blackType);
+            blackJuyuso.setLpgYn(juyuso.getLpgYn());
+            blackJuyuso.setOsNm(juyuso.getOsNm());
+            blackJuyuso.setNewAdr(juyuso.getNewAdr());
+            blackJuyuso.setStatus(0); // 미처리 상태로 초기화
+
+            return juyusoDAO.insertBlackStation(blackJuyuso);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

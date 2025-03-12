@@ -16,8 +16,7 @@ const Juyuso = () => {
             }
             const data = await response.json();
             console.log("Fetched stations:", data);
-            const stationList = data.RESULT?.OIL || [];
-            setStations(stationList);
+            setStations(data);
         } catch (error) {
             console.error("Error fetching fuel stations:", error);
             setStations([]);

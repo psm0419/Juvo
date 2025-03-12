@@ -191,4 +191,50 @@
 		DELETE FROM like_juyuso 
 		WHERE user_id = #{userId} AND uni_id = #{uniId}
 	</delete>
+	<!-- 관리자 -->
+	
+	<select id="findProcessedAllBlackList" resultType="Black">
+		SELECT UNI_ID, black_type, LPG_YN, OS_NM, NEW_ADR, status 
+		FROM black_juyuso
+	</select>
+	
+	<select id="findProcessedBlackList" resultType="Black">
+		SELECT UNI_ID, black_type, LPG_YN, OS_NM, NEW_ADR, status 
+		FROM black_juyuso
+		WHERE status = 1
+	</select>
+	
+	<select id="findBlackList" resultType="Black">
+		SELECT UNI_ID, black_type, LPG_YN, OS_NM, NEW_ADR, status 
+		FROM black_juyuso
+		WHERE status = 0
+	</select>
+	
+	<update id="modifyBlack" parameterType="Black">
+	    UPDATE black_juyuso
+	    SET
+	        status = 1
+	    WHERE UNI_ID = #{uniId}
+	</update>
+	
+	<delete id="removeBlack" parameterType="String">
+		DELETE FROM black_juyuso
+		WHERE UNI_ID = #{uniId}
+	</delete>
+	
+	<!-- 불법 주유소 중복 체크 -->
+    <select id="checkBlackStationExists" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM black_juyuso
+        WHERE UNI_ID = #{uniId}
+        AND EXISTS (
+            SELECT 1 FROM black_juyuso WHERE UNI_ID = #{uniId}
+        )
+    </select>
+
+    <!-- 불법 주유소 삽입 -->
+    <insert id="insertBlackStation" parameterType="Black">
+        INSERT INTO black_juyuso (UNI_ID, black_type, LPG_YN, OS_NM, NEW_ADR, status)
+        VALUES (#{uniId}, #{blackType}, #{lpgYn}, #{osNm}, #{newAdr}, #{status})
+    </insert>
 </mapper>

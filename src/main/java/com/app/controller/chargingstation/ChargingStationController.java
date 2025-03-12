@@ -7,8 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.app.dto.chargingstation.ChargingStationRequest;
 
 import com.app.dto.chargingstation.ChargingStation;
 import com.app.service.chargingstation.ChargingStationService;
@@ -32,11 +34,10 @@ public class ChargingStationController {
     public List<String> getSidoList() {
         return chargingStationService.getAllSido();
     }
-    
-    // 데이터 조회
+
     @PostMapping("/getChargingStation")
     @ResponseBody
-    public List<ChargingStation> searchChargingStations(@RequestParam("sido") List<String> selectedSido) {
-        return chargingStationService.getChargingStationsBySido(selectedSido);
+    public List<ChargingStation> searchChargingStations(@RequestBody ChargingStationRequest request) {
+        return chargingStationService.getChargingStationsBySido(request.getRegions());
     }
 }
