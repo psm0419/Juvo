@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Navigate } from 'react-router-dom';
+import axios from 'axios';
 import '../../../assets/css/detail/MembershipDetail.css';
 
 class MembershipDetail extends Component {
@@ -31,7 +32,6 @@ class MembershipDetail extends Component {
         if (!cardNumber.match(/^\d{16}$/)) errors.cardNumber = "유효한 카드번호(16자리)를 입력해주세요.";
         if (!cvc.match(/^\d{3}$/)) errors.cvc = "유효한 CVC(3자리)를 입력해주세요.";
         if (!expiry.match(/^(0[1-9]|1[0-2])\/\d{2}$/)) errors.expiry = "유효기간을 MM/YY 형식으로 입력해주세요.";
-
         this.setState({ errors });
         return Object.keys(errors).length === 0;
     };
@@ -58,17 +58,43 @@ class MembershipDetail extends Component {
         this.setState({ expiry: value.slice(0, 5) });
     };
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         if (this.validateForm()) {
-            alert("멤버십 가입이 완료되었습니다!");
-            this.setState({ redirect: true });
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                alert("로그인이 필요합니다.");
+                this.setState({ redirect: true });
+                return;
+            }
+
+            const membershipData = {
+                name: this.state.name,
+                phone: this.state.phone,
+                address: this.state.address,
+                detailAddress: this.state.detailAddress,
+                cardCompany: this.state.cardCompany,
+                cardNumber: this.state.cardNumber,
+                cvc: this.state.cvc,
+                expiry: this.state.expiry
+            };
+
+            try {
+                await axios.post("/api/membership/subscribe", membershipData, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                alert("멤버십 가입이 완료되었습니다!");
+                this.setState({ redirect: true });
+            } catch (error) {
+                console.error("멤버십 가입 오류:", error);
+                alert("멤버십 가입에 실패했습니다. 다시 시도해주세요.");
+            }
         }
     };
 
     render() {
         if (this.state.redirect) {
-            return <Navigate to="/" />;
+            return <Navigate to="/mypage/membership" />; // 수정: /user/mypage → /
         }
 
         return (
@@ -134,7 +160,7 @@ class MembershipDetail extends Component {
                         </div>
                     </div>
 
-                    <button type="submit" className="mbd-submit-button">가입 완료</button>
+                    <button type="submit" className="mbd-submit-button">양식</button>
                 </form>
             </div>
         );

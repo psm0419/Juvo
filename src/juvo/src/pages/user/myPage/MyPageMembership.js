@@ -76,6 +76,11 @@ function MyPageMembership() {
         }
     };
 
+    // 새로운 경로 이동 함수 추가
+    const handleNavigateToDetail = () => {
+        navigate('/detail/guideDetail/MembershipDetail');
+    };
+
     if (isLoading) return <div className="membership-container">로딩 중...</div>;
 
     return (
@@ -116,12 +121,12 @@ function MyPageMembership() {
                     <div className="status-box unsubscribed">
                         <h2>프리미엄 멤버십</h2>
                         <div className="price">
-                            <span className="amount">9,900</span>
+                            <span className="amount">4,990</span>
                             <span className="unit">원/월</span>
                         </div>
                         <button 
                             className="subscribe-btn"
-                            onClick={handleSubscribe}
+                            onClick={handleNavigateToDetail} // handleSubscribe 대신 handleNavigateToDetail로 변경
                         >
                             구독 시작하기
                         </button>
@@ -143,4 +148,4 @@ function MyPageMembership() {
     );
 }
 
-export default MyPageMembership; 
+export default MyPageMembership;
