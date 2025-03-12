@@ -156,11 +156,12 @@
     justify-content: flex-end;
 }
 
-/* 로그인 로그아웃 회원가입 마이페이지 버튼 스타일 */
+/* 로그인 로그아웃 회원가입 마이페이지 관리자 버튼 스타일 */
 .btns .login,
 .btns .signup,
 .btns .logout,
-.btns .mypage  {
+.btns .mypage,
+.btns .admin  {
     border: 1px solid #d1d9e6;
     padding: 10px 10px;
     cursor: pointer;
@@ -170,11 +171,12 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-/* 로그인 로그아웃 회원가입 마이페이지 버튼 호버 시 효과 */
+/* 로그인 로그아웃 회원가입 마이페이지 관리자페이지 버튼 호버 시 효과 */
 .btns .login:hover,
 .btns .signup:hover,
 .btns .logout:hover,
-.btns .mypage:hover  {
+.btns .mypage:hover,
+.btns .admin:hover  {
     background: #1a73e8;
     color: #fff;
     border-color: #1a73e8;
@@ -182,17 +184,17 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* 로그인 버튼과 회원가입 버튼 사이, 마이페이지와 로그아웃 사이 간격 */
-.login, .mypage {
+/* 로그인 버튼과 회원가입 버튼 사이, 관리자/마이페이지와 로그아웃 사이 간격 */
+.login, .mypage, .admin {
     margin-right: 10px;
 }
 
 
 /* btn 사이즈*/
 .login, .signup {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
-.mypage, .logout {
-    font-size: 0.8rem;
+.mypage, .admin, .logout {
+    font-size: 0.7rem;
 }

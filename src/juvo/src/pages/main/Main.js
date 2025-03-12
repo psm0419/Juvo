@@ -206,7 +206,7 @@ function Main() {
 						<div className="mmiddle middle">
 							<p className="point_text">유가추이</p>
 							<div className='chart'>
-								<AvgPriceChart selectedProduct={selectedProduct} selectedArea={selectedArea} productCodes={productCodes} areaCodes={areaCodes}/>
+								<AvgPriceChart selectedProduct={selectedProduct} selectedArea={selectedArea} productCodes={productCodes} areaCodes={areaCodes} />
 							</div>
 						</div>
 						<div className="rmiddle middle noBorder">
@@ -219,19 +219,24 @@ function Main() {
 				</div>
 				<div className='mainBottom'>
 					<div className="lbottom bottom">
-						<p className="point_text">공지사항</p>
+						<div className='mainotice_title'>
+							<p className="point_text">공지사항</p>
+							<Link to={`/detail/guideDetail/Notice`} className="more"> 더보기 </Link>
+						</div>
 						<div className="mainotice">
 							{notices.length > 0 ? (
-								notices.map((notice) => (
-									<div key={notice.noticeId} className="notice-item">
-										<Link
-											to={`/detail/guideDetail/Notice/detail/${notice.noticeId}`}
-											className="notice-title"
-										>
-											{notice.title}
-										</Link>
-									</div>
-								))
+								notices
+									.slice(0, 3) // Limit to the 3 most recent notices
+									.map((notice) => (
+										<div key={notice.noticeId} className="notice-item">
+											<Link
+												to={`/detail/guideDetail/Notice/detail/${notice.noticeId}`}
+												className="notice-title"
+											>
+												{notice.title}
+											</Link>
+										</div>
+									))
 							) : (
 								<p>현재 공지사항이 없습니다.</p>
 							)}
