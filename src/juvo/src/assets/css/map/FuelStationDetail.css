@@ -21,9 +21,10 @@
 }
 
 .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+    position: absolute; /* 부모(.station-title)를 기준으로 위치 */
+    top: 50%; /* 제목 높이의 50% 지점 */
+    right: 0; /* 오른쪽 끝 */
+    transform: translateY(-50%); /* 수직 가운데 정렬 */
     background: #ff4500;
     color: white;
     border: none;
@@ -32,12 +33,30 @@
     height: 25px;
     cursor: pointer;
     font-size: 14px;
+    display: flex; /* X를 가운데 정렬 */
+    align-items: center;
+    justify-content: center; 
 }
 
 .station-title {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 20px;
+    position: relative; /* 버튼의 위치 기준점 설정 */
+    display: flex; /* flex로 제목과 버튼 배치 */
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: space-between; /* 제목 왼쪽, 버튼 오른쪽 */
+    padding-right: 35px; /* 버튼 공간 확보 */
+}
+.station-name {
+    display: inline-flex; /* 제목과 코드가 붙어 있도록 */
+    align-items: center; /* 수직 정렬 */
+    flex-shrink: 0; /* 줄어들지 않도록 */
+}
+
+.station-code {
+    margin-left: 5px; /* 제목과 코드 사이 약간의 간격 */
+    font-size: 0.9em; /* 코드 크기 조정 (선택 사항) */
 }
 
 .station-title span {
