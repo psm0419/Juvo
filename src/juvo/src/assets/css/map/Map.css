@@ -40,7 +40,7 @@
 }
 
 .map-tab-active {
-    background-color: #4CAF50;
+    background-color: #f89400;
     color: white;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;    
@@ -88,7 +88,7 @@
 
 .map-search-button {
     padding: 8px 16px;
-    background-color: #4CAF50;
+    background-color: #43abae;
     color: white;
     border: none;
     border-radius: 6px;
@@ -98,7 +98,7 @@
 }
 
 .map-search-button:hover {
-    background-color: #388E3C;
+    background-color: #0d9ca4;
 }
 
 /* 상단 UI 고정 높이 설정 */
@@ -180,20 +180,27 @@
 
 .info-window-button {
     padding: 5px 10px;
-    background-color: #28a745;
+    background-color: #43abae;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+.info-window-button:hover{    
+    background-color: #0d9ca4;    
 }
 .info-window-button2 {
     padding: 5px 10px;
-    background-color: red;
+    background-color: lightcoral;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
+.info-window-button2:hover{    
+    background-color: red;    
+}
+
 .info-window-divider {
     border-bottom: 1px solid #eee;
     margin-bottom: 8px;
@@ -258,7 +265,8 @@
 .info-window-route-button {
     margin-top: 5px;
     padding: 8px 10px;
-    background-color: #007bff;
+    /* background-color: #0d9ca4; */
+    background-color: #43abae;
     color: white;
     border: none;
     border-radius: 5px;
@@ -266,6 +274,9 @@
     width: 100%;
     font-size: 14px;
     font-weight: bold;
+}
+.info-window-route-button:hover {    
+    background-color: #0d9ca4;    
 }
 .route-info {
     position: absolute;

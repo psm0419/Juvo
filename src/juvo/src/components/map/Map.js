@@ -3,6 +3,13 @@ import FuelStationList from "../../components/map/FuelStationList";
 import "../../assets/css/map/Map.css";
 import startMarkerImg from "../../assets/image/StartMarker.png";
 import FuelStationDetail from "../../components/map/FuelStationDetail";
+import HdoImage from "../../assets/image/MarkerHdo.png";
+import GscImage from "../../assets/image/MarkerGsc.png";
+import SkeImage from "../../assets/image/MarkerSke.png";
+import SolImage from "../../assets/image/MarkerSol.png";
+import RtxImage from "../../assets/image/MarkerRtx.png";
+import NhoImage from "../../assets/image/MarkerNho.png";
+import EvImage from "../../assets/image/MarkerEv.png";
 
 const Map = ({ fetchFuelStations, stations, loading }) => {
     const mapContainer = useRef(null);
@@ -47,6 +54,32 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     });
     const [regions, setRegions] = useState({});
 
+    const getMarkerImage = (pollDivCd, isChargingStation = false) => {
+        const kakao = window.kakao;
+
+        if (isChargingStation) {
+            return new kakao.maps.MarkerImage(
+                EvImage,
+                new kakao.maps.Size(40, 40), // 충전소 마커 크기 (필요에 따라 조정)
+                { offset: new kakao.maps.Point(15, 30) } // 중심점 설정
+            );
+        }
+        const logos = {
+            GSC: GscImage,
+            SKE: SkeImage,
+            HDO: HdoImage,
+            SOL: SolImage,
+            RTX: RtxImage,
+            NHO: NhoImage,
+        };
+        const imageSrc = logos[pollDivCd] || RtxImage; // 기본값은 RTX(기타)
+        return new kakao.maps.MarkerImage(
+            imageSrc,
+            new kakao.maps.Size(35, 35), // 마커 크기 (필요에 따라 조정)
+            { offset: new kakao.maps.Point(15, 30) } // 마커의 중심점 설정
+        );
+    };
+
     function debounce(func, wait) {
         let timeout;
         return function (...args) {
@@ -54,43 +87,43 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             timeout = setTimeout(() => func.apply(this, args), wait);
         };
     }
-// 불법 주유소 신고 제출
-const handleReportSubmit = () => {
-    if (!selectedBlackType) {
-        alert("신고 유형을 선택해주세요.");
-        return;
-    }
+    // 불법 주유소 신고 제출
+    const handleReportSubmit = () => {
+        if (!selectedBlackType) {
+            alert("신고 유형을 선택해주세요.");
+            return;
+        }
 
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-        alert("로그인이 필요합니다.");
-        sessionStorage.setItem("redirectUrl", window.location.pathname);
-        window.location.href = "/user/login";
-        return;
-    }
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            alert("로그인이 필요합니다.");
+            sessionStorage.setItem("redirectUrl", window.location.pathname);
+            window.location.href = "/user/login";
+            return;
+        }
 
-    fetch("/registerblack", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({ uniId: reportUniId, blackType: selectedBlackType }),
-    })
-        .then(response => {
-            if (!response.ok) throw new Error("신고 실패");
-            return response.json();
+        fetch("/registerblack", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({ uniId: reportUniId, blackType: selectedBlackType }),
         })
-        .then(data => {
-            alert(data.message);
-            setShowReportModal(false);
-            setSelectedBlackType(null);
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("신고 처리 중 오류가 발생했습니다.");
-        });
-};
+            .then(response => {
+                if (!response.ok) throw new Error("신고 실패");
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                setShowReportModal(false);
+                setSelectedBlackType(null);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("신고 처리 중 오류가 발생했습니다.");
+            });
+    };
     // SIDO 데이터 가져오기
     useEffect(() => {
         const fetchSidoList = async () => {
@@ -192,13 +225,13 @@ const handleReportSubmit = () => {
                 (brands.sOil && station.pollDivCd === "SOL") ||
                 (brands.nOil && station.pollDivCd === "NHO") ||
                 (!brands.cheap && !brands.skEnergy && !brands.gsCaltex && !brands.hyundaiOilbank && !brands.sOil && !brands.nOil);
-    
+
             const additionalMatches =
                 (!additionalInfo.carWash || station.carWashYn === "Y") &&
                 (!additionalInfo.maintenance || station.maintYn === "Y") &&
                 (!additionalInfo.convenience || station.cvsYn === "Y") &&
                 (!additionalInfo.self || station.selfYn === "Y" || (station.OS_NM && station.OS_NM.includes("셀프")));
-    
+
             return brandMatches && additionalMatches;
         });
     };
@@ -234,10 +267,14 @@ const handleReportSubmit = () => {
                             return;
                         }
 
+                        // pollDivCd에 따라 마커 이미지 설정
+                        const markerImage = getMarkerImage(station.pollDivCd);
+
                         const marker = new kakao.maps.Marker({
                             position: coords,
                             map: mapRef.current,
                             title: station.OS_NM || station.osNm,
+                            image: markerImage,
                         });
 
                         const infoWindowContent = `
@@ -247,7 +284,7 @@ const handleReportSubmit = () => {
                                 </div>
                                 <div class="info-window-button-container">
                                 <button onclick="registerFavoriteStation('${station.uniId}')" class="info-window-button">
-                                    관심 주유소 등록
+                                    즐겨찾기
                                 </button>
                                 <button onclick="registerBlack('${station.uniId}')" class="info-window-button2">
                                         신고
@@ -420,10 +457,12 @@ const handleReportSubmit = () => {
             // 마커 생성
             const markers = validStations.map(({ station, lat: stationLat, lng: stationLng }) => {
                 const coords = new kakao.maps.LatLng(stationLat, stationLng);
+                const markerImage = getMarkerImage(null, true);
                 const marker = new kakao.maps.Marker({
                     position: coords,
                     map: mapRef.current,
                     title: station.stationName,
+                    image: markerImage,
                 });
 
                 const infoWindowContent = `
@@ -780,11 +819,11 @@ const handleReportSubmit = () => {
         <div className="map-container">
             <div ref={mapContainer} className="map">
                 {routeInfo.distance && routeInfo.time && (
-                        <div className="route-info">
-                            <span>거리: {routeInfo.distance} km | </span>
-                            <span>소요 시간: {routeInfo.time} 분</span>
-                        </div>
-                    )}
+                    <div className="route-info">
+                        <span>거리: {routeInfo.distance} km | </span>
+                        <span>소요 시간: {routeInfo.time} 분</span>
+                    </div>
+                )}
             </div>
             {selectedDetailStation && <FuelStationDetail station={selectedDetailStation} onClose={handleCloseDetail} />}
             <div className="map-sidebar">

@@ -1,5 +1,10 @@
 import React from "react";
-
+import HdoImage from "../../assets/image/Hdo.gif";
+import GscImage from "../../assets/image/Gsc.gif";
+import SkeImage from "../../assets/image/Ske.gif";
+import SolImage from "../../assets/image/Sol.gif";
+import RtxImage from "../../assets/image/Rtx.gif";
+import NhoImage from "../../assets/image/Nho.gif";
 
 const FuelStationList = ({ stations, loading, onStationClick, isChargingStation = false }) => {
     if (loading) {
@@ -16,14 +21,15 @@ const FuelStationList = ({ stations, loading, onStationClick, isChargingStation 
 
     const getBrandLogo = (pollDivCd) => {
         const logos = {
-            GSC: "🟢", // GS칼텍스
-            SKE: "🟡", // SK에너지
-            HDO: "🔵", // 현대오일뱅크
-            SOL: "🟠", // S-OIL
-            RTX: "⚪", // 기타
-            NHO: "⚫", // 농협
+            GSC: GscImage, // GS칼텍스 이미지
+            SKE: SkeImage, // SK에너지 이미지
+            HDO: HdoImage, // 현대오일뱅크 이미지
+            SOL: SolImage, // S-OIL 이미지
+            RTX: RtxImage, // 기타 이미지
+            NHO: NhoImage, // 농협 이미지
         };
-        return logos[pollDivCd] || "⚪";
+        // 해당 pollDivCd에 맞는 로고가 없으면 RtxImage(기타)를 기본값으로 사용
+        return logos[pollDivCd] || RtxImage;
     };
 
     return (
@@ -75,9 +81,7 @@ const FuelStationList = ({ stations, loading, onStationClick, isChargingStation 
                                 </span>
                             </div>
                             <div style={{ display: "flex", gap: "10px", fontWeight: "bold" }}>
-                                <span>
-                                    {station.modelSmall || "-"}
-                                </span>
+                                <span>{station.modelSmall || "-"}</span>
                                 <span>{station.userRestriction || "-"}</span>
                             </div>
                         </div>
@@ -115,7 +119,11 @@ const FuelStationList = ({ stations, loading, onStationClick, isChargingStation 
                             }}
                         >
                             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                <span>{getBrandLogo(station.pollDivCd)}</span>
+                                <img
+                                    src={getBrandLogo(station.pollDivCd)}
+                                    alt={`${station.pollDivCd} logo`}
+                                    style={{ width: "20px", height: "16px" }}
+                                />
                                 <span
                                     style={{ cursor: "pointer", color: "#007bff" }}
                                     onClick={() => onStationClick(station)}
