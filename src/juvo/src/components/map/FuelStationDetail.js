@@ -264,10 +264,12 @@ const FuelStationDetail = ({ station, onClose }) => {
 
     return (
         <div className="fuel-station-detail-overlay">
-            <div className="fuel-station-detail">
-                <button className="close-btn" onClick={onClose}>X</button>
+            <div className="fuel-station-detail">                
                 <h2 className="station-title">
-                    {station.OS_NM || "이름 없음"} <span>({station.pollDivCd || "이름 없음"})</span>
+                <span className="station-name">
+                {station.OS_NM || "이름 없음"} <span className="station-code">({station.pollDivCd || "이름 없음"})</span>
+            </span>
+            <button className="close-btn" onClick={onClose}>X</button>
                 </h2>
                 <div className="detail-section">
                     <h3 className="section-title">주요 가격</h3>
