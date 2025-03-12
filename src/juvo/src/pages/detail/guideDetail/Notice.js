@@ -1,32 +1,39 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../../../assets/css/detail/Notice.css';
 import axios from 'axios';
 
 const Notice = () => {
     const [notices, setNotices] = useState([]);
 
-    // 공지사항 API 호출
     useEffect(() => {
         const fetchNotices = async () => {
             try {
-                const response = await axios.get('/api/notices'); // 공지사항 API
-                setNotices(response.data); // 응답된 데이터를 notices에 저장
+                const response = await axios.get('http://localhost:3000/notice/list');
+                setNotices(response.data);
             } catch (error) {
                 console.error('공지사항을 불러오는 중 오류 발생:', error);
             }
         };
 
         fetchNotices();
-    }, []); // 페이지 로드 시 한 번만 호출
+    }, []);
 
     return (
         <div className="notice">
             {notices.length > 0 ? (
-                notices.map((notice, index) => (
-                    <div key={index} className="notice-item">
-                        <h4>{notice.title}</h4>
+                notices.map((notice) => (
+                    <div key={notice.noticeId} className="notice-item">
+                        <h4>
+                            <Link
+                                to={`/detail/guideDetail/Notice/detail/${notice.noticeId}`}
+                                className="notice-title"
+                            >
+                                {notice.title}
+                            </Link>
+                        </h4>
                         <p>{notice.content}</p>
-                        <span>{notice.date}</span>
+                        <span>{notice.createdDate}</span>
                     </div>
                 ))
             ) : (
