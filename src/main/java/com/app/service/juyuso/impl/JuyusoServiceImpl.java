@@ -446,6 +446,14 @@ public class JuyusoServiceImpl implements JuyusoService {
         System.out.println("Deleted review for userId: " + userId + ", uniId: " + uniId + ", result: " + result);
         return result > 0;
     }
+    
+    @Override
+	public List<BlackJuyuso> findProcessedBlackList() {
+		
+		List<BlackJuyuso> blackList = juyusoDAO.findProcessedBlackList();
+		
+		return blackList;
+	}
 
 	@Override
 	public List<BlackJuyuso> findBlackList() {
@@ -456,9 +464,9 @@ public class JuyusoServiceImpl implements JuyusoService {
 	}
 
 	@Override
-	public int saveBlack(BlackJuyuso blackJuyuso) {
+	public int modifyBlack(BlackJuyuso blackJuyuso) {
 		
-		int result = juyusoDAO.saveBlack(blackJuyuso);
+		int result = juyusoDAO.modifyBlack(blackJuyuso);
 		
 		return result;
 	}

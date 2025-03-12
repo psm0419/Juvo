@@ -32,7 +32,8 @@ public interface JuyusoDAO {
 	boolean deleteFavoriteStation(String userId, String uniId);
     
     //관리자
+    public List<BlackJuyuso> findProcessedBlackList();
     public List<BlackJuyuso> findBlackList();
-    public int saveBlack(BlackJuyuso blackJuyuso);
+    public int modifyBlack(BlackJuyuso blackJuyuso);
 	public int removeBlack(String uniId);
 }

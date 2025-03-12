@@ -24,4 +24,5 @@ public class BlackJuyuso {
      Double iOilPrice; // C004: 실내등유
      Integer operatation;
      int blackType; //블랙타입
+     int status; //처리상태 0 미처리 1 처리
 }
