@@ -48,14 +48,16 @@ public class UserController {
 			System.out.println("로그인 실패");
 			tokens.put("accessToken", "fail");
 		} else { // 로그인 성공
-			String accessToken = JwtProvider.createAccessToken(user.getId(),user.getUserType());
+			String accessToken = JwtProvider.createAccessToken(loginUser.getId(),loginUser.getUserType());
 			String refreshToken = JwtProvider.createRefreshToken();
-			System.out.println("로그인 아이디 : " + user.getId());
+			System.out.println("로그인 아이디 : " + loginUser.getId());
+			System.out.println("로그인 타입 : " + loginUser.getUserType());
 			System.out.println("발행 access Token : " + accessToken);
 			System.out.println("발행 refresh Token : " + refreshToken);
 
 			tokens.put("accessToken", accessToken);
 			tokens.put("refreshToken", refreshToken);
+			tokens.put("userType", loginUser.getUserType());
 		}
 		return tokens;
 	}
