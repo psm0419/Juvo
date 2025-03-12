@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import '../../assets/css/user/Login.css';
 import Header from '../../components/header/Header';
 import axiosInstance from '../../util/AxiosConfig';
 import NaverLogin from './socialLogin/NaverLogin';
+
 function Login() {
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
@@ -24,7 +24,7 @@ function Login() {
                 { id, pw },
                 { headers: { 'Content-Type': 'application/json' } }
             );
-            const { accessToken, refreshToken } = response.data;
+            const { accessToken, refreshToken, userType } = response.data;
 
             if (accessToken === 'fail') {
                 alert('로그인 실패: 아이디 또는 비밀번호를 확인해주세요.');
@@ -33,12 +33,12 @@ function Login() {
             } else {
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('refreshToken', refreshToken);
+                localStorage.setItem('userType', userType); // userType 저장
                 window.dispatchEvent(new Event("storage")); // 강제로 storage 이벤트 발생
                 alert('로그인 성공');
 
-                // 이전 URL로 리다이렉트
                 const redirectUrl = sessionStorage.getItem('redirectUrl') || '/';
-                sessionStorage.removeItem('redirectUrl'); // 사용 후 제거
+                sessionStorage.removeItem('redirectUrl');
                 navigate(redirectUrl);
             }
         } catch (error) {
@@ -51,11 +51,11 @@ function Login() {
     };
 
     const handleFindId = () => {
-        navigate('/findIdRequest'); // 아이디 찾기 페이지로 이동
+        navigate('/findIdRequest');
     };
 
     const handleFindPw = () => {
-        navigate("/findPasswordRequest"); // 비밀번호 찾기 페이지로 이동
+        navigate('/findPasswordRequest');
     };
 
     return (
@@ -103,7 +103,6 @@ function Login() {
                     <button className="login-social-btn naver-login-btn">
                         <span className="login-social-icon naver-icon" />
                         <span>네이버로 로그인</span>
-                        
                     </button>
                     <button className="login-social-btn kakao-login-btn">
                         <span className="login-social-icon kakao-icon" />
