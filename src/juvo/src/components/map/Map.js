@@ -137,10 +137,10 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     }, [marker, routeLine]);
 
     // 주유소 필터링 함수
-    const filterStations = () => {
-        console.log("Filtering stations, stations prop:", stations);
-        if (!stations || !stations.RESULT || !stations.RESULT.OIL || stations.RESULT.OIL.length === 0) return [];
-        return stations.RESULT.OIL.filter(station => {
+    const filterStations = (stationsData) => {
+        console.log("Filtering stations, stations data:", stationsData);
+        if (!stationsData || !stationsData.RESULT || !stationsData.RESULT.OIL || stationsData.RESULT.OIL.length === 0) return [];
+        return stationsData.RESULT.OIL.filter(station => {
             const brandMatches =
                 (brands.cheap && station.pollDivCd === "RTE") ||
                 (brands.skEnergy && station.pollDivCd === "SKE") ||
@@ -149,26 +149,25 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 (brands.sOil && station.pollDivCd === "SOL") ||
                 (brands.nOil && station.pollDivCd === "NHO") ||
                 (!brands.cheap && !brands.skEnergy && !brands.gsCaltex && !brands.hyundaiOilbank && !brands.sOil && !brands.nOil);
-
+    
             const additionalMatches =
                 (!additionalInfo.carWash || station.carWashYn === "Y") &&
                 (!additionalInfo.maintenance || station.maintYn === "Y") &&
                 (!additionalInfo.convenience || station.cvsYn === "Y") &&
                 (!additionalInfo.self || station.selfYn === "Y" || (station.OS_NM && station.OS_NM.includes("셀프")));
-
+    
             return brandMatches && additionalMatches;
         });
     };
 
     // 주유소 데이터 업데이트
     useEffect(() => {
-        if (activeTab === "주유소" && stations && stations.RESULT && stations.RESULT.OIL) {
-            const filtered = filterStations();
-            console.log("Filtered stations:", filtered);
+        if (activeTab === "주유소" && stations && stations.RESULT && stations.RESULT.OIL && isDataLoaded) {
+            const filtered = filterStations(stations);
             setFilteredStations(filtered);
-            setIsDataLoaded(true);
+            console.log("Filtered stations:", filtered);
         }
-    }, [stations, brands, additionalInfo, activeTab]);
+    }, [stations, brands, additionalInfo, activeTab, isDataLoaded]);
 
     // 주유소 마커 업데이트
     useEffect(() => {
@@ -330,7 +329,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             }
             if (currentInfoWindow) currentInfoWindow.close();
         };
-    }, [filteredStations, lat, lng, activeTab]);
+    }, [filteredStations, lat, lng, activeTab, isDataLoaded]);
 
     // 충전소 마커 업데이트
     useEffect(() => {
@@ -454,10 +453,11 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         setIsDataLoaded(false);
         if (activeTab === "주유소") {
             try {
-                await fetchFuelStations(lat, lng); // 부모 컴포넌트에서 stations 업데이트
-                console.log("Fetched fuel stations triggered");
+                await fetchFuelStations(lat, lng); // 데이터는 stations props로 반영됨
+                setIsDataLoaded(true); // 데이터 로드 완료 후 useEffect에서 필터링
             } catch (error) {
                 console.error("Error fetching fuel stations:", error);
+                setFilteredStations([]);
                 setIsDataLoaded(true);
             }
         } else {
