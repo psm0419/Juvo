@@ -34,9 +34,6 @@ public class FindController {
 	@PostMapping("/user/findId")
 	public User findIdByEmail(HttpServletRequest request, @RequestBody User requestUser) {
 		User user = userService.findIdByRequest(requestUser);
-		if (user == null) {
-			throw new RuntimeException("입력하신 정보와 일치하는 사용자를 찾을 수 없습니다.");
-		}
 		return user;
 	}
 
@@ -53,7 +50,7 @@ public class FindController {
 
 		try {
 			// 토큰 생성
-			String token = JwtProvider.createAccessToken(user.getId());
+			String token = JwtProvider.createAccessToken(user.getId(),user.getUserType());
 
 			// 이메일 설정
 			String setFrom = "cording1kyu@gmail.com";

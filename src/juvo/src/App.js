@@ -30,6 +30,8 @@ import { useTokenCleanup } from './util/AxiosConfig';
 import Notice from './pages/detail/guideDetail/Notice';
 import NoticeDetail from './pages/detail/guideDetail/NoticeDetail';
 
+import SocialLoginTest from './pages/user/socialLogin/SocialLoginTest';
+import KakaoPost from './pages/user/socialLogin/KakaoPost';
 
 function App() {
 	useTokenCleanup();
@@ -40,6 +42,8 @@ function App() {
 				<Route path='/user/login' element={<Login />} />
 				<Route path='/user/signup' element={<Signup />} />
 
+				<Route path='/socialLogin' element={<SocialLoginTest />} />
+				<Route path='/login/auth2/code/kakao' element={<KakaoPost />} />
 				<Route path="/findPasswordRequest" element={<FindPasswordRequest />} />
 				<Route path="/resetPassword/:token" element={<ResetPassword />} />
 
