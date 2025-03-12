@@ -14,5 +14,7 @@
 		<typeAlias type="com.app.dto.juyuso.UserKeyword" alias="UserKeyword" />
 		<typeAlias type="com.app.dto.juyuso.Keyword" alias="Keyword" />
 		<typeAlias type="com.app.dto.chargingstation.ChargingStation" alias="ChargingStation" />
+		<typeAlias type="com.app.dto.notice.NoticeDTO" alias="Notice" />
+		
 	</typeAliases>
 </configuration>
