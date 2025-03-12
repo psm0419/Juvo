@@ -3,8 +3,10 @@ package com.app.dao.juyuso;
 import java.util.List;
 import java.util.Map;
 
+import com.app.dto.juyuso.BlackJuyuso;
 import com.app.dto.juyuso.Juyuso;
 import com.app.dto.juyuso.LikeJuyuso;
+import com.app.dto.user.User;
 
 public interface JuyusoDAO {
 
@@ -28,4 +30,9 @@ public interface JuyusoDAO {
     int deleteKeywordsByUserAndStation(Map<String, Object> param);
 	List<String> getFavoriteJuyuso(String userId);
 	boolean deleteFavoriteStation(String userId, String uniId);
+    
+    //관리자
+    public List<BlackJuyuso> findBlackList();
+    public int saveBlack(BlackJuyuso blackJuyuso);
+	public int removeBlack(String uniId);
 }

@@ -1,5 +1,7 @@
 package com.app.dao.user.impl;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -76,6 +78,25 @@ public class UserDAOImpl implements UserDAO {
 		
 		return user;
 	}
+	
+	// 관리자
+
+	@Override
+	public List<User> findUserList() {
+		
+		List <User> userList = sqlSessionTemplate.selectList("user_mapper.findUserList");
+		
+		return userList;
+	}
+
+	@Override
+	public int removeUser(String id) {
+		
+		int result = sqlSessionTemplate.delete("user_mapper.removeUser",id);
+		
+		return result;
+	}
+
 
 	@Override
 	public User findByEmail(String email) {

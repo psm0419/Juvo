@@ -202,7 +202,7 @@ function Main() {
 						<div className="mmiddle middle">
 							<p className="point_text">유가추이</p>
 							<div className='chart'>
-								<AvgPriceChart selectedProduct={selectedProduct} selectedArea={selectedArea} />
+								<AvgPriceChart selectedProduct={selectedProduct} selectedArea={selectedArea} productCodes={productCodes} areaCodes={areaCodes}/>
 							</div>
 						</div>
 						<div className="rmiddle middle noBorder">

@@ -90,5 +90,15 @@
 		INSERT INTO users (id, email, userName)
 		VALUES (#{id}, #{email}, #{username})
 	</insert>
+	<!-- 관리자 -->
+	
+	<select id="findUserList" resultType="User">
+		SELECT * FROM users
+	</select>
+	
+	<delete id="removeUser" parameterType="String">
+		DELETE FROM users
+		WHERE id = #{id}
+	</delete>
 	
 	</mapper>

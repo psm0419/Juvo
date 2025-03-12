@@ -6,6 +6,7 @@ import Login from './pages/user/Login';
 import Signup from './pages/user/Signup';
 import FindId from './pages/user/FindIdRequest';
 import MyPageProfile from './pages/user/myPage/MyPageProfile';
+import Admin from './pages/admin/Admin';
 import MyPageLayout from './pages/user/myPage/MyPageLayout';
 import MyPageFavorites from './pages/user/myPage/MyPageFavorites';
 import MyPageMembership from './pages/user/myPage/MyPageMembership';
@@ -40,6 +41,8 @@ function App() {
 				<Route path="/resetPassword/:token" element={<ResetPassword />} />
 
 				<Route path='/findIdRequest' element={<FindId />} />
+
+				<Route path="/admin" element={<Admin />} />
 
 				<Route path="/mypage" element={<MyPageLayout />}>
 					<Route path="profile" element={<MyPageProfile />} />

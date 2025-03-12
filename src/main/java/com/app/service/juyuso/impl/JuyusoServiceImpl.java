@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.app.controller.juyuso.GeoTrans;
 import com.app.dao.juyuso.JuyusoDAO;
+import com.app.dto.juyuso.BlackJuyuso;
 import com.app.dto.juyuso.Juyuso;
 import com.app.dto.juyuso.LikeJuyuso;
 import com.app.service.api.ArplApiService;
@@ -434,5 +435,39 @@ public class JuyusoServiceImpl implements JuyusoService {
 			e.printStackTrace();
 			return false;
 		}
+    @Transactional
+    @Override
+    public boolean deleteReview(String userId, String uniId, String content) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("userId", userId);
+        param.put("uniId", uniId);
+        param.put("content", content);
+        int result = juyusoDAO.deleteReview(param);
+        System.out.println("Deleted review for userId: " + userId + ", uniId: " + uniId + ", result: " + result);
+        return result > 0;
+    }
+
+	@Override
+	public List<BlackJuyuso> findBlackList() {
+		
+		List<BlackJuyuso> blackList = juyusoDAO.findBlackList();
+		
+		return blackList;
+	}
+
+	@Override
+	public int saveBlack(BlackJuyuso blackJuyuso) {
+		
+		int result = juyusoDAO.saveBlack(blackJuyuso);
+		
+		return result;
+	}
+
+	@Override
+	public int removeBlack(String uniId) {
+		
+		int result = juyusoDAO.removeBlack(uniId);
+		
+		return result;
 	}
 }

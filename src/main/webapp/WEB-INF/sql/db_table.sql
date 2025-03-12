@@ -4,8 +4,8 @@ CREATE TABLE users (
     username VARCHAR2(32) ,
     nickname VARCHAR2(48)  UNIQUE,
     pw VARCHAR2(256) ,
-    email VARCHAR2(64)  UNIQUE,
-    tel VARCHAR2(24)  UNIQUE,
+    email VARCHAR2(64)  ,
+    tel VARCHAR2(24)  ,
     jumin VARCHAR2(16) ,
     user_type VARCHAR2(16) ,
     membership NUMBER
@@ -104,13 +104,17 @@ CREATE TABLE like_juyuso (
 -- 블랙리스트 주유소
 CREATE TABLE black_juyuso (
     UNI_ID VARCHAR2(32) NOT NULL,
-    black_type NUMBER NOT NULL
+    black_type NUMBER NOT NULL,
+    LPG_YN VARCHAR2(2),
+    OS_NM VARCHAR2(255),
+    NEW_ADR VARCHAR2(255)
 );
 
 -- 블랙리스트 유형
+-- 1 용도외판매 2 품질기준부적합 3 가짜석유취급 4 정량미달판매
 CREATE TABLE black_type (
-    black_id NUMBER PRIMARY KEY,
-    black_type VARCHAR2(100)
+    black_id NUMBER PRIMARY KEY,  
+    black_type VARCHAR2(100) 
 );
 
 -- 주유소 신고 테이블
