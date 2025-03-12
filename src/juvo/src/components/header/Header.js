@@ -30,6 +30,11 @@ function Header() {
         navigate('/');
     };
 
+    const handleLogin = () => {
+        sessionStorage.setItem("redirectUrl", window.location.pathname);
+        navigate("/user/login");
+    };
+
     const handleMyPageClick = () => {
         const token = localStorage.getItem('accessToken');
         if (!token) {
@@ -96,7 +101,7 @@ function Header() {
                     </>
                 ) : (
                     <>
-                        <div className="login" onClick={() => navigate("/user/login")}>로그인</div>
+                        <div className="login" onClick={handleLogin}>로그인</div>
                         <div className="signup" onClick={() => navigate("/user/signup")}>회원가입</div>
                     </>
                 )}
