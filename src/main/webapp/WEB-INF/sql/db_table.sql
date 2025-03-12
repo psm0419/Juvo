@@ -101,7 +101,8 @@ CREATE TABLE black_juyuso (
     black_type NUMBER NOT NULL,
     LPG_YN VARCHAR2(2),
     OS_NM VARCHAR2(255),
-    NEW_ADR VARCHAR2(255)
+    NEW_ADR VARCHAR2(255),
+    status NUMBER -- 0 미처리 1 처리
 );
 
 -- 블랙리스트 유형

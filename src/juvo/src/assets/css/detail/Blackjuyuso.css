@@ -48,7 +48,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    padding: 15px;
+    padding: 15px 25px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -58,7 +58,7 @@
 .bj-filter-item {
     display: flex;
     flex-direction: column;
-    min-width: 150px;
+    min-width: 255px;
 }
 
 .bj-filter-item label {

@@ -118,6 +118,14 @@ public class JuyusoDAOImpl implements JuyusoDAO {
     public int deleteKeywordsByUserAndStation(Map<String, Object> param) {
         return sqlSessionTemplate.delete(NAMESPACE + "deleteKeywordsByUserAndStation", param);
     }
+    
+    @Override
+	public List<BlackJuyuso> findProcessedBlackList() {
+		
+		List<BlackJuyuso> blackList = sqlSessionTemplate.selectList("juyuso_mapper.findProcessedBlackList");
+		
+		return blackList;
+	}
 
 	@Override
 	public List<BlackJuyuso> findBlackList() {
@@ -128,9 +136,9 @@ public class JuyusoDAOImpl implements JuyusoDAO {
 	}
 
 	@Override
-	public int saveBlack(BlackJuyuso blackJuyuso) {
+	public int modifyBlack(BlackJuyuso blackJuyuso) {
 		
-		int result = sqlSessionTemplate.insert("juyuso_mapper.saveBlack", blackJuyuso);
+		int result = sqlSessionTemplate.update("juyuso_mapper.modifyBlack", blackJuyuso);
 		
 		return result;
 	}

@@ -64,9 +64,27 @@ public class AdminController {
 		}
 	}
 	
-	@GetMapping("/api/admin/blackJuyuso")
+	@GetMapping("/api/admin/findProcessedBlack")
 	@ResponseBody
-	public List<BlackJuyuso> blackJuyuso() {
+	public List<BlackJuyuso> findProcessedBlack() {
+		try {
+	        List<BlackJuyuso> blackList = juyusoService.findProcessedBlackList();
+	        if (blackList == null) {
+	            System.out.println(" processed blackList is null");
+	            return List.of(); // null 대신 빈 리스트 반환
+	        }
+	        System.out.println(blackList);
+	        return blackList;
+	    } catch (Exception e) {
+	        System.err.println("Error in get processed blackList: " + e.getMessage());
+	        e.printStackTrace();
+	        return List.of(); // 오류 발생 시 빈 리스트 반환
+	    }
+	}
+	
+	@GetMapping("/api/admin/findBlack")
+	@ResponseBody
+	public List<BlackJuyuso> findBlack() {
 		try {
 	        List<BlackJuyuso> blackList = juyusoService.findBlackList();
 	        if (blackList == null) {
@@ -76,23 +94,23 @@ public class AdminController {
 	        System.out.println(blackList);
 	        return blackList;
 	    } catch (Exception e) {
-	        System.err.println("Error in getUserList: " + e.getMessage());
+	        System.err.println("Error in get blackList: " + e.getMessage());
 	        e.printStackTrace();
 	        return List.of(); // 오류 발생 시 빈 리스트 반환
 	    }
 	}
 	
-	@PostMapping("/api/admin/saveBlack")
+	@PostMapping("/api/admin/modifyBlack")
 	@ResponseBody
 	public String saveBlack(@RequestBody BlackJuyuso blackJuyuso) {
 		
 		try {
-			int result = juyusoService.saveBlack(blackJuyuso);
+			int result = juyusoService.modifyBlack(blackJuyuso);
 			if (result > 0) {
-				System.out.println("Black saved: " + blackJuyuso);
+				System.out.println("Black modified: " + blackJuyuso);
 				return "success";
 			} else {
-				System.out.println("Black not saved: " + blackJuyuso);
+				System.out.println("Black not modified: " + blackJuyuso);
 				return "failure";
 			}
 		} catch (Exception e) {

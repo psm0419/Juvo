@@ -25,7 +25,8 @@ public interface JuyusoService {
     boolean deleteReview(String userId, String uniId, String content);
     
     //관리자
+    public List<BlackJuyuso> findProcessedBlackList();
     public List<BlackJuyuso> findBlackList();
-    public int saveBlack(BlackJuyuso blackJuyuso);
+    public int modifyBlack(BlackJuyuso blackJuyuso);
 	public int removeBlack(String uniId);
 }
