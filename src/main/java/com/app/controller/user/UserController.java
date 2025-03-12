@@ -48,7 +48,7 @@ public class UserController {
 			System.out.println("로그인 실패");
 			tokens.put("accessToken", "fail");
 		} else { // 로그인 성공
-			String accessToken = JwtProvider.createAccessToken(user.getId());
+			String accessToken = JwtProvider.createAccessToken(user.getId(),user.getUserType());
 			String refreshToken = JwtProvider.createRefreshToken();
 			System.out.println("로그인 아이디 : " + user.getId());
 			System.out.println("발행 access Token : " + accessToken);
@@ -216,7 +216,8 @@ public class UserController {
 	public ResponseEntity<Map<String, String>> refreshAccessToken(@RequestHeader("Authorization") String refreshToken) {
 		String token = refreshToken.replace("Bearer ", "");
 		String userId = JwtProvider.getUserIdFromToken(token);
-		String newAccessToken = JwtProvider.refreshAccessToken(token, userId);
+		String userType = JwtProvider.getUserTypeFromToken(token);
+		String newAccessToken = JwtProvider.refreshAccessToken(token, userId, userType );
 
 		if (newAccessToken != null) {
 			Map<String, String> tokens = new HashMap<>();
