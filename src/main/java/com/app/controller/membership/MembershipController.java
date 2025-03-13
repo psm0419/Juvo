@@ -65,4 +65,24 @@ public class MembershipController {
 		return	membership;
 		}
 		
+		@PostMapping("/api/membership/unsubscribe")
+	    public ResponseEntity<String> unsubscribe(@RequestBody Membership membership, HttpServletRequest request) {
+	    	String token = request.getHeader("Authorization").substring(7);
+	    	String id = JwtProvider.getUserIdFromToken(token);
+	    	membership.setUserId(JwtProvider.getUserIdFromToken(token)); //membership table에 id 세팅
+	    	User user = userService.findUserById(id);
+	    	
+	    	user.setMembership(0);  //가입여부 0 == false
+	    	boolean isSubscribe = userService.updateMembership(user);// user table에 멤버십 가입여부 넣기
+	   
+	    	boolean result = membershipService.unsubscribe(user.getId()); //가입 결과
+	    	if(result == true) {
+	    		return ResponseEntity.ok("멤버십 해지가 완료되었습니다.");
+	    	} else {
+	    		
+	    	}	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해지가 완료되지 않았습니다. 관리자에게 문의하세요.");
+			
+			
+	    }
+		
     }
