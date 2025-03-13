@@ -24,7 +24,6 @@ const Notice = () => {
             {notices.length > 0 ? (
                 notices.map((notice) => (
                     <Link
-                        key={notice.noticeId}
                         to={`/detail/guideDetail/Notice/detail/${notice.noticeId}`}
                         className="notice-item"
                     >
