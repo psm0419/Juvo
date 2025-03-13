@@ -146,3 +146,24 @@ CREATE SEQUENCE NOTICE_SEQ
 START WITH 1
 INCREMENT BY 1
 NOCACHE;
+------------------멤버쉽----------------------
+
+create table membership (
+    id varchar2(32) primary key,
+    user_id varchar2(32) ,
+    name  varchar2(32),
+    tel varchar2(32),
+    address varchar2(32),
+    detail_address varchar2(32),
+    card_company varchar2(32),
+    card_number varchar2(32),
+    cvc varchar2(32),
+    expiry varchar2(32),
+    created_at timestamp
+    
+);
+
+create SEQUENCE membership_seq
+START WITH 1
+INCREMENT BY 1
+NOCYCLE;

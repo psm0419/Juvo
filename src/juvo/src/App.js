@@ -27,6 +27,11 @@ import ResetPassword from './pages/user/ResetPassword';
 import Membership from './pages/detail/guideDetail/Membership';
 import MembershipDetail from './pages/detail/guideDetail/MembershipDetail';
 import { useTokenCleanup } from './util/AxiosConfig';
+import SocialLoginTest from './pages/user/socialLogin/SocialLoginTest';
+import KakaoPost from './pages/user/socialLogin/KakaoPost';
+import Notice from './pages/detail/guideDetail/Notice';
+import NoticeDetail from './pages/detail/guideDetail/NoticeDetail';
+
 import Notice from './pages/detail/guideDetail/Notice';
 import NoticeDetail from './pages/detail/guideDetail/NoticeDetail';
 

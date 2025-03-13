@@ -27,6 +27,8 @@ public interface UserService {
 	public List<User> findUserList();
 	//modifyUser
 	public int removeUser(String id);
+	public boolean updateMembership(User user);
+	
 	
 	
 }
