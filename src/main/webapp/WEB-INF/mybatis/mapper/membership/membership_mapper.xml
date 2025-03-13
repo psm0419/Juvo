@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.app.mapper.membership">
+<mapper namespace="membership_mapper">
 <insert id="insertMembership" parameterType="Membership">
     INSERT INTO membership 
         (id, user_id, name, tel, address, detail_address, card_company, card_number, cvc, expiry, created_at)
@@ -12,4 +12,11 @@
 <select id="checkMembershipByUserId" parameterType="String" resultType="Membership">
     SELECT * FROM membership WHERE user_id = #{userId}
 </select>
+
+
+<delete id="deleteMembership" parameterType="String">
+		DELETE FROM membership
+		WHERE user_id = #{userId}
+</delete>
+
 </mapper>

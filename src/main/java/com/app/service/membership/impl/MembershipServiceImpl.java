@@ -22,6 +22,17 @@ public class MembershipServiceImpl implements MembershipService {
 		}
 
 	}
+	
+	@Override
+	public boolean unsubscribe(String userId) {
+		boolean result = membershipDAO.deleteMembership(userId);
+		if (result == true) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
 
 	@Override
 	public Membership checkMembershipByUserId(String userId) {
