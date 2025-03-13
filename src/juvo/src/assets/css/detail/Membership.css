@@ -121,13 +121,13 @@
 
 
 .tier-button.active {
-    background-color: #f89400 ; /* 활성화 시 녹색 배경 */
+    background-color: #f89400 ;
     opacity: 1; /* 활성화 시 클릭 가능하게 */
-    cursor: pointer; /* 클릭 가능 표시 */
+    cursor: pointer; /* 클릭 가능 표시 */    
 }
 
 .tier-button:hover {
-    background-color:  #374051;
+    background-color:  #da8300;
 }
 
 /* 기능 목록 */

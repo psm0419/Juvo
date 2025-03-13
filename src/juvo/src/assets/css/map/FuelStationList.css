@@ -1,0 +1,59 @@
+/* FuelStationList.css */
+.fuel-station-list-container {
+    margin-top: 10px;
+    max-height: calc(100% - 60px); /* 플라이박스 높이에 맞게 조정 */
+    overflow-y: auto; /* 스크롤바 항상 활성화 */
+    padding-bottom: 20px; /* 하단 패딩 추가 */
+}
+
+.loading-text,
+.no-stations-text {
+    padding: 10px;
+    text-align: center;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.header-prices {
+    display: flex;
+    gap: 20px;
+}
+
+.station-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    align-items: center;
+    font-size: 14px;
+}
+
+.station-name-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.station-name {
+    cursor: pointer;
+    color: #007bff;
+}
+
+.station-prices {
+    display: flex;
+    gap: 20px;
+    font-weight: bold;
+    color: #f89400;
+}
+
+.brand-logo {
+    width: 20px;
+    height: 16px;
+}

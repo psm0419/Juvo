@@ -14,6 +14,7 @@ const FuelStationDetail = ({ station, onClose }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userId, setUserId] = useState(null);
     const [editingReview, setEditingReview] = useState(null);
+    const [visibleReviews, setVisibleReviews] = useState(3);
 
     useEffect(() => {
         if (!station?.uniId) {
@@ -49,6 +50,7 @@ const FuelStationDetail = ({ station, onClose }) => {
             console.log("Reviews data:", data);
             setReviews(data.reviews || []);
             setAverageRating(data.averageRating || 0);
+            setVisibleReviews(3); //리뷰 새로 가져올 때마다 3개로 리셋
         } catch (error) {
             console.error('Error fetching reviews:', error);
             setReviews([]);
@@ -143,7 +145,7 @@ const FuelStationDetail = ({ station, onClose }) => {
             alert(`리뷰 저장 중 오류가 발생했습니다: ${error.message}`);
         }
     };
-
+    
     const handleSelectKeyword = async () => {
         const token = localStorage.getItem('accessToken');
         if (!token) {
@@ -246,6 +248,11 @@ const FuelStationDetail = ({ station, onClose }) => {
         }
     };
 
+    // 더보기 버튼 클릭 시 5개씩 추가
+    const handleShowMore = () => {
+        setVisibleReviews(prev => prev + 5);
+    }
+
     const toggleKeyword = (id) => {
         setSelectedKeywords(prev =>
             prev.includes(id) ? prev.filter(k => k !== id) : [...prev, id]
@@ -266,10 +273,10 @@ const FuelStationDetail = ({ station, onClose }) => {
         <div className="fuel-station-detail-overlay">
             <div className="fuel-station-detail">                
                 <h2 className="station-title">
-                <span className="station-name">
-                {station.OS_NM || "이름 없음"} <span className="station-code">({station.pollDivCd || "이름 없음"})</span>
-            </span>
-            <button className="close-btn" onClick={onClose}>X</button>
+                    <span className="station-name">
+                        {station.OS_NM || "이름 없음"}({station.pollDivCd || "이름 없음"})
+                    </span>
+                    <button className="close-btn" onClick={onClose}>X</button>
                 </h2>
                 <div className="detail-section">
                     <h3 className="section-title">주요 가격</h3>
@@ -316,22 +323,32 @@ const FuelStationDetail = ({ station, onClose }) => {
                     </div>
                     <div className="review-list">
                         {reviews.length > 0 ? (
-                            reviews.map((review, index) => (
-                                <div key={index} className="review-item">
-                                    <div className="review-header">
-                                        <span className="review-user">{review.USER_ID || "익명"}</span>
-                                        <span className="review-date">{review.CREATE_AT || "날짜 없음"}</span>
-                                    </div>
-                                    <div className="review-rating">★ {review.STARCNT || 0}</div>
-                                    <p className="review-comment">{review.CONTENT || "댓글 없음"}</p>
-                                    {isLoggedIn && review.USER_ID === userId && (
-                                        <div className="review-actions">
-                                            <button onClick={() => handleEditReview(review)}>수정</button>
-                                            <button onClick={() => handleDeleteReview(review)}>삭제</button>
+                            <>
+                                {reviews.slice(0, visibleReviews).map((review, index) => (
+                                    <div key={index} className="review-item">
+                                        <div className="review-header">
+                                            <span className="review-user">{review.USER_ID || "익명"}</span>
+                                            <span className="review-date">{review.CREATE_AT || "날짜 없음"}</span>
                                         </div>
-                                    )}
-                                </div>
-                            ))
+                                        <div className="review-rating">★ {review.STARCNT || 0}</div>
+                                        <p className="review-comment">{review.CONTENT || "댓글 없음"}</p>
+                                        {isLoggedIn && review.USER_ID === userId && (
+                                            <div className="review-actions">
+                                                <button onClick={() => handleEditReview(review)}>수정</button>
+                                                <button onClick={() => handleDeleteReview(review)}>삭제</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                                {visibleReviews < reviews.length && (
+                                    <button 
+                                        onClick={handleShowMore} 
+                                        className="more-btn"                                        
+                                    >
+                                        더보기
+                                    </button>
+                                )}
+                            </>
                         ) : (
                             <p className="review-comment">리뷰가 없습니다。</p>
                         )}
@@ -379,7 +396,7 @@ const FuelStationDetail = ({ station, onClose }) => {
                 </div>
                 {isLoggedIn && (
                     <div className="button-container">
-                        <button onClick={() => setShowReviewForm(!showReviewForm)} className="favorite-btn">
+                        <button onClick={() => setShowReviewForm(!showReviewForm)} className="write-review-btn">
                             {showReviewForm ? "리뷰 작성 취소" : "리뷰 작성"}
                         </button>
                         <button
@@ -387,7 +404,7 @@ const FuelStationDetail = ({ station, onClose }) => {
                                 setShowKeywordForm(!showKeywordForm);
                                 if (!showKeywordForm) fetchUserKeywords();
                             }}
-                            className="route-btn"
+                            className="select-keyword-btn"
                         >
                             {showKeywordForm ? "키워드 선택 취소" : "키워드 선택"}
                         </button>

@@ -159,7 +159,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             const markerImage = new kakao.maps.MarkerImage(
                 startMarkerImg,
                 new kakao.maps.Size(40, 40),
-                { offset: new kakao.maps.Point(20, 40) }
+                { offset: new kakao.maps.Point(20, 20) }
             );
 
             const userMarker = new kakao.maps.Marker({
