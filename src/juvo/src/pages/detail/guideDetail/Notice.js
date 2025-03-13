@@ -23,18 +23,17 @@ const Notice = () => {
         <div className="notice">
             {notices.length > 0 ? (
                 notices.map((notice) => (
-                    <div key={notice.noticeId} className="notice-item">
-                        <h4>
-                            <Link
-                                to={`/detail/guideDetail/Notice/detail/${notice.noticeId}`}
-                                className="notice-title"
-                            >
-                                {notice.title}
-                            </Link>
-                        </h4>
-                        <p>{notice.content}</p>
-                        <span>{notice.createdDate}</span>
-                    </div>
+                    <Link
+                        key={notice.noticeId}
+                        to={`/detail/guideDetail/Notice/detail/${notice.noticeId}`}
+                        className="notice-item"
+                    >
+                        <div>
+                            <h4 className="notice-title">{notice.title}</h4>
+                            <p>{notice.content}</p>
+                            <span>{notice.createdDate}</span>
+                        </div>
+                    </Link>
                 ))
             ) : (
                 <p>현재 공지사항이 없습니다.</p>
