@@ -8,38 +8,37 @@
 /* 페이지 전체 레이아웃 */
 .mp-page {
     display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 10px;
     box-sizing: border-box;
 }
 
 /* 컨테이너 */
 .mp-container {
-    max-width: 460px;
+    
     width: 100%;
-    margin: 40px auto;
-    padding: 30px 30px;
+    padding: 40px 40px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(145deg, #ffffff, #f0f4f8);
-    border: 1px solid #e8ecef;
     border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    
 }
 
 /* 제목 */
 .mp-title {
-    text-align: center;
+    text-align: left;
     color: #1e2a44;
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #1a73e8;
 }
 
 /* 입력 그룹 */
 .mp-form-group {
     margin-bottom: 20px;
+    
 }
 
 /* 라벨 */

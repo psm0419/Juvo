@@ -34,7 +34,6 @@ function MyPageMembership() {
             const membershipData = response.data;
             setMembershipInfo(membershipData);
 
-            // created_at을 이용해 구독 일수 계산
             if (membershipData.created_at) {
                 const createdDate = new Date(membershipData.created_at);
                 const currentDate = new Date();
@@ -46,7 +45,7 @@ function MyPageMembership() {
             setIsLoading(false);
         } catch (error) {
             console.error("멤버십 정보 조회 오류:", error);
-            if (error.response.status === 401) {
+            if (error.response?.status === 401) {
                 alert("세션이 만료되었습니다. 다시 로그인해주세요.");
                 navigate("/user/login");
             } else {
@@ -65,7 +64,7 @@ function MyPageMembership() {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             alert("구독이 시작되었습니다!");
-            fetchMembershipInfo(); // 정보 갱신
+            fetchMembershipInfo();
         } catch (error) {
             console.error("구독 신청 오류:", error);
             alert("구독 신청에 실패했습니다.");
@@ -85,7 +84,7 @@ function MyPageMembership() {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             alert("구독이 해지되었습니다.");
-            fetchMembershipInfo(); // 정보 갱신
+            fetchMembershipInfo();
         } catch (error) {
             console.error("구독 해지 오류:", error);
             alert("구독 해지에 실패했습니다.");
@@ -96,46 +95,81 @@ function MyPageMembership() {
         navigate('/detail/guideDetail/MembershipDetail');
     };
 
-    if (isLoading) return <div className="membership-container">로딩 중...</div>;
+    const premiumFeatures = [
+        'JUVO PASS 카드 발급',
+        'JUVO PASS 카드 이용 시 1L 당 10원 할인',
+        '주유량 50L 이상 시 추가 5% 할인',
+        '전기차 충전 1kWh 당 10원 할인',
+        '충전량 500kWh 이상 시 추가 5% 할인'
+    ];
+
+    const freeFeatures = [
+        '최저가 주유소 길찾기 가능',
+        '유가 관련 정보 열람 가능',
+        '최적화 경로 탐색 가능',
+        '불법 주유소 열람 가능',
+        '주유소 즐겨찾기 가능'
+    ];
+
+    if (isLoading) return <div className="mypage-membership-container">로딩 중...</div>;
 
     return (
-        <div className="membership-container">
-            <h1 className="membership-title">멤버십 관리</h1>
+        <div className="mypage-membership-page">
+            <header className="mypage-membership-header">
+                <h1 className="favorites-title">멤버십 관리</h1>
+            </header>
 
             {membershipInfo ? (
-                // 구독 중인 경우
-                <div className="subscription-info">
-                    <div className="status-box subscribed">
-                        <h2>{membershipInfo.name}</h2>
-                        <p className="subscription-period">
-                            구독 {subscriptionDays}일째
-                        </p>
-                        <p className="user-info">
-                            아이디: {membershipInfo.userId}
-                        </p>
-                        <p className="tel-info">
-                            전화번호: {membershipInfo.tel}
-                        </p>
-                        <button
-                            className="unsubscribe-btn"
-                            onClick={handleUnsubscribe}
-                        >
-                            구독 해지
-                        </button>
-                    </div>
+                <div className="mypage-membership-tier-card mypage-membership-subscribed">
+                    <h2 className="mypage-membership-tier-title">{membershipInfo.name}</h2>
+                    <p className="mypage-membership-tier-subtitle">구독 {subscriptionDays}일째</p>
+                    <p className="mypage-membership-tier-info">아이디: {membershipInfo.user_id}</p>
+                    <p className="mypage-membership-tier-info">전화번호: {membershipInfo.tel}</p>
+                    <ul className="mypage-membership-tier-features">
+                        {premiumFeatures.map((feature, index) => (
+                            <li key={index}>
+                                <span className="mypage-membership-checkmark">✓</span> {feature}
+                            </li>
+                        ))}
+                    </ul>
+                    <button className="mypage-membership-tier-button mypage-membership-unsubscribe-btn" onClick={handleUnsubscribe}>
+                        구독 해지
+                    </button>
                 </div>
             ) : (
-                // 미구독인 경우
-                <div className="subscription-info">
-                    <div className="status-box unsubscribed">
-                        <h2>멤버십 미가입</h2>
-                        <button
-                            className="subscribe-btn"
-                            onClick={handleNavigateToDetail}
-                        >
-                            구독 시작
-                        </button>
+                <div className="mypage-membership-benefits-wrapper">
+                    <div className="mypage-membership-tier-card mypage-membership-free-section">
+                        <h3 className="mypage-membership-feature-title">무료 서비스 혜택</h3>
+                        <p className="mypage-membership-tier-subtitle">일반 사용자를 위한 기본 서비스</p>
+                        <ul className="mypage-membership-tier-features">
+                            {freeFeatures.map((feature, index) => (
+                                <li key={index}>
+                                    <span className="mypage-membership-checkmark">✓</span> {feature}
+                                </li>
+                            ))}
+                        </ul>
                     </div>
+                    <div className="mypage-membership-tier-card mypage-membership-premium-section">
+                        <h3 className="mypage-membership-feature-title">프리미엄 요금제 혜택</h3>
+                        <p className="mypage-membership-tier-subtitle">구독 시 제공</p>
+                        <ul className="mypage-membership-tier-features">
+                            {premiumFeatures.map((feature, index) => (
+                                <li key={index}>
+                                    <span className="mypage-membership-checkmark">✓</span> {feature}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
+
+            {/* 구독 시작 버튼과 가격을 아래로 분리 */}
+            {!membershipInfo && (
+                <div className="mypage-membership-subscribe-section">
+                    <span className="mypage-membership-price">월 4,900원</span> {/* 가격 수정 */}
+                    <button className="mypage-membership-tier-button mypage-membership-subscribe-btn mypage-membership-active" onClick={handleNavigateToDetail}>
+                        구독 시작
+                    </button>
                 </div>
             )}
         </div>
