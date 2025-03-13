@@ -896,7 +896,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 {activeTab === "주유소" ? (
                     <>
                         <div className="map-section">
-                            <div className="map-section-title">상표</div>
+                            <div className="map-section-title">주유소 브랜드</div>
                             <div className="map-options">
                                 {[
                                     { key: "cheap", label: "알뜰" },
