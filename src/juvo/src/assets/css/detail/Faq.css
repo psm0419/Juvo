@@ -1,153 +1,166 @@
-/* src/assets/css/detail/Faq.css */
+/* 컨테이너 */
 .faq-container {
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    background-color: #fff;
-}
-
-.faq-container h1 {
-    font-size: 24px; /* 제목 크기를 28px에서 24px로 줄임 */
-    margin-bottom: 15px;
+    padding: 30px;
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
     color: #333;
-    font-family: 'Arial', sans-serif;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.faq-container p {
-    color: #666;
-    margin-bottom: 25px;
-    font-size: 14px; /* 본문 크기를 16px에서 14px로 줄임 */
-    font-family: 'Arial', sans-serif;
+/* 제목 */
+.faq-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    width: 300px;
+    border-bottom: 2px solid #f89400;
+    text-align: left;
 }
 
+/* 테이블 */
 .faq-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
+    margin-top: 40px;
     margin-bottom: 20px;
-    animation: fadeIn 0.5s ease-in-out;
+    background: #fff;
 }
 
-.faq-table th,
-.faq-table td {
-    padding: 12px; /* 패딩을 15px에서 12px로 줄여 컴팩트하게 */
-    text-align: center;
-    border: 1px solid #ddd;
-    font-family: 'Arial', sans-serif;
-    font-size: 14px; /* 테이블 글씨 크기 명시적으로 14px로 조정 */
-}
-
+/* 테이블 헤더 */
 .faq-table th {
-    background-color: #f5f5f5;
+    padding: 12px;
+    text-align: center;
+    background-color: #fafafa;
     font-weight: bold;
     color: #333;
+    border-bottom: 2px solid #f89400;
+    font-size: 14px;
 }
 
+/* 번호 열 (좁게) */
+.faq-table th:nth-child(1),
+.faq-table td:nth-child(1) {
+    width: 10%; 
+}
+
+/* 제목 열 (넓게) */
+.faq-table th:nth-child(2),
+.faq-table td:nth-child(2) {
+    width: 70%; 
+    text-align: center;
+}
+
+/* 작성일 열 (적당히) */
+.faq-table th:nth-child(3),
+.faq-table td:nth-child(3) {
+    width: 20%; 
+}
+
+/* 테이블 셀 */
 .faq-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
     color: #555;
+    font-size: 14px;
 }
 
+/* 제목 셀 (왼쪽 정렬) */
+.faq-table .faq-title {
+    text-align: left;
+}
+
+/* 링크 스타일 */
+.faq-table .faq-title a {
+    color: black;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.faq-table .faq-title a:hover {
+    color: #f89400;
+}
+
+/* 호버 효과 */
 .faq-row:hover {
     background-color: #f9f9f9;
     transition: background-color 0.3s ease;
 }
 
-.faq-title {
-    text-align: left;
-}
-
-.faq-title a {
-    color: #0066cc;
-    text-decoration: none;
-    padding: 2px 5px;
-    border-radius: 3px;
-    transition: background-color 0.3s ease;
-}
-
-.faq-title a:hover {
-    background-color: #e6f0ff;
-}
-
-.pagination {
+/* 페이징 */
+.faq-pagination {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 10px;
     margin-top: 20px;
-    margin-right: 100px;
 }
 
-.pagination button {
+.faq-pagination button {
     padding: 8px 16px;
-    border: 1px solid #ddd;
-    background-color: white;
+    border: 1px solid #eee;
+    background-color: #fff;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    color: #666;
+    font-size: 14px;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.pagination button:hover {
-    background-color: #f0f0f0;
-}
-
-.back-link {
-    display: inline-block;
-    margin-top: 20px;
-    color: #0066cc;
-    text-decoration: none;
-    padding: 10px 20px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.back-link:hover {
-    background-color: #e0e0e0;
-}
-
-/* 접근성을 위한 포커스 스타일 */
-.faq-title a:focus,
-.pagination button:focus,
-.back-link:focus {
-    outline: 2px solid #0066cc;
-    outline-offset: 2px;
-}
-
-/* 애니메이션 정의 */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.faq-pagination button:hover {
+    background-color: #f89400;
+    color: #fff;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
+    .faq-container {
+        padding: 20px;
+        margin: 20px 10px;
+    }
+
+    .faq-title {
+        font-size: 20px;
+        width: 180px;
+    }
+
+    .faq-description {
+        font-size: 14px;
+    }
+
     .faq-table th,
     .faq-table td {
         padding: 10px;
-        font-size: 12px; /* 모바일에서 글씨 크기 더 작게 조정 */
+        font-size: 12px;
     }
 
-    .faq-container h1 {
-        font-size: 20px; /* 모바일에서 제목 크기 조정 */
+    /* 반응형에서도 열 너비 유지 */
+    .faq-table th:nth-child(1),
+    .faq-table td:nth-child(1) {
+        width: 15%;
     }
 
-    .faq-container p {
-        font-size: 12px; /* 모바일에서 본문 크기 조정 */
+    .faq-table th:nth-child(2),
+    .faq-table td:nth-child(2) {
+        width: 65%;
     }
 
-    .pagination {
-        gap: 10px;
+    .faq-table th:nth-child(3),
+    .faq-table td:nth-child(3) {
+        width: 20%;
     }
 
-    .pagination button {
+    .faq-pagination button {
         padding: 6px 12px;
+        font-size: 12px;
     }
 }

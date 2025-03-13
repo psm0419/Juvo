@@ -14,8 +14,7 @@ export default function Faq() {
 
     return (
         <div className="faq-container">
-            <h1>자주 묻는 질문(FAQ)</h1>
-            <p>가격문의 및 고객별 자주 묻는 질문과 답변</p>
+            <h1 className="faq-title">자주 묻는 질문 (FAQ)</h1>
 
             <table className="faq-table">
                 <thead>
@@ -40,7 +39,7 @@ export default function Faq() {
                 </tbody>
             </table>
 
-            <div className="pagination">
+            <div className="faq-pagination">
                 <button>1</button>
             </div>
         </div>
