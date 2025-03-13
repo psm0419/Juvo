@@ -31,9 +31,6 @@ import SocialLoginTest from './pages/user/socialLogin/SocialLoginTest';
 import KakaoPost from './pages/user/socialLogin/KakaoPost';
 import Notice from './pages/detail/guideDetail/Notice';
 import NoticeDetail from './pages/detail/guideDetail/NoticeDetail';
-
-import Notice from './pages/detail/guideDetail/Notice';
-import NoticeDetail from './pages/detail/guideDetail/NoticeDetail';
 import SocialLoginTest from './pages/user/socialLogin/SocialLoginTest';
 import KakaoPost from './pages/user/socialLogin/KakaoPost';
 
