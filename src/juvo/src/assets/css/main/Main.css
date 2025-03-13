@@ -96,7 +96,7 @@
 .mainMiddle {
     width: 100%;
     height: 500px;
-    background-color: rgb(236, 234, 234);
+    background-color: rgba(241, 239, 235, 0.699);
     padding: 0px 30px 50px 30px;
 }
 
@@ -298,13 +298,18 @@
 }
 
 .lbottom {
-    width: 50%;
+    width: 33%;
+    padding: 20px;
+}
+
+.mbottom {
+    width: 33%;
     padding: 20px;
 }
 
 .rbottom {
-    width: 50%;
-    padding: 20px 00px;
+    width: 33%;
+    padding-left: 30px;
 }
 
 /* 공지사항 */
@@ -327,39 +332,37 @@
     background-color: #ffffff;
 }
 
-.mainotice h3 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-    font-family: 'Noto Sans KR', sans-serif;
+.notice_box {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9; 
+    transition: background-color 0.3s ease; 
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    text-decoration: none; 
+    color: inherit;
 }
 
-.notice-title {
-    color: #333; /* Adjusted color to match the design */
+.notice_box:hover {
+    border-color: #f5f3f3;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.notice_text {
     text-decoration: none;
     font-size: 0.8rem; 
     font-weight: bold;
-    font-family: 'Noto Sans KR', sans-serif;
+    color: #f89400;
+    text-decoration: none;
 }
 
-.notice-title:hover {
-    text-decoration: underline;
-}
-
-.notice-item {
-    display: block; 
-    width: 100%; 
-    padding: 15px; 
-    margin-bottom: 10px; 
-    background-color: #f9f9f9; 
-    border-radius: 5px; 
-    text-decoration: none; 
-    color: inherit; 
-    transition: background-color 0.3s ease; 
-}
-
-.notice-item:hover {
-    background-color: #f5f3f3; 
+.notice_text:hover {
+    text-decoration: none;
 }
 
 /* 반응형 디자인 - 공지사항 */
@@ -379,9 +382,18 @@
     }
 }
 
+
+
 /* 멤버십 */
+.membership {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .membership img {
-    height: 200px;
+    width: 100%;
+    height: auto;
     border-radius: 5%;
 }
 

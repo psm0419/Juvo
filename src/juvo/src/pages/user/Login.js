@@ -26,7 +26,7 @@ function Login() {
             );
             const { accessToken, refreshToken, userType } = response.data;
 
-            if (accessToken === 'fail') {
+            if (accessToken == 'fail') {
                 alert('로그인 실패: 아이디 또는 비밀번호를 확인해주세요.');
                 setId('');
                 setPw('');
@@ -43,7 +43,7 @@ function Login() {
             }
         } catch (error) {
             console.error('로그인 오류:', error);
-            const errorMsg = error.response?.data?.message || '로그인 중 통신오류가 발생했습니다.';
+            const errorMsg = error.response?.data?.message
             alert(errorMsg);
             setId('');
             setPw('');

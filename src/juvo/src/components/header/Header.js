@@ -1,18 +1,24 @@
 import '../../assets/css/header/Header.css';
 import Logo from '../../assets/image/Logo.png';
+import MembershipIcon from '../../assets/image/PremiumStar.png'; // 멤버십 표시용 이미지 추가
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function Header() {
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(false);
-    const [userType, setUserType] = useState(null); // userType 상태 추가
+    const [userType, setUserType] = useState(null);
+    const [membership, setMembership] = useState(null); // membership 상태 추가
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
-        const type = localStorage.getItem('userType'); // userType 가져오기
+        const type = localStorage.getItem('userType');
         setIsLogin(!!token);
-        setUserType(type); // userType 설정
+        setUserType(type);
+        if (token) {
+            fetchUserInfo(token); // 로그인 상태일 때 사용자 정보 가져오기
+        }
     }, []);
 
     useEffect(() => {
@@ -20,19 +26,48 @@ function Header() {
             const token = localStorage.getItem('accessToken');
             const type = localStorage.getItem('userType');
             setIsLogin(!!token);
-            setUserType(type); // storage 변경 시 userType도 업데이트
+            setUserType(type);
+            if (token) {
+                fetchUserInfo(token); // 스토리지 변경 시 사용자 정보 갱신
+            } else {
+                setMembership(null); // 로그아웃 시 membership 초기화
+            }
         };
 
         window.addEventListener("storage", handleStorageChange);
         return () => window.removeEventListener("storage", handleStorageChange);
     }, []);
 
+    const fetchUserInfo = async (token) => {
+        try {
+            const response = await axios.get('/user/checkUserByToken', {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            
+            setMembership(response.data.membership); // 응답에서 membership 값 설정
+            console.log(membership);
+        } catch (error) {
+            console.error("사용자 정보 조회 오류:", error);
+            if (error.response?.status === 401) {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+                localStorage.removeItem('userType');
+                setIsLogin(false);
+                setUserType(null);
+                setMembership(null);
+                alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+                navigate('/user/login');
+            }
+        }
+    };
+
     const handleLogout = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        localStorage.removeItem('userType'); // userType도 제거
+        localStorage.removeItem('userType');
         setIsLogin(false);
-        setUserType(null); // 상태 초기화
+        setUserType(null);
+        setMembership(null); // 로그아웃 시 membership 초기화
         alert('로그아웃 되었습니다.');
         navigate('/');
     };
@@ -46,10 +81,10 @@ function Header() {
         const token = localStorage.getItem('accessToken');
         if (!token) {
             alert('로그인이 필요합니다.');
-            navigate('/login'); // 로그인 페이지로 이동
+            navigate('/login');
             return;
         }
-        navigate("/myPage/profile"); // CUS용 마이페이지 경로
+        navigate("/myPage/profile");
     };
 
     const handleAdminClick = () => {
@@ -59,7 +94,7 @@ function Header() {
             navigate('/login');
             return;
         }
-        navigate("/admin"); // ADM용 관리자 페이지 경로
+        navigate("/admin");
     };
 
     const menuItems = {
@@ -114,7 +149,16 @@ function Header() {
                 {isLogin ? (
                     <>
                         {userType === 'CUS' && (
-                            <div className="mypage" onClick={handleMyPageClick}>마이페이지</div>
+                            <div className="mypage-container" style={{ display: 'flex', alignItems: 'center' }}>
+                                {membership == 1 && (
+                                    <img
+                                        src={MembershipIcon}
+                                        alt="멤버십 아이콘"
+                                        style={{ width: '20px', height: '20px', marginLeft: '5px' }}
+                                    />
+                                )}
+                                <div className="mypage" onClick={handleMyPageClick}>마이페이지</div>
+                            </div>
                         )}
                         {userType === 'ADM' && (
                             <div className="admin" onClick={handleAdminClick}>관리자 페이지</div>
@@ -133,4 +177,3 @@ function Header() {
 }
 
 export default Header;
-

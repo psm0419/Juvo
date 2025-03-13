@@ -114,6 +114,19 @@ public class UserServiceImpl implements UserService{
 		return result;
 	}
 
+	@Override
+	public boolean updateMembership(User user) {
+
+		boolean result = userDAO.updateMembership(user);
+		
+		if(result == true) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+
 	
 
 
