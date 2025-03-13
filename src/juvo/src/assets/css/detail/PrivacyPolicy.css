@@ -1,24 +1,28 @@
-
-
+/* 전체 컨테이너 스타일 */
 .policy-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 30px;
     font-family: 'Arial', sans-serif;
     line-height: 1.6;
     color: #333;
-    margin-top: 100px;
-    margin-left: 30px;
-
+    margin-top: 60px;
+    margin-bottom: 60px;
 }
 
+/* 제목 스타일 */
 .policy-container h1 {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
-    margin-bottom: 30px;
-    border-bottom: 1px solid black;
+    color: #2c3e50;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+    width: 350px;
+    border-bottom: 2px solid #f89400;
+    text-align: left;
 }
 
+/* 섹션 스타일 */
 .policy-section {
     margin-bottom: 20px;
 }
@@ -26,32 +30,76 @@
 .policy-section h2 {
     font-size: 20px;
     font-weight: bold;
-    margin-bottom: 10px;
     color: #2c3e50;
+    margin-bottom: 15px;
+    margin-top: 35px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
 }
 
+/* 본문 스타일 */
 .policy-section p {
     font-size: 16px;
-    margin-bottom: 10px;
+    color: #666;
+    margin-bottom: 20px;
+    background: #fafafa;
+    padding: 15px;
+    border-radius: 5px;
 }
 
-.policy-section ol {
-    padding-left: 20px;
-    margin-bottom: 10px;
+/* 리스트 스타일 */
+.policy-section ol,
+.policy-section ul {
+    list-style-type: disc;
+    padding-left: 25px;
+    margin-bottom: 20px;
 }
 
 .policy-section li {
     font-size: 16px;
-    margin-bottom: 5px;
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.5;
 }
 
+/* 서브리스트 (policy-section 내 추가) */
+.policy-section ul ul {
+    list-style-type: circle;
+    padding-left: 25px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.policy-section ul ul li {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* 서브서브리스트 (policy-section 내 추가) */
+.policy-section ul ul ul {
+    list-style-type: square;
+    padding-left: 25px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.policy-section ul ul ul li {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* 반응형 디자인 */
 @media (max-width: 600px) {
     .policy-container {
-        padding: 10px;
+        padding: 20px;
+        margin: 20px 10px;
     }
 
     .policy-container h1 {
-        font-size: 24px;
+        font-size: 20px;
+        width: 180px;
     }
 
     .policy-section h2 {
@@ -60,6 +108,11 @@
 
     .policy-section p,
     .policy-section li {
+        font-size: 14px;
+    }
+
+    .policy-section ul ul li,
+    .policy-section ul ul ul li {
         font-size: 14px;
     }
 }

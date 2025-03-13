@@ -15,15 +15,14 @@
 
 /* 제목 스타일 */
 .detail-title {
-    font-size: 22px; /* 24px -> 22px로 살짝 더 줄임 */
+    font-size: 22px; 
     font-weight: bold;
     color: #2c3e50;
     margin: 0 0 20px 0;
     padding-bottom: 10px;
-    width: 300px; /* 밑줄 길이 늘림 (200px -> 300px) */
-    border-bottom: 2px solid #f89400; /* 포인트 컬러 */
-    white-space: nowrap; /* 한 줄로 유지 */
-    /* ellipsis 제거 */
+    width: 400px; 
+    border-bottom: 2px solid #f89400; 
+    white-space: nowrap; 
 }
 
 /* 날짜 스타일 (오른쪽 정렬) */
@@ -64,8 +63,8 @@
     }
 
     .detail-title {
-        font-size: 18px; /* 반응형에서 더 줄임 */
-        width: 250px; /* 반응형에서도 길이 조정 */
+        font-size: 18px; 
+        width: 250px; 
     }
 
     .detail-date {
