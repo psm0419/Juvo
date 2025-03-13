@@ -110,6 +110,34 @@ public class JuyusoController {
 			return ResponseEntity.status(400).body(Map.of("status", "error", "message", "이미 등록된 주유소입니다."));
 		}
 	}
+	//즐겨찾기 한 주유소 조회
+	@GetMapping("/api/favorite/juyuso")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> getFavoriteStations(HttpServletRequest request) {
+	    System.out.println("Received GET request to /api/favorite/juyuso"); // 요청 수신 로그
+	    String token = JwtProvider.extractToken(request);
+	    if (token == null || !JwtProvider.isVaildToken(token)) {
+	        return ResponseEntity.status(401).body(Map.of("status", "error", "message", "유효하지 않은 토큰입니다."));
+	    }
+
+	    String userId = JwtProvider.getUserIdFromToken(token);
+	    System.out.println("Extracted userId: " + userId);
+	    if (userId == null || userId.trim().isEmpty()) {
+	        return ResponseEntity.status(401).body(Map.of("status", "error", "message", "사용자 ID를 가져올 수 없습니다."));
+	    }
+
+	    User user = userService.findUserById(userId);
+	    if (user == null) {
+	        return ResponseEntity.status(400).body(Map.of("status", "error", "message", "유효하지 않은 사용자입니다."));
+	    }
+
+	    List<String> favoriteUniIds = juyusoService.getFavoritesJuyuso(userId);
+	    System.out.println("Favorite stations for userId " + userId + ": " + favoriteUniIds);
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("status", "success");
+	    response.put("favorites", favoriteUniIds);
+	    return ResponseEntity.ok(response);
+	}
 
 	// 리뷰 저장
 	@PostMapping("/api/reviews")

@@ -345,3 +345,27 @@
 .modal-buttons button:last-child {
     background-color: #ccc;
 }
+.favorite-toggle-btn {
+    margin-left: 10px;
+    padding: 5px 10px;
+    font-size: 18px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.favorite-toggle-btn.active {
+    background-color: #ffd700;
+    color: #fff;
+}
+
+.favorite-toggle-btn:hover:not(:disabled) {
+    background-color: #e0e0e0;
+}
+
+.favorite-toggle-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

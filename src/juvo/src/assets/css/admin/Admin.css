@@ -213,7 +213,7 @@ h2 {
 }
 
 /* 주유소 관리 */
-.gasContainer {
+.gasContainer {    
     padding: 20px;
 }
 
@@ -227,7 +227,7 @@ h2 {
 .gasContainer th,
 .gasContainer td {
     border: 1px solid #e0e0e0;
-    padding: 10px;
+    padding: 5px;
     text-align: left;
 }
 
@@ -243,7 +243,7 @@ h2 {
 }
 
 .gasContainer td {
-    font-size: 0.8rem;
+    font-size: 12px;
 }
 
 /* 추가/삭제 버튼 스타일 */

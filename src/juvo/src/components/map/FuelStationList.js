@@ -38,8 +38,9 @@ const FuelStationList = ({ stations, loading, onStationClick, isChargingStation 
                 <>
                     <div className="header-row">
                         <span>충전소명</span>
+                        <span>모델</span>
                         <div className="header-prices">
-                            <span>모델</span>
+                            
                             <span>사용 제한</span>
                         </div>
                     </div>

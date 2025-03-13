@@ -34,6 +34,9 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const [showReportModal, setShowReportModal] = useState(false);
     const [reportUniId, setReportUniId] = useState(null);
     const [selectedBlackType, setSelectedBlackType] = useState(null);
+    const [favoriteStations, setFavoriteStations] = useState([]); // 사용자별 즐겨찾기 uniId 목록
+    const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+
     const openReportModal = (uniId) => {
         setReportUniId(uniId);
         setShowReportModal(true);
@@ -87,6 +90,43 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             timeout = setTimeout(() => func.apply(this, args), wait);
         };
     }
+    //즐겨찾기 조회 함수
+    const fetchFavoriteStations = async () => {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            setFavoriteStations([]);
+            return;
+        }
+
+        try {
+            console.log('Fetching favorites from /api/favorite/juyuso');
+            const response = await fetch('/api/favorite/juyuso', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            console.log('Response status:', response.status);
+            if (!response.ok) throw new Error('Failed to fetch favorites');
+            const data = await response.json();
+            if (data.status === 'success') {
+                setFavoriteStations(data.favorites || []);
+            } else {
+                console.error('Error in response:', data.message);
+                setFavoriteStations([]);
+            }
+        } catch (error) {
+            console.error('Error fetching favorite stations:', error);
+            setFavoriteStations([]);
+        }
+    };
+
+    // 컴포넌트 마운트 시 호출
+    useEffect(() => {
+        fetchFavoriteStations();
+    }, []);
+
     // 불법 주유소 신고 제출
     const handleReportSubmit = () => {
         if (!selectedBlackType) {
@@ -248,13 +288,21 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     // 주유소 마커 업데이트
     useEffect(() => {
         if (activeTab !== "주유소" || !mapRef.current || !filteredStations.length) return;
-
+        console.log('Filtered stations:', filteredStations); // 필터링 전 데이터 확인
+        console.log('Favorite stations:', favoriteStations);
         const kakao = window.kakao;
         const geocoder = new kakao.maps.services.Geocoder();
 
         fuelMarkers.forEach(marker => marker?.setMap(null)); //기존 마커 제거
 
-        const promises = filteredStations.map(station => {
+        const stationsToShow = showFavoritesOnly
+            ? filteredStations.filter(station => {
+                const isFavorite = favoriteStations.includes(station.uniId);
+                return isFavorite;
+            })
+            : filteredStations;
+
+        const promises = stationsToShow.map(station => {
             const address = station.NEW_ADR || station.newAdr || station.VAN_ADR || station.vanAdr;
             if (!address) return Promise.resolve(null);
 
@@ -267,9 +315,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                             return;
                         }
 
-                        // pollDivCd에 따라 마커 이미지 설정
                         const markerImage = getMarkerImage(station.pollDivCd);
-
                         const marker = new kakao.maps.Marker({
                             position: coords,
                             map: mapRef.current,
@@ -331,10 +377,8 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
                         kakao.maps.event.addListener(marker, "click", () => {
                             if (!window.activeInfoWindows) window.activeInfoWindows = [];
-                            if (window.activeInfoWindows.length > 0) {
-                                window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
-                                window.activeInfoWindows = [];
-                            }
+                            window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
+                            window.activeInfoWindows = [];
                             if (currentInfoWindow) currentInfoWindow.close();
 
                             infoWindow.open(mapRef.current, marker);
@@ -369,36 +413,34 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             }
         };
 
-        window.registerFavoriteStation = function (uniId) {
-            console.log("Registering favorite station:", uniId);
-            const token = localStorage.getItem('accessToken');
+        window.registerFavoriteStation = async (uniId) => {
+            const token = localStorage.getItem("accessToken");
             if (!token) {
-                alert('로그인이 필요합니다.');
-                // 현재 페이지 URL 저장
-                sessionStorage.setItem('redirectUrl', window.location.pathname);
-                window.location.href = '/user/login'; // 로그인 페이지로 이동
+                alert("로그인이 필요합니다.");
+                sessionStorage.setItem("redirectUrl", window.location.pathname);
+                window.location.href = "/user/login";
                 return;
             }
 
-            fetch('/api/favorite/juyuso', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ uniId: uniId })
-            })
-                .then(response => {
-                    if (!response.ok) throw new Error('등록 실패');
-                    return response.json();
-                })
-                .then(data => {
-                    alert(data.message);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('로그인이 필요 합니다.');
+            try {
+                const response = await fetch("/api/favorite/juyuso", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ uniId: uniId }),
                 });
+                if (!response.ok) throw new Error("등록 실패");
+                const data = await response.json();
+                alert(data.message);
+                if (data.status === "success") {
+                    setFavoriteStations(prev => [...prev, uniId]); // 실시간 추가
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("이미 등록된 주유소 입니다.");
+            }
         };
 
         window.registerBlack = function (uniId) {
@@ -417,7 +459,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             }
             if (currentInfoWindow) currentInfoWindow.close();
         };
-    }, [filteredStations, lat, lng, activeTab, isDataLoaded]);
+    }, [filteredStations, lat, lng, activeTab, isDataLoaded, showFavoritesOnly, favoriteStations]);
 
     // 충전소 마커 업데이트
     useEffect(() => {
@@ -840,6 +882,15 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                     >
                         충전소
                     </div>
+                    {activeTab === "주유소" && (
+                        <button
+                            className={`favorite-toggle-btn ${showFavoritesOnly ? "active" : ""}`}
+                            onClick={() => setShowFavoritesOnly(prev => !prev)}
+                            disabled={!localStorage.getItem('accessToken')}
+                        >
+                            ★
+                        </button>
+                    )}
                 </div>
 
                 {activeTab === "주유소" ? (
