@@ -5,7 +5,7 @@ export default function Law() {
     return (
         <div className="law-container">
             <div className="law-header-container">
-                <h1 className="law-title">가격 보고 및 <br/>공개 관련 법률</h1>
+                <h1 className="law-title">가격 보고 및 공개 관련 법률</h1>
                 <p className="law-description">
                     JUVO는 석유 및 석유대체연료사업법과 액화석유가스의 안전관리 및 사업법에 의거하여 <br/>정기적으로 가격조사 및 공개를 하고 있습니다.
                 </p>

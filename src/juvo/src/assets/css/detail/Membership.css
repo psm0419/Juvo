@@ -112,16 +112,19 @@
 }
 
 .card-button {
-    background-color: #ccc;
+    background-color: #f89400;
     color: #fff;
     border: none;
     padding: 10px 25px;
     border-radius: 50px;
-    cursor: not-allowed;
     font-weight: bold;
     margin: 10px 0px;
     transition: background-color 0.2s ease;
     font-family: 'Candal', sans-serif;
+}
+
+.card-button:hover {
+    background-color: #e08a00;
 }
 
 
