@@ -229,4 +229,42 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 		}
 	}
+	
+	@PostMapping("/user/googleLogin")
+	public ResponseEntity<Map<String, String>> googleLogin(@RequestBody Map<String, String> request) {
+	    String code = request.get("code");
+	    System.out.println("구글 로그인 시도 - 인증 코드: " + code);
+
+	    try {
+	        User googleUser = userService.handleGoogleLogin(code);
+
+	        if (googleUser == null) {
+	            System.out.println("구글 로그인 실패 - 사용자 정보 없음");
+	            Map<String, String> tokens = new HashMap<>();
+	            tokens.put("accessToken", "fail");
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(tokens);
+	        }
+
+	        String accessToken = JwtProvider.createAccessToken(googleUser.getId(), googleUser.getUserType());
+	        String refreshToken = JwtProvider.createRefreshToken();
+
+	        Map<String, String> tokens = new HashMap<>();
+	        tokens.put("accessToken", accessToken);
+	        tokens.put("refreshToken", refreshToken);
+	        tokens.put("userType", googleUser.getUserType());
+
+	        return ResponseEntity.ok(tokens);
+
+	    } catch (IllegalArgumentException e) {
+	        System.out.println("구글 로그인 실패 - " + e.getMessage());
+	        Map<String, String> tokens = new HashMap<>();
+	        tokens.put("accessToken", "fail");
+	        return ResponseEntity.badRequest().body(tokens);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        Map<String, String> tokens = new HashMap<>();
+	        tokens.put("accessToken", "fail");
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tokens);
+	    }
+	}
 }

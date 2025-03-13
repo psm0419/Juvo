@@ -4,6 +4,7 @@ import '../../assets/css/user/Login.css';
 import Header from '../../components/header/Header';
 import axiosInstance from '../../util/AxiosConfig';
 import NaverLogin from './socialLogin/NaverLogin';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 function Login() {
     const [id, setId] = useState('');
@@ -48,6 +49,41 @@ function Login() {
             setId('');
             setPw('');
         }
+    };
+    //구글 로그인 구현
+    const handleGoogleLoginSuccess = async (response) => {
+        console.log("Google Response:", response); // 응답 확인
+        try {
+            const res = await axiosInstance.post(
+                '/user/googleLogin',
+                { code: response.code },
+                { headers: { 'Content-Type': 'application/json' } }
+            );
+            console.log("Backend Response:", res.data);
+            const { accessToken, refreshToken, userType } = res.data;
+
+            if (accessToken === 'fail') {
+                alert('구글 로그인 실패');
+            } else {
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
+                localStorage.setItem('userType', userType);
+                window.dispatchEvent(new Event("storage"));
+                alert('구글 로그인 성공');
+
+                const redirectUrl = sessionStorage.getItem('redirectUrl') || '/';
+                sessionStorage.removeItem('redirectUrl');
+                navigate(redirectUrl);
+            }
+        } catch (error) {
+            console.error('구글 로그인 오류:', error);
+            alert('구글 로그인 중 오류가 발생했습니다.');
+        }
+    };
+
+    const handleGoogleLoginFailure = (error) => {
+        console.error('구글 로그인 실패:', error);
+        alert('구글 로그인에 실패했습니다.');
     };
 
     const handleFindId = () => {
@@ -108,6 +144,23 @@ function Login() {
                         <span className="login-social-icon kakao-icon" />
                         <span>카카오계정으로 로그인</span>
                     </button>
+                    <GoogleOAuthProvider clientId="115778231067-ocno0uge1khs3k1b47se1b6fh5f079ku.apps.googleusercontent.com">
+                        <GoogleLogin
+                            onSuccess={handleGoogleLoginSuccess}
+                            onError={handleGoogleLoginFailure}
+                            flow="auth-code" // Authorization Code Flow로 설정
+                            render={(renderProps) => (
+                                <button
+                                    className="login-social-btn google-login-btn"
+                                    onClick={renderProps.onClick}
+                                    disabled={renderProps.disabled}
+                                >
+                                    <span className="login-social-icon google-icon" />
+                                    <span>구글로 로그인</span>
+                                </button>
+                            )}
+                        />
+                    </GoogleOAuthProvider>
                 </div>
             </div>
         </div>
