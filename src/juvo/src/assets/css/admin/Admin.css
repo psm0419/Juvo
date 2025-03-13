@@ -91,6 +91,10 @@ h2 {
     color: #444;
 }
 
+.customerContainer td {
+    font-size: 13px;
+}
+
 .customerContainer tr:hover {
     background-color: #f8f9fa;
 }
