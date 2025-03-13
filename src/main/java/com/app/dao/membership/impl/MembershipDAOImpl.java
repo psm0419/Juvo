@@ -2,19 +2,19 @@ package com.app.dao.membership.impl;
 
 import com.app.dao.membership.MembershipDAO;
 import com.app.dto.membership.Membership;
-import org.apache.ibatis.session.SqlSession;
+
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 @Repository
 public class MembershipDAOImpl implements MembershipDAO {
 
 	@Autowired
-	private SqlSession sqlSession;
+	SqlSessionTemplate sqlSessionTemplate;
 
 	@Override
 	public boolean insertMembership(Membership membership) {
-		int result = sqlSession.insert("com.app.mapper.membership.insertMembership", membership);
+		int result = sqlSessionTemplate.insert("membership_mapper.insertMembership", membership);
 		if (result == 1) {
 			return true;
 		} else {
@@ -26,6 +26,17 @@ public class MembershipDAOImpl implements MembershipDAO {
 	@Override
 	public Membership checkMembershipByUserId(String userId) {
 		
-		return sqlSession.selectOne("com.app.mapper.membership.checkMembershipByUserId", userId);
+		return sqlSessionTemplate.selectOne("membership_mapper.checkMembershipByUserId", userId);
+	}
+
+	@Override
+	public boolean deleteMembership(String userId) {
+		int result = sqlSessionTemplate.delete("membership_mapper.deleteMembership", userId);
+		if(result == 1) {
+			return true;
+		} else {
+			return false;
+		}
+		
 	}
 }
