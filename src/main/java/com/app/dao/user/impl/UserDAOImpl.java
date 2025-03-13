@@ -107,4 +107,15 @@ public class UserDAOImpl implements UserDAO {
 	public int insertUser(User user) {
 		return sqlSessionTemplate.insert("user_mapper.insertUser", user);
 	}
+
+	@Override
+	public boolean updateMembership(User user) {
+		int result = sqlSessionTemplate.update("user_mapper.updateMembership", user);
+	 if(result == 1) {
+		 return true;
+	 } else {
+		 return false;
+	 }
+		
+	}
 }

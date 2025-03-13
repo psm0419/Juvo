@@ -9,16 +9,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class MembershipServiceImpl implements MembershipService {
 
-    @Autowired
-    private MembershipDAO membershipDAO;
+	@Autowired
+	private MembershipDAO membershipDAO;
 
-    @Override
-    public void subscribe(Membership membership) {
-        membershipDAO.insertMembership(membership);
-    }
+	@Override
+	public boolean subscribe(Membership membership) {
+		boolean result = membershipDAO.insertMembership(membership);
+		if (result == true) {
+			return true;
+		} else {
+			return false;
+		}
 
-    @Override
-    public Membership getMembershipInfo(String userId) {
-        return membershipDAO.getMembershipByUserId(userId);
-    }
+	}
+
+	@Override
+	public Membership checkMembershipByUserId(String userId) {
+		return membershipDAO.checkMembershipByUserId(userId);
+	}
 }

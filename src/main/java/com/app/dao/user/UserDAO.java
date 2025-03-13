@@ -38,5 +38,7 @@ public interface UserDAO {
 	public List<User> findUserList();
 	
 	public int removeUser(String id);
+
+	public boolean updateMembership(User user);
 	
 }

@@ -9,16 +9,23 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MembershipDAOImpl implements MembershipDAO {
 
-    @Autowired
-    private SqlSession sqlSession;
+	@Autowired
+	private SqlSession sqlSession;
 
-    @Override
-    public void insertMembership(Membership membership) {
-        sqlSession.insert("com.app.mapper.membership.insertMembership", membership);
-    }
+	@Override
+	public boolean insertMembership(Membership membership) {
+		int result = sqlSession.insert("com.app.mapper.membership.insertMembership", membership);
+		if (result == 1) {
+			return true;
+		} else {
+			return false;
+		}
 
-    @Override
-    public Membership getMembershipByUserId(String userId) {
-        return sqlSession.selectOne("com.app.mapper.membership.getMembershipByUserId", userId);
-    }
+	}
+
+	@Override
+	public Membership checkMembershipByUserId(String userId) {
+		
+		return sqlSession.selectOne("com.app.mapper.membership.checkMembershipByUserId", userId);
+	}
 }

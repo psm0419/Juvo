@@ -8,7 +8,7 @@ public class Membership {
     private Long id;
     private String userId; // Long → String으로 변경
     private String name;
-    private String phone;
+    private String tel;
     private String address;
     private String detailAddress;
     private String cardCompany;

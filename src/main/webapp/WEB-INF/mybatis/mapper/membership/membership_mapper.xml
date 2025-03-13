@@ -3,13 +3,13 @@
 <mapper namespace="com.app.mapper.membership">
 <insert id="insertMembership" parameterType="Membership">
     INSERT INTO membership 
-        (id, user_id, name, phone, address, detail_address, card_company, card_number, cvc, expiry, created_at)
+        (id, user_id, name, tel, address, detail_address, card_company, card_number, cvc, expiry, created_at)
     VALUES 
-        (membership_seq.NEXTVAL, #{userId}, #{name}, #{phone}, #{address}, #{detailAddress}, 
-         #{cardCompany}, #{cardNumber}, #{cvc}, #{expiry}, CURRENT_TIMESTAMP)
+        (membership_seq.NEXTVAL, #{userId}, #{name}, #{tel}, #{address}, #{detailAddress}, 
+         #{cardCompany}, #{cardNumber}, #{cvc}, #{expiry}, #{createdAt})
 </insert>
 
-<select id="getMembershipByUserId" parameterType="String" resultType="Membership">
+<select id="checkMembershipByUserId" parameterType="String" resultType="Membership">
     SELECT * FROM membership WHERE user_id = #{userId}
 </select>
 </mapper>
