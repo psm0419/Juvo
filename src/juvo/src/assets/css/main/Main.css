@@ -469,4 +469,16 @@ select {
     font-family: 'Noto Sans KR', sans-serif;
 }
 
-/* cursor */
+.info-window-route-options {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.info-window-route-options label {
+    margin: 0 10px;
+    font-size: 14px;
+}
+
+.info-window-route-options input[type="radio"] {
+    margin-right: 5px;
+}
