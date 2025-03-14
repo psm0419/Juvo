@@ -88,7 +88,7 @@
 	
 	<insert id="insertUser" parameterType="User">
 		INSERT INTO users (id, email, username, user_type, pw)
-		VALUES (#{id}, #{email}, #{username})
+		VALUES (#{id}, #{email}, #{username}, #{userType}, #{pw})
 	</insert>
 	
 	<update id="updateMembership" parameterType="User">

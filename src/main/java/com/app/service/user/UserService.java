@@ -1,6 +1,7 @@
 package com.app.service.user;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,6 @@ public interface UserService {
 	public boolean updateMembership(User user);
 	
 	// 구글 로그인용 메서드 추가
-    User handleGoogleLogin(String code) throws Exception;
+	User handleGoogleLogin(Map<String, String> requestBody) throws Exception;
 	
 }

@@ -1,17 +1,21 @@
 package com.app.service.user.impl;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -19,190 +23,208 @@ import org.springframework.web.client.RestTemplate;
 import com.app.dao.user.UserDAO;
 import com.app.dto.user.User;
 import com.app.service.user.UserService;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 
+@PropertySource(value = { "classpath:application.properties" })
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
-	@Autowired
-	UserDAO userDAO;
-	
-	@Autowired
-	RestTemplate restTemplate;
-	
-	@Value("${google.client-id}")
-	private String clientId;
+    @Autowired
+    UserDAO userDAO;
 
-	@Value("${google.client-secret}")
-	private String clientSecret;
+    @Value("${google.client-id}")
+    private String clientId;
 
-	@Value("${google.redirect-uri}")
-	private String redirectUri;	
-	
-	@Override
-	public User checkUserLogin(User user) {
-		return userDAO.checkUserLogin(user);
-	}
+    @Value("${google.client-secret}")
+    private String clientSecret;
 
-	@Override
-	public int signupUser(User user) {
-		return userDAO.signupUser(user);
-	}
+    @Value("${google.redirect-uri}")
+    private String redirectUri;
 
-	@Override
-	public boolean checkDupId(String id) {
-		return userDAO.checkDupId(id) != null;
-	}
+    @Override
+    public User checkUserLogin(User user) {
+        return userDAO.checkUserLogin(user);
+    }
 
-	@Override
-	public boolean checkDupNickname(String nickname) {
-		return userDAO.checkDupNickname(nickname) != null;
-	}
+    @Override
+    public int signupUser(User user) {
+        return userDAO.signupUser(user);
+    }
 
-	@Override
-	public User checkUserByToken(String id) {
-		return userDAO.checkUserByToken(id);
-	}
+    @Override
+    public boolean checkDupId(String id) {
+        return userDAO.checkDupId(id) != null;
+    }
 
-	@Override
-	public int changePassword(User user) {
-		return userDAO.changePassword(user);
-	}
+    @Override
+    public boolean checkDupNickname(String nickname) {
+        return userDAO.checkDupNickname(nickname) != null;
+    }
 
-	@Override
-	public User findUserById(String id) {
-		return userDAO.findUserById(id);
-	}
+    @Override
+    public User checkUserByToken(String id) {
+        return userDAO.checkUserByToken(id);
+    }
 
-	@Override
-	public int changeNickname(User user) {
-		return userDAO.changeNickname(user);
-	}
+    @Override
+    public int changePassword(User user) {
+        return userDAO.changePassword(user);
+    }
 
-	@Override
-	public User findIdByRequest(User requestUser) {
-		return userDAO.findIdRequest(requestUser);
-	}
+    @Override
+    public User findUserById(String id) {
+        return userDAO.findUserById(id);
+    }
 
-	@Override
-	public User resetPasswordRequest(User requestUser) {
-		return userDAO.resetPasswordRequest(requestUser);
-	}
+    @Override
+    public int changeNickname(User user) {
+        return userDAO.changeNickname(user);
+    }
 
-	@Override
-	public User findByEmail(String email) {
-		return userDAO.findByEmail(email);
-	}
+    @Override
+    public User findIdByRequest(User requestUser) {
+        return userDAO.findIdRequest(requestUser);
+    }
 
-	@Override
-	public int insertUser(User user) {
-		return userDAO.insertUser(user);
-	}
+    @Override
+    public User resetPasswordRequest(User requestUser) {
+        return userDAO.resetPasswordRequest(requestUser);
+    }
 
-	@Transactional
-	@Override
-	public User findOrCreateGoogleUser(String email, String name) {
-		User user = userDAO.findByEmail(email);
-		if (user == null) {
-			user = new User();
-			user.setEmail(email);
-			user.setUsername(name);
+    @Override
+    public User findByEmail(String email) {
+        return userDAO.findByEmail(email);
+    }
 
-			String randomId = email.split("@")[0] + "_" + String.format("%04d", new Random().nextInt(10000));
-			user.setId(randomId);
+    @Override
+    public int insertUser(User user) {
+        return userDAO.insertUser(user);
+    }
 
-			userDAO.insertUser(user);
-		}
-		return user;
-	}
-	
-	//관리자	
-	
-	@Override
-	public List<User> findUserList() {
-		
-		List<User> userList = userDAO.findUserList();
+    @Transactional
+    @Override
+    public User findOrCreateGoogleUser(String email, String name) {
+        User user = userDAO.findByEmail(email);
+        if (user == null) {
+            user = new User();
+            user.setEmail(email);
+            user.setUsername(name);
 
-		return userList;
-	}
+            String randomId = email.split("@")[0] + "_" + String.format("%04d", new Random().nextInt(10000));
+            user.setId(randomId);
 
-	@Override
-	public int removeUser(String id) {
-		
-		int result  = userDAO.removeUser(id);
-		
-		return result;
-	}
+            userDAO.insertUser(user);
+        }
+        return user;
+    }
 
-	@Override
-	public boolean updateMembership(User user) {
+    // 관리자
+    @Override
+    public List<User> findUserList() {
+        List<User> userList = userDAO.findUserList();
+        return userList;
+    }
 
-		boolean result = userDAO.updateMembership(user);
-		
-		if(result == true) {
-			return true;
-		} else {
-			return false;
-		}
-		
-	}
+    @Override
+    public int removeUser(String id) {
+        int result = userDAO.removeUser(id);
+        return result;
+    }
 
-	@Override
-	public User handleGoogleLogin(String code) throws Exception {
-		if (code == null || code.isEmpty()) {
-	        throw new IllegalArgumentException("Google authentication code is missing");
-	    }
-	    // 1. 구글 액세스 토큰 요청
-	    String tokenUrl = "https://oauth2.googleapis.com/token";
-	    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-	    params.add("code", code);
-	    params.add("client_id", clientId);
-	    params.add("client_secret", clientSecret);
-	    params.add("redirect_uri", redirectUri);
-	    params.add("grant_type", "authorization_code");
-	    
-	    System.out.println("Request Params:");
-	    System.out.println("  Code: " + code);
-	    System.out.println("  Client ID: " + clientId);
-	    System.out.println("  Client Secret: " + clientSecret);
-	    System.out.println("  Redirect URI: " + redirectUri);
+    @Override
+    public boolean updateMembership(User user) {
+        boolean result = userDAO.updateMembership(user);
+        return result;
+    }
 
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    @Override
+    public User handleGoogleLogin(Map<String, String> requestBody) throws Exception {
+        String code = requestBody.get("code");
+        if (code == null || code.isEmpty()) {
+            System.out.println("구글 로그인 시도 - Authorization code: " + code);
+            throw new IllegalArgumentException("Authorization code is missing");
+        }
 
-	    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-	    ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, request, Map.class);
-	    String accessToken = (String) response.getBody().get("access_token");
-	    
-	    // 2. 구글 사용자 정보 요청
-	    String userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
-	    HttpHeaders userInfoHeaders = new HttpHeaders();
-	    userInfoHeaders.setBearerAuth(accessToken);
-	    HttpEntity<String> userInfoRequest = new HttpEntity<>(userInfoHeaders);
-	    ResponseEntity<Map> userInfoResponse = restTemplate.exchange(userInfoUrl, HttpMethod.GET, userInfoRequest, Map.class);
+        System.out.println("Processing authorization code: " + code);
 
-	    Map<String, Object> userInfo = userInfoResponse.getBody();
-	    String email = (String) userInfo.get("email");
-	    String name = (String) userInfo.get("name");
-	    String googleId = (String) userInfo.get("id"); // 구글 고유 ID
+        if (clientId == null || clientId.isEmpty() || clientSecret == null || clientSecret.isEmpty()) {
+            throw new IllegalStateException("Google client ID or secret is not configured. Check application.properties");
+        }
 
-	    // 3. DB에서 사용자 확인 및 저장
-	    User user = userDAO.findByEmail(email);
-	    if (user == null) {
-	        // 신규 사용자면 DB에 저장
-	        user = new User();
-	        user.setId(googleId); // 구글 ID를 사용자 ID로 사용하거나, 별도 규칙으로 생성
-	        user.setEmail(email);
-	        user.setUsername(name);
-	        user.setUserType("CUS"); // 기본 유저 타입
-	        user.setPw(""); // 구글 로그인은 비밀번호 불필요
-	        userDAO.insertUser(user);
-	    }
+        // Google OAuth 2.0 토큰 엔드포인트로 code 교환
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-	    return user;
-	}
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("code", code);
+        params.add("client_id", clientId);
+        params.add("client_secret", clientSecret);
+        params.add("redirect_uri", redirectUri);
+        params.add("grant_type", "authorization_code");
 
-	
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
+        ResponseEntity<Map> response;
+        try {
+            response = restTemplate.exchange(
+                "https://oauth2.googleapis.com/token",
+                HttpMethod.POST,
+                entity,
+                Map.class
+            );
+        } catch (Exception e) {
+            System.err.println("Error exchanging code for token: " + e.getMessage());
+            throw new IllegalStateException("Failed to exchange authorization code for token", e);
+        }
 
+        Map<String, Object> tokenResponse = response.getBody();
+        if (tokenResponse == null || tokenResponse.get("id_token") == null) {
+            System.err.println("Token response: " + tokenResponse);
+            throw new IllegalArgumentException("ID token not found in token response");
+        }
 
+        String idToken = (String) tokenResponse.get("id_token");
+        System.out.println("ID token received: " + idToken);
 
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
+                .setAudience(Collections.singletonList(clientId))
+                .build();
+
+        GoogleIdToken googleIdToken;
+        try {
+            googleIdToken = verifier.verify(idToken);
+        } catch (GeneralSecurityException | IOException e) {
+            System.err.println("Error verifying ID token: " + e.getMessage());
+            throw new IllegalArgumentException("Failed to verify ID token", e);
+        }
+
+        if (googleIdToken == null) {
+            throw new IllegalArgumentException("Invalid ID token: Verification failed");
+        }
+
+        GoogleIdToken.Payload payload = googleIdToken.getPayload();
+        System.out.println("ID Token Payload: " + payload.toString());
+
+        String email = payload.getEmail();
+        String name = (String) payload.get("name");
+        String googleId = payload.getSubject();
+
+        System.out.println("Google User Info - Email: " + email + ", Name: " + name + ", Google ID: " + googleId);
+
+        User user = userDAO.findByEmail(email);
+        if (user == null) {
+            user = new User();
+            user.setId(googleId);
+            user.setEmail(email);
+            user.setUsername(name);
+            user.setUserType("CUS");
+            user.setPw("");
+            userDAO.insertUser(user);
+        }
+
+        return user;
+    }
 }
