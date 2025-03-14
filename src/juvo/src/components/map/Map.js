@@ -310,7 +310,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 geocoder.addressSearch(address, (result, status) => {
                     if (status === kakao.maps.services.Status.OK) {
                         const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                        if (getDistance(lat, lng, coords.getLat(), coords.getLng()) > 5000) {
+                        if (getDistance(lat, lng, coords.getLat(), coords.getLng()) > 10000) {
                             resolve(null);
                             return;
                         }
@@ -627,36 +627,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             currentInfoWindow.close();
             setCurrentInfoWindow(null);
         }
-    };
-
-    window.registerFavoriteStation = function (uniId) {
-        console.log("Registering favorite station:", uniId);
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-            alert("로그인이 필요합니다.");
-            return;
-        }
-
-        fetch("/api/favorite/juyuso", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify({ uniId: uniId }),
-        })
-            .then(response => {
-                if (!response.ok) throw new Error("등록 실패");
-                return response.json();
-            })
-            .then(data => {
-                alert(data.message);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("이미 등록된 주유소 입니다.");
-            });
-    };
+    };    
 
     const handleCloseDetail = () => {
         setSelectedDetailStation(null);
