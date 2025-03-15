@@ -186,7 +186,7 @@
 
 /* 로그인 버튼과 회원가입 버튼 사이, 관리자/마이페이지와 로그아웃 사이 간격 */
 .login, .mypage, .admin {
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 
