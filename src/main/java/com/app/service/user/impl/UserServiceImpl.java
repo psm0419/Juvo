@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserDAO userDAO;
-
+    //구글
     @Value("${google.client-id}")
     private String clientId;
 
@@ -43,6 +43,22 @@ public class UserServiceImpl implements UserService {
 
     @Value("${google.redirect-uri}")
     private String redirectUri;
+    
+    //네이버
+    @Value("${naver.client-id}")
+    private String naverClientId;
+
+    @Value("${naver.client-secret}")
+    private String naverClientSecret;
+
+    @Value("${naver.redirect-uri}")
+    private String naverRedirectUri;
+
+    @Value("${naver.token-url}")
+    private String naverTokenUrl;
+
+    @Value("${naver.user-info-url}")
+    private String naverUserInfoUrl;
 
     @Override
     public User checkUserLogin(User user) {
@@ -209,7 +225,7 @@ public class UserServiceImpl implements UserService {
         System.out.println("ID Token Payload: " + payload.toString());
 
         String email = payload.getEmail();
-        String name = (String) payload.get("name");
+        String name = (String) payload.get("name");        
         String googleId = payload.getSubject();
 
         System.out.println("Google User Info - Email: " + email + ", Name: " + name + ", Google ID: " + googleId);
@@ -219,12 +235,113 @@ public class UserServiceImpl implements UserService {
             user = new User();
             user.setId(googleId);
             user.setEmail(email);
-            user.setUsername(name);
+            user.setUsername(name);            
             user.setUserType("CUS");
             user.setPw("");
             userDAO.insertUser(user);
         }
 
+        return user;
+    }
+
+    @Override
+    public User handleNaverLogin(Map<String, String> requestBody) throws Exception {
+        System.out.println("네이버 로그인 처리 시작 - 요청 데이터: " + requestBody);
+
+        String code = requestBody.get("code");
+        if (code == null || code.isEmpty()) {
+            System.out.println("WARNING: Authorization code가 누락됨");
+            throw new IllegalArgumentException("Authorization code is missing");
+        }
+
+        System.out.println("DEBUG: Authorization code: " + code);
+
+        // 네이버 토큰 교환
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", naverClientId);
+        params.add("client_secret", naverClientSecret);
+        params.add("code", code);
+        params.add("redirect_uri", naverRedirectUri);
+
+        System.out.println("DEBUG: 네이버 토큰 요청 파라미터: " + params);
+
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
+        ResponseEntity<Map> response = restTemplate.exchange(
+            naverTokenUrl,
+            HttpMethod.POST,
+            entity,
+            Map.class
+        );
+
+        Map<String, Object> tokenResponse = response.getBody();
+        System.out.println("DEBUG: 네이버 토큰 응답: " + tokenResponse);
+
+        if (tokenResponse == null || tokenResponse.get("access_token") == null) {
+            System.out.println("WARNING: 네이버 토큰 획득 실패 - 응답: " + tokenResponse);
+            throw new IllegalArgumentException("Failed to obtain access token");
+        }
+
+        String accessToken = (String) tokenResponse.get("access_token");
+        System.out.println("INFO: 네이버 access token 획득 성공: " + accessToken);
+
+        // 네이버 사용자 정보 조회
+        headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        HttpEntity<String> userInfoEntity = new HttpEntity<>(headers);
+
+        System.out.println("DEBUG: 네이버 사용자 정보 요청 - URL: " + naverUserInfoUrl);
+        ResponseEntity<Map> userInfoResponse = restTemplate.exchange(
+            naverUserInfoUrl,
+            HttpMethod.GET,
+            userInfoEntity,
+            Map.class
+        );
+
+        Map<String, Object> userInfo = userInfoResponse.getBody();
+        System.out.println("DEBUG: 네이버 사용자 정보 응답: " + userInfo);
+
+        if (userInfo == null || userInfo.get("response") == null) {
+            System.out.println("WARNING: 네이버 사용자 정보 조회 실패 - 응답: " + userInfo);
+            throw new IllegalArgumentException("Failed to retrieve user info");
+        }
+
+        Map<String, Object> responseData = (Map<String, Object>) userInfo.get("response");
+        String naverId = (String) responseData.get("id");
+        String email = (String) responseData.get("email");
+        String name = (String) responseData.get("name");
+        String nickName = (String) responseData.get("nickname");
+
+        System.out.println("INFO: 네이버 사용자 정보 - ID: " + naverId + ", Email: " + email + ", Name: " + name);
+
+        // 사용자 확인 및 생성
+        User user = userDAO.findByEmail(email);
+        if (user == null) {
+            System.out.println("INFO: 새로운 네이버 사용자 - DB에 등록 시작");
+            user = new User();
+            user.setId(naverId);
+            user.setEmail(email);
+            user.setUsername(name);
+            user.setNickname(nickName);
+            user.setUserType("CUS");
+            user.setPw(""); // 소셜 로그인 사용자는 비밀번호 없음
+            try {
+                userDAO.insertUser(user);
+                System.out.println("INFO: 새로운 네이버 사용자 등록 완료 - ID: " + naverId);
+            } catch (Exception e) {
+                System.err.println("ERROR: DB 삽입 중 오류 발생 - " + e.getMessage());
+                e.printStackTrace();
+                throw e; // 예외를 상위로 전파하여 디버깅 가능
+            }
+        } else {
+            System.out.println("INFO: 기존 네이버 사용자 - ID: " + user.getId() + ", Email: " + user.getEmail());
+        }
+
+        System.out.println("INFO: 네이버 로그인 처리 완료 - 반환 사용자: " + user);
         return user;
     }
 }
