@@ -7,9 +7,9 @@ export default function Faq() {
     const faqData = [
         { id: 1, title: "JUVO 이용안내", date: "2025.03.20" },
         { id: 2, title: "불법주유소에 대해 알고 싶어요", date: "2025.03.19" },
-        { id: 3, title: "취업 하고 싶어요", date: "2025.03.18" },
-        { id: 4, title: "돈 벌고 싶어요", date: "2025.03.17" },
-        { id: 5, title: "취업시켜 주세요 멘토님", date: "2025.03.16" },
+        { id: 3, title: "멤버십 가입 어떻게 하나요?", date: "2025.03.18" },
+        { id: 4, title: "API 어디서 가지고 오시나요?", date: "2025.03.17" },
+        { id: 5, title: "주유소 찾기 하는 방법이 궁금해요", date: "2025.03.16" },
     ];
 
     return (

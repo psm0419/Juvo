@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .membership-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -32,12 +39,15 @@
 .status-box.unsubscribed {
     background-color: #fff;
     border: 2px solid #e0e0e0;
+    font-family: 'GmarketSansMedium';
+    font-weight: 100;
 }
 
 .status-box h2 {
     margin-bottom: 1.5rem;
     color: #333;
     font-size: 1.5rem;
+    font-family: 'GmarketSansMedium';
 }
 
 .subscription-period, .next-reward {

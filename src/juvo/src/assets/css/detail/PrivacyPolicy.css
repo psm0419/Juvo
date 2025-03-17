@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* 전체 컨테이너 스타일 */
 .policy-container {
     max-width: 800px;
@@ -8,6 +15,7 @@
     color: #333;
     margin-top: 60px;
     margin-bottom: 60px;
+    font-family: 'GmarketSansMedium';
 }
 
 /* 제목 스타일 */

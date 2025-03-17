@@ -1,7 +1,7 @@
 @font-face {
-    font-family: 'BookkMyungjo-Bd';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2') format('woff2');
-    font-weight: 700;
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
     font-style: normal;
 }
 
@@ -12,7 +12,7 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    font-family: 'BookkMyungjo-Bd';
+    font-family: 'GmarketSansMedium';
 }
 
 /* 제목과 설명을 감싸는 박스 */
@@ -126,6 +126,7 @@
     padding: 10px;
     text-align: center;
     border-bottom: 1px solid #eee;
+    font-size: 14px;
 }
 
 .bj-no-data {
