@@ -21,10 +21,11 @@
 }
 
 .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #ff4500;
+    position: absolute; /* 부모(.station-title)를 기준으로 위치 */
+    top: 50%; /* 제목 높이의 50% 지점 */
+    right: 0; /* 오른쪽 끝 */
+    transform: translateY(-50%); /* 수직 가운데 정렬 */
+    background: #f89400;
     color: white;
     border: none;
     border-radius: 50%;
@@ -32,24 +33,38 @@
     height: 25px;
     cursor: pointer;
     font-size: 14px;
+    display: flex; /* X를 가운데 정렬 */
+    align-items: center;
+    justify-content: center; 
 }
 
-.station-title {
+.station-title {    
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 20px;
+    position: relative; /* 버튼의 위치 기준점 설정 */
+    display: flex; /* flex로 제목과 버튼 배치 */
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: space-between; /* 제목 왼쪽, 버튼 오른쪽 */
+    padding-right: 35px; /* 버튼 공간 확보 */
+}
+.station-name {
+    max-width: 340px;
+    display: inline-flex; /* 제목과 코드가 붙어 있도록 */
+    align-items: center; /* 수직 정렬 */
+    flex-shrink: 0; /* 줄어들지 않도록 */
 }
 
 .station-title span {
-    font-size: 16px;
-    color: #888;
+    font-size: 20px;
+    color: #374051;
 }
 
 .section-title {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #333;
+    color: #374051;
 }
 
 .price-list {
@@ -157,7 +172,7 @@
     margin-top: 20px;
 }
 
-.favorite-btn, .route-btn {
+.write-review-btn, .select-keyword-btn {
     flex: 1;
     padding: 10px;
     font-size: 14px;
@@ -167,12 +182,18 @@
     color: white;
 }
 
-.favorite-btn {
-    background-color: #28a745;
-}
-
-.route-btn {
-    background-color: #007bff;
+.more-btn {
+    display: block;
+    margin: 10px auto;
+    padding: 8px 16px;
+    background-color: #43abae;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
+    background-color: #f89400;    
 }
 
 .review-form, .keyword-form {
@@ -208,7 +229,7 @@
 .review-form button, .keyword-form button {
     margin-right: 10px;
     padding: 5px 10px;
-    background-color: #007bff;
+    background-color: #43abae;
     color: white;
     border: none;
     border-radius: 4px;
@@ -216,7 +237,7 @@
 }
 
 .review-form button:hover, .keyword-form button:hover {
-    background-color: #0056b3;
+    background-color: #0d9ca4;
 }
 
 .button-container {
@@ -224,18 +245,18 @@
     text-align: center;
 }
 
-.favorite-btn, .route-btn {
+.write-review-btn, .select-keyword-btn {
     padding: 10px 20px;
     margin: 0 10px;
-    background-color: #28a745;
+    background-color: #43abae;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
 
-.favorite-btn:hover, .route-btn:hover {
-    background-color: #218838;
+.write-review-btn:hover, .select-keyword-btn:hover {
+    background-color: #0d9ca4;
 }
 
 .review-actions {
@@ -245,7 +266,7 @@
 .review-actions button {
     margin-right: 10px;
     padding: 5px 10px;
-    background-color: #dc3545;
+    background-color: #43abae;
     color: white;
     border: none;
     border-radius: 4px;
@@ -253,13 +274,13 @@
 }
 
 .review-actions button:hover {
-    background-color: #c82333;
+    background-color: #0d9ca4;
 }
 
 .review-actions button:first-child {
-    background-color: #ffc107;
+    background-color: #43abae;
 }
 
 .review-actions button:first-child:hover {
-    background-color: #e0a800;
+    background-color: #0d9ca4;
 }

@@ -144,7 +144,7 @@
 
 .bj-page-btn {
     padding: 8px 12px;
-    background-color: #007bff;
+    background-color: #ff5722;
     color: white;
     border: none;
     border-radius: 4px;
@@ -153,7 +153,7 @@
 }
 
 .bj-page-btn:hover:not(:disabled) {
-    background-color: #0056b3;
+    background-color: #fa420a;
 }
 
 .bj-page-btn:disabled {
@@ -164,4 +164,5 @@
 .bj-page-btn.bj-active {
     background-color: #ff5722;
     font-weight: bold;
+    
 }

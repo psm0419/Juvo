@@ -32,6 +32,7 @@ import KakaoPost from './pages/user/socialLogin/KakaoPost';
 import Notice from './pages/detail/guideDetail/Notice';
 import NoticeDetail from './pages/detail/guideDetail/NoticeDetail';
 
+
 function App() {
 	useTokenCleanup();
 	return (
@@ -40,7 +41,7 @@ function App() {
 				<Route path='/' element={<Main />} />
 				<Route path='/user/login' element={<Login />} />
 				<Route path='/user/signup' element={<Signup />} />
-
+				<Route path="/callback/naver" element={<Login />} />
 				<Route path='/socialLogin' element={<SocialLoginTest />} />
 				<Route path='/login/auth2/code/kakao' element={<KakaoPost />} />
 				<Route path="/findPasswordRequest" element={<FindPasswordRequest />} />

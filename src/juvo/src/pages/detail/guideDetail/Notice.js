@@ -20,24 +20,27 @@ const Notice = () => {
     }, []);
 
     return (
-        <div className="notice">
-            {notices.length > 0 ? (
-                notices.map((notice) => (
-                    <Link
-                        key={notice.noticeId}
-                        to={`/detail/guideDetail/Notice/detail/${notice.noticeId}`}
-                        className="notice-item"
-                    >
-                        <div>
-                            <h4 className="notice-title">{notice.title}</h4>
-                            <p>{notice.content}</p>
-                            <span>{notice.createdDate}</span>
-                        </div>
-                    </Link>
-                ))
-            ) : (
-                <p>현재 공지사항이 없습니다.</p>
-            )}
+        <div className="notice-page">
+            <h1 className="notice-title">공지사항</h1>
+            <div className="notice-grid">
+                {notices.length > 0 ? (
+                    notices.map((notice) => (
+                        <Link
+                            key={notice.noticeId}
+                            to={`/detail/guideDetail/Notice/detail/${notice.noticeId}`}
+                            className="notice-card"
+                        >
+                            <h3 className="card-title">{notice.title}</h3>
+                            <p className="card-content">{notice.content}</p>
+                            <span className="card-date">{notice.createdDate}</span>
+                        </Link>
+                    ))
+                ) : (
+                    <div className="empty-notice">
+                        <p>공지사항이 없습니다.</p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

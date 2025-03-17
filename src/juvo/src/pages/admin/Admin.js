@@ -17,7 +17,7 @@ function Admin() {
             <div className="admin-sidebar">
                 <h2 className="sidebar-title">관리자페이지</h2>
                 <div className="sidebar-nav">
-                    <p className={`admin cusor ${activeTab === 'admin' ? 'active' : ''}`}
+                    <p className={`adminInfo cusor ${activeTab === 'admin' ? 'active' : ''}`}
                         onClick={() => setActiveTab('admin')}> 관리자 정보 </p>
                     <p className={`user cusor ${activeTab === 'customer' ? 'active' : ''}`}
                         onClick={() => setActiveTab('customer')}> 고객 관리  </p>

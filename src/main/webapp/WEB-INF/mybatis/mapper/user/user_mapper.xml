@@ -87,8 +87,8 @@
 	</select>
 	
 	<insert id="insertUser" parameterType="User">
-		INSERT INTO users (id, email, userName)
-		VALUES (#{id}, #{email}, #{username})
+		INSERT INTO users (id, email, username, user_type, pw, nickname)
+		VALUES (#{id}, #{email}, #{username}, #{userType}, #{pw}, #{nickname})
 	</insert>
 	
 	<update id="updateMembership" parameterType="User">

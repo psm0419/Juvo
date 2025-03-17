@@ -25,9 +25,9 @@ const NoticeDetail = () => {
 
     return (
         <div className="notice-detail">
-            <h2>{notice.title}</h2>
-            <p className="date">작성일: {notice.createdDate}</p>
-            <div className="content">{notice.content}</div>
+            <h2 className="detail-title">{notice.title}</h2>
+            <p className="detail-date">작성일: {notice.createdDate}</p>
+            <div className="detail-content">{notice.content}</div>
         </div>
     );
 };

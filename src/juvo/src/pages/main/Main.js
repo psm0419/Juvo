@@ -226,21 +226,25 @@ function Main() {
 						<div className="mainotice">
 							{notices.length > 0 ? (
 								notices
-									.slice(0, 3) // Limit to the 3 most recent notices
+									.slice(0, 3) // 최근 3개의 공지사항만 표시
 									.map((notice) => (
-										<div key={notice.noticeId} className="notice-item">
-											<Link
-												to={`/detail/guideDetail/Notice/detail/${notice.noticeId}`}
-												className="notice-title"
-											>
+										<Link
+											to={`/detail/guideDetail/Notice/detail/${notice.noticeId}`}
+											key={notice.noticeId}
+											className="notice_box"
+										>
+											<div className="notice_text">
 												{notice.title}
-											</Link>
-										</div>
+											</div>
+										</Link>
 									))
 							) : (
 								<p>현재 공지사항이 없습니다.</p>
 							)}
 						</div>
+					</div>
+					<div className="mbottom bottom">
+						
 					</div>
 					<div className="rbottom bottom cursor">
 						<div className="membership">

@@ -3,6 +3,13 @@ import FuelStationList from "../../components/map/FuelStationList";
 import "../../assets/css/map/Map.css";
 import startMarkerImg from "../../assets/image/StartMarker.png";
 import FuelStationDetail from "../../components/map/FuelStationDetail";
+import HdoImage from "../../assets/image/MarkerHdo.png";
+import GscImage from "../../assets/image/MarkerGsc.png";
+import SkeImage from "../../assets/image/MarkerSke.png";
+import SolImage from "../../assets/image/MarkerSol.png";
+import RtxImage from "../../assets/image/MarkerRtx.png";
+import NhoImage from "../../assets/image/MarkerNho.png";
+import EvImage from "../../assets/image/MarkerEv.png";
 
 const Map = ({ fetchFuelStations, stations, loading }) => {
     const mapContainer = useRef(null);
@@ -27,6 +34,10 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const [showReportModal, setShowReportModal] = useState(false);
     const [reportUniId, setReportUniId] = useState(null);
     const [selectedBlackType, setSelectedBlackType] = useState(null);
+    const [favoriteStations, setFavoriteStations] = useState([]); // 사용자별 즐겨찾기 uniId 목록
+    const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+    const [searchOption, setSearchOption] = useState("0");
+
     const openReportModal = (uniId) => {
         setReportUniId(uniId);
         setShowReportModal(true);
@@ -47,6 +58,32 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     });
     const [regions, setRegions] = useState({});
 
+    const getMarkerImage = (pollDivCd, isChargingStation = false) => {
+        const kakao = window.kakao;
+
+        if (isChargingStation) {
+            return new kakao.maps.MarkerImage(
+                EvImage,
+                new kakao.maps.Size(40, 40), // 충전소 마커 크기 (필요에 따라 조정)
+                { offset: new kakao.maps.Point(15, 30) } // 중심점 설정
+            );
+        }
+        const logos = {
+            GSC: GscImage,
+            SKE: SkeImage,
+            HDO: HdoImage,
+            SOL: SolImage,
+            RTX: RtxImage,
+            NHO: NhoImage,
+        };
+        const imageSrc = logos[pollDivCd] || RtxImage; // 기본값은 RTX(기타)
+        return new kakao.maps.MarkerImage(
+            imageSrc,
+            new kakao.maps.Size(35, 35), // 마커 크기 (필요에 따라 조정)
+            { offset: new kakao.maps.Point(15, 30) } // 마커의 중심점 설정
+        );
+    };
+
     function debounce(func, wait) {
         let timeout;
         return function (...args) {
@@ -54,43 +91,80 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             timeout = setTimeout(() => func.apply(this, args), wait);
         };
     }
-// 불법 주유소 신고 제출
-const handleReportSubmit = () => {
-    if (!selectedBlackType) {
-        alert("신고 유형을 선택해주세요.");
-        return;
-    }
+    //즐겨찾기 조회 함수
+    const fetchFavoriteStations = async () => {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            setFavoriteStations([]);
+            return;
+        }
 
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-        alert("로그인이 필요합니다.");
-        sessionStorage.setItem("redirectUrl", window.location.pathname);
-        window.location.href = "/user/login";
-        return;
-    }
+        try {
+            console.log('Fetching favorites from /api/favorite/juyuso');
+            const response = await fetch('/api/favorite/juyuso', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            console.log('Response status:', response.status);
+            if (!response.ok) throw new Error('Failed to fetch favorites');
+            const data = await response.json();
+            if (data.status === 'success') {
+                setFavoriteStations(data.favorites || []);
+            } else {
+                console.error('Error in response:', data.message);
+                setFavoriteStations([]);
+            }
+        } catch (error) {
+            console.error('Error fetching favorite stations:', error);
+            setFavoriteStations([]);
+        }
+    };
 
-    fetch("/registerblack", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({ uniId: reportUniId, blackType: selectedBlackType }),
-    })
-        .then(response => {
-            if (!response.ok) throw new Error("신고 실패");
-            return response.json();
+    // 컴포넌트 마운트 시 호출
+    useEffect(() => {
+        fetchFavoriteStations();
+    }, []);
+
+    // 불법 주유소 신고 제출
+    const handleReportSubmit = () => {
+        if (!selectedBlackType) {
+            alert("신고 유형을 선택해주세요.");
+            return;
+        }
+
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            alert("로그인이 필요합니다.");
+            sessionStorage.setItem("redirectUrl", window.location.pathname);
+            window.location.href = "/user/login";
+            return;
+        }
+
+        fetch("/registerblack", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({ uniId: reportUniId, blackType: selectedBlackType }),
         })
-        .then(data => {
-            alert(data.message);
-            setShowReportModal(false);
-            setSelectedBlackType(null);
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("신고 처리 중 오류가 발생했습니다.");
-        });
-};
+            .then(response => {
+                if (!response.ok) throw new Error("신고 실패");
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                setShowReportModal(false);
+                setSelectedBlackType(null);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("신고 처리 중 오류가 발생했습니다.");
+            });
+    };
     // SIDO 데이터 가져오기
     useEffect(() => {
         const fetchSidoList = async () => {
@@ -126,7 +200,7 @@ const handleReportSubmit = () => {
             const markerImage = new kakao.maps.MarkerImage(
                 startMarkerImg,
                 new kakao.maps.Size(40, 40),
-                { offset: new kakao.maps.Point(20, 40) }
+                { offset: new kakao.maps.Point(20, 20) }
             );
 
             const userMarker = new kakao.maps.Marker({
@@ -164,7 +238,7 @@ const handleReportSubmit = () => {
             setLng(newLng);
         };
 
-        const debounceHandleMarkerMove = debounce(handleMarkerMove, 500);
+        const debounceHandleMarkerMove = debounce(handleMarkerMove, 100);
 
         kakao.maps.event.addListener(marker, "dragend", debounceHandleMarkerMove);
         kakao.maps.event.addListener(mapRef.current, "click", (mouseEvent) => {
@@ -192,13 +266,13 @@ const handleReportSubmit = () => {
                 (brands.sOil && station.pollDivCd === "SOL") ||
                 (brands.nOil && station.pollDivCd === "NHO") ||
                 (!brands.cheap && !brands.skEnergy && !brands.gsCaltex && !brands.hyundaiOilbank && !brands.sOil && !brands.nOil);
-    
+
             const additionalMatches =
                 (!additionalInfo.carWash || station.carWashYn === "Y") &&
                 (!additionalInfo.maintenance || station.maintYn === "Y") &&
                 (!additionalInfo.convenience || station.cvsYn === "Y") &&
                 (!additionalInfo.self || station.selfYn === "Y" || (station.OS_NM && station.OS_NM.includes("셀프")));
-    
+
             return brandMatches && additionalMatches;
         });
     };
@@ -215,13 +289,21 @@ const handleReportSubmit = () => {
     // 주유소 마커 업데이트
     useEffect(() => {
         if (activeTab !== "주유소" || !mapRef.current || !filteredStations.length) return;
-
+        console.log('Filtered stations:', filteredStations); // 필터링 전 데이터 확인
+        console.log('Favorite stations:', favoriteStations);
         const kakao = window.kakao;
         const geocoder = new kakao.maps.services.Geocoder();
 
         fuelMarkers.forEach(marker => marker?.setMap(null)); //기존 마커 제거
 
-        const promises = filteredStations.map(station => {
+        const stationsToShow = showFavoritesOnly
+            ? filteredStations.filter(station => {
+                const isFavorite = favoriteStations.includes(station.uniId);
+                return isFavorite;
+            })
+            : filteredStations;
+
+        const promises = stationsToShow.map(station => {
             const address = station.NEW_ADR || station.newAdr || station.VAN_ADR || station.vanAdr;
             if (!address) return Promise.resolve(null);
 
@@ -229,15 +311,17 @@ const handleReportSubmit = () => {
                 geocoder.addressSearch(address, (result, status) => {
                     if (status === kakao.maps.services.Status.OK) {
                         const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                        if (getDistance(lat, lng, coords.getLat(), coords.getLng()) > 5000) {
+                        if (getDistance(lat, lng, coords.getLat(), coords.getLng()) > 10000) {
                             resolve(null);
                             return;
                         }
 
+                        const markerImage = getMarkerImage(station.pollDivCd);
                         const marker = new kakao.maps.Marker({
                             position: coords,
                             map: mapRef.current,
                             title: station.OS_NM || station.osNm,
+                            image: markerImage,
                         });
 
                         const infoWindowContent = `
@@ -247,7 +331,7 @@ const handleReportSubmit = () => {
                                 </div>
                                 <div class="info-window-button-container">
                                 <button onclick="registerFavoriteStation('${station.uniId}')" class="info-window-button">
-                                    관심 주유소 등록
+                                    즐겨찾기
                                 </button>
                                 <button onclick="registerBlack('${station.uniId}')" class="info-window-button2">
                                         신고
@@ -282,6 +366,11 @@ const handleReportSubmit = () => {
                                 <div class="info-window-quality">
                                     ${station.kpetroYn === "Y" ? "품질인증 주유소 ✅" : "품질인증 주유소 ❌"}
                                 </div>
+                                <div class="info-window-route-options">
+                                    <label><input type="radio" name="routeOption" value="0" onchange="window.setSearchOption('0')" ${searchOption === "0" ? "checked" : ""}> 추천</label>
+                                    <label><input type="radio" name="routeOption" value="1" onchange="window.setSearchOption('1')" ${searchOption === "1" ? "checked" : ""}> 최단</label>
+                                    <label><input type="radio" name="routeOption" value="2" onchange="window.setSearchOption('2')" ${searchOption === "2" ? "checked" : ""}> 최적</label>
+                                </div>
                                 <button class="info-window-route-button" onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})">
                                     경로찾기
                                 </button>
@@ -294,10 +383,8 @@ const handleReportSubmit = () => {
 
                         kakao.maps.event.addListener(marker, "click", () => {
                             if (!window.activeInfoWindows) window.activeInfoWindows = [];
-                            if (window.activeInfoWindows.length > 0) {
-                                window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
-                                window.activeInfoWindows = [];
-                            }
+                            window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
+                            window.activeInfoWindows = [];
                             if (currentInfoWindow) currentInfoWindow.close();
 
                             infoWindow.open(mapRef.current, marker);
@@ -332,42 +419,42 @@ const handleReportSubmit = () => {
             }
         };
 
-        window.registerFavoriteStation = function (uniId) {
-            console.log("Registering favorite station:", uniId);
-            const token = localStorage.getItem('accessToken');
+        window.registerFavoriteStation = async (uniId) => {
+            const token = localStorage.getItem("accessToken");
             if (!token) {
-                alert('로그인이 필요합니다.');
-                // 현재 페이지 URL 저장
-                sessionStorage.setItem('redirectUrl', window.location.pathname);
-                window.location.href = '/user/login'; // 로그인 페이지로 이동
+                alert("로그인이 필요합니다.");
+                sessionStorage.setItem("redirectUrl", window.location.pathname);
+                window.location.href = "/user/login";
                 return;
             }
 
-            fetch('/api/favorite/juyuso', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ uniId: uniId })
-            })
-                .then(response => {
-                    if (!response.ok) throw new Error('등록 실패');
-                    return response.json();
-                })
-                .then(data => {
-                    alert(data.message);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('로그인이 필요 합니다.');
+            try {
+                const response = await fetch("/api/favorite/juyuso", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ uniId: uniId }),
                 });
+                if (!response.ok) throw new Error("등록 실패");
+                const data = await response.json();
+                alert(data.message);
+                if (data.status === "success") {
+                    setFavoriteStations(prev => [...prev, uniId]); // 실시간 추가
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("이미 등록된 주유소 입니다.");
+            }
         };
 
         window.registerBlack = function (uniId) {
             console.log("Opening report modal for uniId:", uniId);
             openReportModal(uniId);
         };
+
+        
 
         return () => {
             fuelMarkers.forEach(marker => {
@@ -380,7 +467,7 @@ const handleReportSubmit = () => {
             }
             if (currentInfoWindow) currentInfoWindow.close();
         };
-    }, [filteredStations, lat, lng, activeTab, isDataLoaded]);
+    }, [filteredStations, lat, lng, activeTab, isDataLoaded, showFavoritesOnly, favoriteStations]);
 
     // 충전소 마커 업데이트
     useEffect(() => {
@@ -420,10 +507,12 @@ const handleReportSubmit = () => {
             // 마커 생성
             const markers = validStations.map(({ station, lat: stationLat, lng: stationLng }) => {
                 const coords = new kakao.maps.LatLng(stationLat, stationLng);
+                const markerImage = getMarkerImage(null, true);
                 const marker = new kakao.maps.Marker({
                     position: coords,
                     map: mapRef.current,
                     title: station.stationName,
+                    image: markerImage,
                 });
 
                 const infoWindowContent = `
@@ -436,6 +525,11 @@ const handleReportSubmit = () => {
                             <div><span>충전기 타입 : </span> ${station.chargerType || "정보 없음"}</div>
                             <div><span>세부 타입 : </span> ${station.modelSmall || "정보 없음"}</div>
                             <div><span>이용 가능 여부 : </span> ${station.userRestriction || "정보 없음"}</div>
+                        </div>
+                        <div class="info-window-route-options">
+                            <label><input type="radio" name="routeOption" value="0" onchange="window.setSearchOption('0')" ${searchOption === "0" ? "checked" : ""}> 추천</label>
+                            <label><input type="radio" name="routeOption" value="1" onchange="window.setSearchOption('1')" ${searchOption === "1" ? "checked" : ""}> 최단</label>
+                            <label><input type="radio" name="routeOption" value="2" onchange="window.setSearchOption('2')" ${searchOption === "2" ? "checked" : ""}> 최적</label>
                         </div>
                         <button class="info-window-route-button" onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})">
                             경로찾기
@@ -548,33 +642,8 @@ const handleReportSubmit = () => {
         }
     };
 
-    window.registerFavoriteStation = function (uniId) {
-        console.log("Registering favorite station:", uniId);
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-            alert("로그인이 필요합니다.");
-            return;
-        }
-
-        fetch("/api/favorite/juyuso", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify({ uniId: uniId }),
-        })
-            .then(response => {
-                if (!response.ok) throw new Error("등록 실패");
-                return response.json();
-            })
-            .then(data => {
-                alert(data.message);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("이미 등록된 주유소 입니다.");
-            });
+    window.setSearchOption = (option) => {
+        setSearchOption(option);
     };
 
     const handleCloseDetail = () => {
@@ -623,7 +692,7 @@ const handleReportSubmit = () => {
 
     const fetchRouteFromTmap = async (startLat, startLng, endLat, endLng) => {
         const apiKey = "QPrFw4mVJd3ZoUjdTvZQA6vU82HDgXSf5Pd2eyYH";
-        const url = "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json";
+        const url = "https://apis.openapi.sk.com/tmap/routes?version=1&format=json";
 
         const headers = {
             "Content-Type": "application/json",
@@ -639,6 +708,7 @@ const handleReportSubmit = () => {
             resCoordType: "WGS84GEO",
             startName: "출발지",
             endName: "도착지",
+            searchOption: searchOption, // 추천 경로 (0: 추천, 1: 최단, 2: 최적 등)
         };
 
         try {
@@ -780,11 +850,11 @@ const handleReportSubmit = () => {
         <div className="map-container">
             <div ref={mapContainer} className="map">
                 {routeInfo.distance && routeInfo.time && (
-                        <div className="route-info">
-                            <span>거리: {routeInfo.distance} km | </span>
-                            <span>소요 시간: {routeInfo.time} 분</span>
-                        </div>
-                    )}
+                    <div className="route-info">
+                        <span>거리: {routeInfo.distance} km | </span>
+                        <span>소요 시간: {routeInfo.time} 분</span>
+                    </div>
+                )}
             </div>
             {selectedDetailStation && <FuelStationDetail station={selectedDetailStation} onClose={handleCloseDetail} />}
             <div className="map-sidebar">
@@ -801,12 +871,21 @@ const handleReportSubmit = () => {
                     >
                         충전소
                     </div>
+                    {activeTab === "주유소" && (
+                        <button
+                            className={`favorite-toggle-btn ${showFavoritesOnly ? "active" : ""}`}
+                            onClick={() => setShowFavoritesOnly(prev => !prev)}
+                            disabled={!localStorage.getItem('accessToken')}
+                        >
+                            ★
+                        </button>
+                    )}
                 </div>
 
                 {activeTab === "주유소" ? (
                     <>
                         <div className="map-section">
-                            <div className="map-section-title">상표</div>
+                            <div className="map-section-title">주유소 브랜드</div>
                             <div className="map-options">
                                 {[
                                     { key: "cheap", label: "알뜰" },

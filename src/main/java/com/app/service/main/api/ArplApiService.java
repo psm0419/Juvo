@@ -29,7 +29,7 @@ public class ArplApiService {
         urlBuilder.append("&" + URLEncoder.encode("cnt","UTF-8") + "=" + URLEncoder.encode("5", "UTF-8")); //최저가순 결과 건수
         
         
-        System.out.println("요청 URL: " + urlBuilder.toString());
+        
         
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -56,7 +56,7 @@ public class ArplApiService {
         conn.disconnect();
         
         String response = sb.toString();
-        System.out.println("API 응답 데이터: " + (response.length() > 100 ? response.substring(0, 100) + "..." : response));
+        
         
         return response;
     } 
@@ -67,7 +67,7 @@ public class ArplApiService {
     	
     	try {
             String jsonText = juyuso(prodcd, area); 
-            System.out.println("파싱할 JSON 데이터: " + jsonText);
+            
             
             JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObj = (JSONObject)jsonParser.parse(jsonText); 

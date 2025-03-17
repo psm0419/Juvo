@@ -72,6 +72,11 @@ function Header() {
         navigate('/');
     };
 
+    const handleLogin = () => {
+        sessionStorage.setItem("redirectUrl", window.location.pathname);
+        navigate("/user/login");
+    };
+
     const handleMyPageClick = () => {
         const token = localStorage.getItem('accessToken');
         if (!token) {
@@ -149,7 +154,7 @@ function Header() {
                                     <img
                                         src={MembershipIcon}
                                         alt="멤버십 아이콘"
-                                        style={{ width: '20px', height: '20px', marginLeft: '5px' }}
+                                        style={{ width: '20px', height: '20px', marginRight: '5px' }}
                                     />
                                 )}
                                 <div className="mypage" onClick={handleMyPageClick}>마이페이지</div>
@@ -162,7 +167,7 @@ function Header() {
                     </>
                 ) : (
                     <>
-                        <div className="login" onClick={() => navigate("/user/login")}>로그인</div>
+                        <div className="login" onClick={handleLogin}>로그인</div>
                         <div className="signup" onClick={() => navigate("/user/signup")}>회원가입</div>
                     </>
                 )}

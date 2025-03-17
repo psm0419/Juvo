@@ -2,11 +2,11 @@ import MyPageProfile from '../../pages/user/myPage/MyPageProfile';
 
 function AdminManagement() {
     
-    // return(
+    return(
 
-    //     <MyPageProfile/>
+        <MyPageProfile/>
 
-    // );
+    );
 }
 
 export default AdminManagement;
