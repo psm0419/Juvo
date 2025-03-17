@@ -26,8 +26,8 @@ public class JwtProvider {
 	private static final String SECRET_KEY = "thisissecretkeyforjwtreactconnectwithspringserverthisissecretkeyforjwtreactconnectwithspringserver";
 
 // Access Token & Refresh Token 만료시간 설정
-	private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 30; // 30분
-	private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 7; // 7일
+	private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 30 ; // 3분
+	private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 21; // 7일
 
 //시크릿키 생성 (비밀키 변환으로 키 생성)
 	private static SecretKey getSigningKey() {
@@ -126,24 +126,33 @@ public class JwtProvider {
 	/**
 	 * Refresh Token 생성
 	 */
-	public static String createRefreshToken() {
-		return Jwts.builder().issuedAt(new Date()).issuer("spring server")
-				.expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
-				.signWith(getSigningKey(), Jwts.SIG.HS256).compact();
-	}
+	public static String createRefreshToken(String userId, String userType) {
+		Claims claims = Jwts.claims()
+			    .add("userId", userId)
+			    .add("userType", userType)
+			    .build();
+		return Jwts.builder()
+			    .claims(claims)
+			    .issuedAt(new Date())
+			    .issuer("spring server")
+			    .expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
+			    .signWith(getSigningKey(), Jwts.SIG.HS256)
+			    .compact();
+			}
 
 	/**
 	 * Refresh Token을 이용한 새로운 Access Token 발급
 	 */
-	public static String refreshAccessToken(String refreshToken, String userId, String userType) {
-		if (isVaildToken(refreshToken)) {
-			return createAccessToken(userId,userType);
+	public static String refreshAccessToken(String refreshToken) {
+		  if (isVaildToken(refreshToken)) {
+		    String userId = getUserIdFromToken(refreshToken);
+		    String userType = getUserTypeFromToken(refreshToken);
+		    if (userId != null && userType != null) {
+		      return createAccessToken(userId, userType);
+		    }
+		  }
+		  return null;
 		}
-//throw new RuntimeException("유효하지 않은 Refresh Token");
-//exception 처리 하거나
-//return null 혹은 별도 값을 리턴하여 처리
-		return null;
-	}
 
 	public static String extractToken(HttpServletRequest request) {
 		String bearerToken = request.getHeader("Authorization");
