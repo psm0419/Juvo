@@ -192,14 +192,7 @@ class TokenManager {
         return true;
     }
 
-        const expiration = this.getExpirationFromToken(token);
-        if (!expiration || expiration < new Date().getTime()) {
-            this.logout(false);  // 강제 리다이렉트 없이 로그아웃
-            return false;
-        }
-
-        return true;
-    }
+   
 }
 
 // 싱글톤 인스턴스 생성

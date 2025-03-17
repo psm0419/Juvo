@@ -166,7 +166,7 @@ function MyPageMembership() {
             {/* 구독 시작 버튼과 가격을 아래로 분리 */}
             {!membershipInfo && (
                 <div className="mypage-membership-subscribe-section">
-                    <span className="mypage-membership-price">월 4,900원</span> {/* 가격 수정 */}
+                    <span className="mypage-membership-price">4,990원 / 월</span> {/* 가격 수정 */}
                     <button className="mypage-membership-tier-button mypage-membership-subscribe-btn mypage-membership-active" onClick={handleNavigateToDetail}>
                         구독 시작
                     </button>

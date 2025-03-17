@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'BookkMyungjo-Bd';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
 /* MyPageMembership.css */
 .mypage-membership-page {
     padding: 40px;
@@ -84,34 +91,31 @@
 }
 
 .mypage-membership-tier-button {
-    background-color: #3498db;
-    color: #fff;
+    background-color: #f3b252; /* 기본 색상 수정 */
+    color: black;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s;
     width: 100%;
     max-width: 200px;
     display: block;
-    margin: 20px auto 0;
+    margin: auto 0;
 }
 
 .mypage-membership-tier-button:hover {
-    background-color: #2980b9;
-}
-
-.mypage-membership-tier-button.mypage-membership-active {
-    background-color: #2980b9;
+    background-color: #f89400; /* hover 색상 수정 */
 }
 
 .mypage-membership-tier-button.mypage-membership-unsubscribe-btn {
-    background-color: #e74c3c;
+    background-color: #f89400;
 }
 
 .mypage-membership-tier-button.mypage-membership-unsubscribe-btn:hover {
-    background-color: #c0392b;
+    background-color: #f89400;
 }
 
 /* 가로 배치를 위한 스타일 */
@@ -140,6 +144,106 @@
 
 .mypage-membership-price {
     font-size: 18px;
-    color: #fff;
+    color: #f89400;
     font-weight: bold;
+}
+
+/* 갤럭시 S24 기준 미디어 쿼리 (뷰포트 너비 360px 이하) */
+@media only screen and (max-width: 360px) {
+    .mypage-membership-page {
+        padding: 20px;
+    }
+
+    .mypage-membership-header {
+        margin-bottom: 30px;
+    }
+
+    .favorites-title {
+        font-size: 20px;
+    }
+
+    .mypage-membership-tier-card {
+        padding: 15px;
+    }
+
+    .mypage-membership-tier-title {
+        font-size: 20px;
+    }
+
+    .mypage-membership-tier-subtitle {
+        font-size: 14px;
+    }
+
+    .mypage-membership-tier-info {
+        font-size: 14px;
+    }
+
+    .mypage-membership-feature-title {
+        font-size: 16px;
+    }
+
+    .mypage-membership-tier-features li {
+        font-size: 12px;
+        margin: 15px 0;
+    }
+
+    .mypage-membership-tier-button {
+        padding: 8px 15px;
+        font-size: 14px;
+        max-width: 150px;
+    }
+
+    .mypage-membership-benefits-wrapper {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .mypage-membership-tier-card.mypage-membership-free-section,
+    .mypage-membership-tier-card.mypage-membership-premium-section {
+        width: 100%;
+    }
+
+    .mypage-membership-subscribe-section {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .mypage-membership-price {
+        font-size: 16px;
+    }
+}
+
+/* 가로 모드 (landscape)에서 추가 조정 */
+@media only screen and (max-width: 780px) and (orientation: landscape) {
+    .mypage-membership-benefits-wrapper {
+        flex-direction: row;
+        gap: 15px;
+    }
+
+    .mypage-membership-tier-card.mypage-membership-free-section,
+    .mypage-membership-tier-card.mypage-membership-premium-section {
+        width: 48%;
+    }
+
+    .mypage-membership-tier-title {
+        font-size: 22px;
+    }
+
+    .mypage-membership-tier-button {
+        max-width: 180px;
+    }
+}
+
+/* 540px 이하에서 좌우 배치 -> 위아래 배치 */
+@media only screen and (max-width: 540px) {
+    .mypage-membership-benefits-wrapper {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .mypage-membership-tier-card.mypage-membership-free-section,
+    .mypage-membership-tier-card.mypage-membership-premium-section {
+        width: 100%;
+    }
 }
