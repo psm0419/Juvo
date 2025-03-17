@@ -80,7 +80,6 @@ CREATE TABLE CHARGING_STATION (
     charger_type VARCHAR(50),
     user_restriction VARCHAR(50)
 );
-
 -- 사용자 관심 키워드 테이블
 --1:친절 2:진출입 편함 3: 깔끔한 시설 4: 정량 주유 5:믿음가는 품질 6:사은품 증정 7: 주유시 세차 할인
 CREATE TABLE user_keyword (
@@ -118,12 +117,6 @@ CREATE TABLE black_type (
     black_type VARCHAR2(100) 
 );
 
--- 사용자 카드 정보
-CREATE TABLE card (
-    USER_ID VARCHAR2(64) NOT NULL,
-    card_info VARCHAR2(512)
-);
-
 --------------공지사항 DB 테이블 및 시퀀스------------
 
 CREATE TABLE NOTICE (
@@ -151,10 +144,42 @@ create table membership (
     cvc varchar2(32),
     expiry varchar2(32),
     created_at timestamp
-    
 );
 
 create SEQUENCE membership_seq
 START WITH 1
 INCREMENT BY 1
 NOCYCLE;
+
+
+------drop 테이블----------------
+
+--
+--drop table users;
+--drop table juyuso;
+--drop table juyuso_review;
+--drop table lowest_cost;
+--drop table charging_station;
+--drop table user_keyword;
+--drop table like_juyuso;
+--drop table black_type;
+--drop table card;
+--drop table notice;
+--drop table membership;
+
+--------------drop sequence------------
+--drop sequence juyuso_review_seq;
+--drop sequence NOTICE_SEQ;
+--drop sequence membership_seq;
+
+
+-------------user_id varchar2 (64로 바꾸는 코드)---------------------
+--ALTER TABLE membership MODIFY (user_id VARCHAR2(64));
+
+-------------------관리자 주는 코드----------------
+--Update users set user_type = 'ADM' where nickname = '';
+
+---------------일반유저로 바뀌는 코드------------------
+--Update users set user_type = 'CUS' where nickname = '';
+
+
