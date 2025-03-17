@@ -20,7 +20,7 @@ function GasStationTable({ currentItems, modifyBlack, removeBlack, activeTab }) 
                     <th>위반 유형</th>
                     <th>업종 구분</th>
                     <th>상호</th>
-                    <th>도로명 주소</th>
+                    <th className="address">도로명 주소</th>
                     <th>상태</th>
                     <th></th>
                 </tr>
