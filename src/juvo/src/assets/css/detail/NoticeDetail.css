@@ -23,13 +23,13 @@
 
 /* 제목 스타일 */
 .detail-title {
-    font-size: 23px; 
+    font-size: 23px;
     color: #2c3e50;
     margin: 0 0 20px 0;
     padding-bottom: 10px;
-    width: 400px; 
-    border-bottom: 2px solid #f89400; 
-    white-space: nowrap; 
+    width: 400px;
+    border-bottom: 2px solid #f89400;
+    white-space: nowrap;
 }
 
 /* 날짜 스타일 (오른쪽 정렬) */
@@ -62,24 +62,32 @@
     padding: 20px;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 600px) {
+/* 미디어 쿼리 (max-width: 540px) */
+@media (max-width: 540px) {
     .notice-detail {
         padding: 20px;
         margin: 20px 10px;
+        margin-top: 60px; /* 상단 여백 줄임 */
     }
 
     .detail-title {
-        font-size: 18px; 
-        width: 250px; 
+        font-size: 20px;
+        width: 100%; /* 화면 전체 너비 사용 */
+        white-space: normal; /* 긴 제목 줄바꿈 허용 */
     }
 
     .detail-date {
         font-size: 12px;
+        text-align: left; /* 작은 화면에서 가독성을 위해 왼쪽 정렬 */
     }
 
     .detail-content {
         font-size: 14px;
         padding: 10px;
+    }
+
+    .notice-detail:empty::before {
+        font-size: 14px;
+        padding: 15px;
     }
 }

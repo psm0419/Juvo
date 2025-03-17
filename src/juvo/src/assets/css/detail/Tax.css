@@ -5,12 +5,10 @@
     font-style: normal;
 }
 
-
 /* 컨테이너 */
 .tax-container {
-    font-family: Arial, sans-serif; /* body에서 옮김 */
-    margin: 20px; /* body에서 옮김 */
-    line-height: 1.6; /* body에서 옮김 */
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
@@ -145,4 +143,68 @@
 .tax-note-text {
     font-size: 14px;
     color: #666;
+}
+
+/* 미디어 쿼리 (max-width: 540px) */
+@media (max-width: 540px) {
+    .tax-container {
+        width: 100%; /* 화면 전체 너비 사용 */
+        padding: 0 10px;
+    }
+
+    .tax-header-container {
+        margin-bottom: 30px;
+    }
+
+    .tax-title {
+        font-size: 20px;
+        width: 100%; /* 화면 전체 너비 사용 */
+        margin-top: 60px; /* 상단 여백 줄임 */
+    }
+
+    .tax-description {
+        font-size: 13px;
+    }
+
+    .tax-tab-container {
+        flex-direction: column; /* 탭 버튼 세로 정렬 */
+        border-bottom: none;
+    }
+
+    .tax-tab-button {
+        padding: 8px 15px;
+        font-size: 14px;
+        border-bottom: 1px solid #ccc; /* 각 버튼 하단에 구분선 추가 */
+    }
+
+    .tax-tab-button.active {
+        border-bottom: 2px solid #007bff;
+    }
+
+    .tax-table-header {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .tax-table-cell {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .tax-vat-row {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .tax-note-container {
+        padding: 10px;
+    }
+
+    .tax-note-title {
+        font-size: 14px;
+    }
+
+    .tax-note-text {
+        font-size: 13px;
+    }
 }

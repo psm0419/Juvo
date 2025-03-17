@@ -112,11 +112,12 @@
     margin-bottom: 10px;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 600px) {
+/* 미디어 쿼리 (max-width: 540px) */
+@media (max-width: 540px) {
     .law-container {
         padding: 20px;
         margin: 20px 10px;
+        margin-top: 40px; /* 상단 여백 줄임 */
     }
 
     .law-header-container {
@@ -125,7 +126,7 @@
 
     .law-title {
         font-size: 20px;
-        width: 180px;
+        width: 100%; /* 화면 전체 너비 사용 */
     }
 
     .law-description {
@@ -135,15 +136,24 @@
 
     .law-subtitle {
         font-size: 18px;
+        margin-top: 25px;
     }
 
     .law-law-title {
         font-size: 16px;
+        margin-top: 20px;
+    }
+
+    .law-list,
+    .law-sublist,
+    .law-subsublist {
+        padding-left: 20px;
     }
 
     .law-list li,
     .law-sublist li,
     .law-subsublist li {
         font-size: 14px;
+        margin-bottom: 8px;
     }
 }

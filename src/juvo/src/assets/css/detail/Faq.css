@@ -20,7 +20,6 @@
     border-radius: 5px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     font-family: 'GmarketSansMedium';
-
 }
 
 /* 제목 */
@@ -130,8 +129,8 @@
     color: #fff;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 768px) {
+/* 미디어 쿼리 (max-width: 540px) */
+@media (max-width: 540px) {
     .faq-container {
         padding: 20px;
         margin: 20px 10px;
@@ -139,11 +138,11 @@
 
     .faq-title {
         font-size: 20px;
-        width: 180px;
+        width: 100%; /* 제목 너비를 화면에 맞춤 */
     }
 
-    .faq-description {
-        font-size: 14px;
+    .faq-table {
+        margin-top: 20px;
     }
 
     .faq-table th,
@@ -152,7 +151,7 @@
         font-size: 12px;
     }
 
-    /* 반응형에서도 열 너비 유지 */
+    /* 열 너비 조정 */
     .faq-table th:nth-child(1),
     .faq-table td:nth-child(1) {
         width: 15%;
