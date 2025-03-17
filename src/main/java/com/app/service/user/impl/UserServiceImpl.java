@@ -430,15 +430,16 @@ public class UserServiceImpl implements UserService {
         System.out.println("INFO: 카카오 사용자 정보 - ID: " + kakaoId + ", Email: " + email + ", Nickname: " + nickname);
 
         // 사용자 확인 및 생성
-        User user = email != null ? userDAO.findByEmail(email) : null;
+        User user = kakaoId != null ? userDAO.checkDupId(kakaoId) : null;
         if (user == null) {
             System.out.println("INFO: 새로운 카카오 사용자 - DB에 등록 시작");
             user = new User();
             user.setId(kakaoId);
-            user.setEmail(email);
+            user.setEmail(email); // email은 null일 수 있음
             user.setNickname(nickname);
             user.setUserType("CUS");
             user.setPw(""); // 소셜 로그인 사용자는 비밀번호 없음
+            
             userDAO.insertUser(user);
             System.out.println("INFO: 새로운 카카오 사용자 등록 완료 - ID: " + kakaoId);
         } else {
