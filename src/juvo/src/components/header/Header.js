@@ -91,7 +91,7 @@ function Header() {
         const token = localStorage.getItem('accessToken');
         if (!token) {
             alert('로그인이 필요합니다.');
-            navigate('/login');
+            navigate('user/login');
             return;
         }
         navigate("/admin");
