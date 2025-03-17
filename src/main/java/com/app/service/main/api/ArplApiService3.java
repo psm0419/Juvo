@@ -23,8 +23,8 @@ public class ArplApiService3 {
         
         // 공공 API URL 구성
         StringBuilder urlBuilder = new StringBuilder("http://www.opinet.co.kr/api/areaAvgRecentPrice.do");
-        urlBuilder.append("?" + URLEncoder.encode("code","UTF-8") + "=F250306159");
-        urlBuilder.append("&" + URLEncoder.encode("out","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
+        urlBuilder.append("?" + URLEncoder.encode("out","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
+        urlBuilder.append("&" + URLEncoder.encode("code","UTF-8") + "=F250306157");
         urlBuilder.append("&" + URLEncoder.encode("area","UTF-8") + "=" + URLEncoder.encode(area, "UTF-8")); // 지역코드
         urlBuilder.append("&" + URLEncoder.encode("date","UTF-8") + "=" + URLEncoder.encode("", "UTF-8")); // 시도코드
         urlBuilder.append("&" + URLEncoder.encode("prodcd","UTF-8") + "=" + URLEncoder.encode(prodcd, "UTF-8")); // 제품구분

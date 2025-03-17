@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 
 import com.app.dto.main.AvgByDay;
+import com.app.dto.main.AvgByDayAll;
 import com.app.dto.main.AvgByRegion;
 import com.app.dto.main.CheapJuyuso;
 import com.app.service.main.api.ArplApiService;
 import com.app.service.main.api.ArplApiService2;
 import com.app.service.main.api.ArplApiService3;
+import com.app.service.main.api.ArplApiService4;
 
 @Controller
 public class MainController {
@@ -78,6 +80,25 @@ public class MainController {
 
 		 try {
 			 avgList = ArplApiService3.avgByDay(area, prodcd); 
+		 } catch (Exception e) {	
+		    e.printStackTrace();
+		 }
+
+		    return avgList; 
+	}
+	
+	@GetMapping("/api/avgByDayAll")
+	@ResponseBody
+	public List<AvgByDayAll> avgByDayAll(@RequestParam(required = false) String prodcd) {
+		
+		if (prodcd == null || prodcd.isEmpty()) {
+			prodcd="B027";
+	    }
+		
+		List<AvgByDayAll> avgList = null;
+
+		 try {
+			 avgList = ArplApiService4.avgByDayAll(prodcd); 
 		 } catch (Exception e) {	
 		    e.printStackTrace();
 		 }

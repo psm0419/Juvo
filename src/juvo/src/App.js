@@ -32,7 +32,6 @@ import KakaoPost from './pages/user/socialLogin/KakaoPost';
 import Notice from './pages/detail/guideDetail/Notice';
 import NoticeDetail from './pages/detail/guideDetail/NoticeDetail';
 
-
 function App() {
 	useTokenCleanup();
 	return (

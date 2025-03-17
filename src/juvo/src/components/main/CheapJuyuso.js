@@ -10,8 +10,12 @@ function CheapJuyuso({cheapJuyusoList}) {
                     {cheapJuyusoList.map((juyuso, index) => (
                         
                         <li key={index}>
-                            <p><strong>{juyuso.osNm}</strong> {juyuso.price.toLocaleString('ko-KR')}원</p>
+                            <p className="juyuso-item">
+                                <span className="juyuso-name"><strong>{juyuso.osNm}</strong></span>
+                                <span className="juyuso-price">{juyuso.price.toLocaleString('ko-KR')}원</span>
+                            </p>
                         </li>
+                        
                     ))}
                 </ul>
             ) : (
