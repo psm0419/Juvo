@@ -27,64 +27,68 @@ function LoginInner() {
         }
     };
 
-    // 네이버 콜백 처리
-    const handleNaverCallback = async () => {
+    // 카카오 로그인 처리
+    const handleKakaoLogin = async () => {
+        try {
+            const kakaoClientId = '3856ad752152ae3f28b78d2b608a1967'; // 실제 REST API 키로 교체
+            const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoClientId}&redirect_uri=${encodeURIComponent('http://localhost:3000/callback/kakao')}`;
+            console.log("Generated Kakao Auth URL:", kakaoAuthUrl);
+            window.location.href = kakaoAuthUrl;
+        } catch (error) {
+            console.error('카카오 로그인 오류:', error);
+            alert('카카오 로그인 중 오류가 발생했습니다.');
+        }
+    };
+
+    // 콜백 처리 (네이버 + 카카오)
+    const handleSocialCallback = async (provider) => {
         const urlParams = new URLSearchParams(location.search);
         const code = urlParams.get('code');
         const state = urlParams.get('state');
-        console.log("Naver Callback - Full URL:", location.href);
-        console.log("Naver Callback - Code:", code, "State:", state);
+        console.log(`${provider} Callback - Full URL:`, location.href);
+        console.log(`${provider} Callback - Code:`, code, "State:", state);
 
         if (code) {
             try {
-                console.log("Sending /naverLogin request with code:", code);
-                const res = await axiosInstance.post('/naverLogin', { code }, {
+                console.log(`Sending /${provider}Login request with code:`, code);
+                const res = await axiosInstance.post(`/${provider}Login`, { code }, {
                     headers: { 'Content-Type': 'application/json' }
                 });
                 console.log("Backend Response:", res.data);
                 const { accessToken, refreshToken, userType } = res.data;
 
                 if (accessToken === 'fail') {
-                    console.warn("Naver login failed - accessToken: fail");
-                    alert('네이버 로그인 실패');
+                    console.warn(`${provider} login failed - accessToken: fail`);
+                    alert(`${provider} 로그인 실패`);
                 } else {
-                    console.log("Naver login success - Tokens:", { accessToken, refreshToken, userType });
+                    console.log(`${provider} login success - Tokens:`, { accessToken, refreshToken, userType });
                     localStorage.setItem('accessToken', accessToken);
                     localStorage.setItem('refreshToken', refreshToken);
                     localStorage.setItem('userType', userType);
                     window.dispatchEvent(new Event("storage"));
-                    alert('네이버 로그인 성공');
+                    alert(`${provider} 로그인 성공`);
 
                     const redirectUrl = sessionStorage.getItem('redirectUrl') || '/';
                     sessionStorage.removeItem('redirectUrl');
-                    // URL에서 쿼리 파라미터 제거 후 리다이렉트
                     navigate(redirectUrl, { replace: true });
                 }
             } catch (error) {
-                console.error('네이버 로그인 오류:', error.response ? error.response.data : error.message);
-                alert('네이버 로그인 중 오류가 발생했습니다.');
+                console.error(`${provider} 로그인 오류:`, error.response ? error.response.data : error.message);
+                alert(`${provider} 로그인 중 오류가 발생했습니다.`);
             }
         } else {
-            console.warn("Naver Callback - No code parameter found");
+            console.warn(`${provider} Callback - No code parameter found`);
         }
     };
 
     // URL 변경 감지 및 콜백 처리
     useEffect(() => {
-        // /callback/naver 경로에서만 콜백 처리
         if (location.pathname === '/callback/naver') {
-            console.log("URL Changed - Current Path:", location.pathname, "Search:", location.search);
-            const urlParams = new URLSearchParams(location.search);
-            const code = urlParams.get('code');
-            const state = urlParams.get('state');
-            if (code && state) {
-                console.log("Naver callback detected - Code:", code, "State:", state);
-                handleNaverCallback();
-            } else {
-                console.log("No Naver callback parameters found in URL");
-                // 콜백 파라미터가 없으면 로그인 페이지로 리다이렉트
-                navigate('/user/login', { replace: true });
-            }
+            console.log("Naver callback detected");
+            handleSocialCallback('naver');
+        } else if (location.pathname === '/callback/kakao') {
+            console.log("Kakao callback detected");
+            handleSocialCallback('kakao');
         }
     }, [location, navigate]);
 
@@ -223,7 +227,7 @@ function LoginInner() {
                         <span className="login-social-icon naver-icon" />
                         <span>네이버로 로그인</span>
                     </button>
-                    <button className="login-social-btn kakao-login-btn">
+                    <button className="login-social-btn kakao-login-btn" onClick={handleKakaoLogin}>
                         <span className="login-social-icon kakao-icon" />
                         <span>카카오계정으로 로그인</span>
                     </button>

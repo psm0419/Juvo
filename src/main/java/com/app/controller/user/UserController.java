@@ -324,4 +324,49 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tokens);
         }
     }
+	
+	@PostMapping("/kakaoLogin")
+    public ResponseEntity<Map<String, String>> kakaoLogin(@RequestBody Map<String, String> request) {
+        String code = request.get("code");
+        System.out.println("카카오 로그인 시도 - Authorization code: " + code);
+
+        if (code == null || code.isEmpty()) {
+            System.out.println("카카오 로그인 실패 - Authorization code 없음");
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", "fail");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tokens);
+        }
+
+        try {
+            User kakaoUser = userService.handleKakaoLogin(request);
+
+            if (kakaoUser == null) {
+                System.out.println("카카오 로그인 실패 - 사용자 정보 없음");
+                Map<String, String> tokens = new HashMap<>();
+                tokens.put("accessToken", "fail");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(tokens);
+            }
+
+            String accessToken = JwtProvider.createAccessToken(kakaoUser.getId(), kakaoUser.getUserType());
+            String refreshToken = JwtProvider.createRefreshToken();
+
+            System.out.println("카카오 로그인 성공 - ID: " + kakaoUser.getId());
+            System.out.println("발행 accessToken: " + accessToken);
+            System.out.println("발행 refreshToken: " + refreshToken);
+
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", accessToken);
+            tokens.put("refreshToken", refreshToken);
+            tokens.put("userType", kakaoUser.getUserType());
+
+            return ResponseEntity.ok(tokens);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("카카오 로그인 오류: " + e.getMessage());
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", "fail");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tokens);
+        }
+    }
 }

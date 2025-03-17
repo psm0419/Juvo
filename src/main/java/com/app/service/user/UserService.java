@@ -30,8 +30,8 @@ public interface UserService {
 	public int removeUser(String id);
 	public boolean updateMembership(User user);
 	
-	// 구글 로그인용 메서드 추가
+	// sns 로그인용 메서드 추가
 	User handleGoogleLogin(Map<String, String> requestBody) throws Exception;
 	User handleNaverLogin(Map<String, String> requestBody) throws Exception;
-	
+	User handleKakaoLogin(Map<String, String> requestBody) throws Exception;
 }
