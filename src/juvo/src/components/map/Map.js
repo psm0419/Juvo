@@ -36,6 +36,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const [selectedBlackType, setSelectedBlackType] = useState(null);
     const [favoriteStations, setFavoriteStations] = useState([]); // 사용자별 즐겨찾기 uniId 목록
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+    const [searchOption, setSearchOption] = useState("0");
 
     const openReportModal = (uniId) => {
         setReportUniId(uniId);
@@ -237,7 +238,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             setLng(newLng);
         };
 
-        const debounceHandleMarkerMove = debounce(handleMarkerMove, 500);
+        const debounceHandleMarkerMove = debounce(handleMarkerMove, 100);
 
         kakao.maps.event.addListener(marker, "dragend", debounceHandleMarkerMove);
         kakao.maps.event.addListener(mapRef.current, "click", (mouseEvent) => {
@@ -310,7 +311,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 geocoder.addressSearch(address, (result, status) => {
                     if (status === kakao.maps.services.Status.OK) {
                         const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                        if (getDistance(lat, lng, coords.getLat(), coords.getLng()) > 5000) {
+                        if (getDistance(lat, lng, coords.getLat(), coords.getLng()) > 10000) {
                             resolve(null);
                             return;
                         }
@@ -364,6 +365,11 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                                 </div>
                                 <div class="info-window-quality">
                                     ${station.kpetroYn === "Y" ? "품질인증 주유소 ✅" : "품질인증 주유소 ❌"}
+                                </div>
+                                <div class="info-window-route-options">
+                                    <label><input type="radio" name="routeOption" value="0" onchange="window.setSearchOption('0')" ${searchOption === "0" ? "checked" : ""}> 추천</label>
+                                    <label><input type="radio" name="routeOption" value="1" onchange="window.setSearchOption('1')" ${searchOption === "1" ? "checked" : ""}> 최단</label>
+                                    <label><input type="radio" name="routeOption" value="2" onchange="window.setSearchOption('2')" ${searchOption === "2" ? "checked" : ""}> 최적</label>
                                 </div>
                                 <button class="info-window-route-button" onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})">
                                     경로찾기
@@ -448,6 +454,8 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             openReportModal(uniId);
         };
 
+        
+
         return () => {
             fuelMarkers.forEach(marker => {
                 if (marker && kakao.maps.event) {
@@ -517,6 +525,11 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                             <div><span>충전기 타입 : </span> ${station.chargerType || "정보 없음"}</div>
                             <div><span>세부 타입 : </span> ${station.modelSmall || "정보 없음"}</div>
                             <div><span>이용 가능 여부 : </span> ${station.userRestriction || "정보 없음"}</div>
+                        </div>
+                        <div class="info-window-route-options">
+                            <label><input type="radio" name="routeOption" value="0" onchange="window.setSearchOption('0')" ${searchOption === "0" ? "checked" : ""}> 추천</label>
+                            <label><input type="radio" name="routeOption" value="1" onchange="window.setSearchOption('1')" ${searchOption === "1" ? "checked" : ""}> 최단</label>
+                            <label><input type="radio" name="routeOption" value="2" onchange="window.setSearchOption('2')" ${searchOption === "2" ? "checked" : ""}> 최적</label>
                         </div>
                         <button class="info-window-route-button" onclick="window.handleFindRoute(${coords.getLat()}, ${coords.getLng()})">
                             경로찾기
@@ -629,33 +642,8 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         }
     };
 
-    window.registerFavoriteStation = function (uniId) {
-        console.log("Registering favorite station:", uniId);
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-            alert("로그인이 필요합니다.");
-            return;
-        }
-
-        fetch("/api/favorite/juyuso", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify({ uniId: uniId }),
-        })
-            .then(response => {
-                if (!response.ok) throw new Error("등록 실패");
-                return response.json();
-            })
-            .then(data => {
-                alert(data.message);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("이미 등록된 주유소 입니다.");
-            });
+    window.setSearchOption = (option) => {
+        setSearchOption(option);
     };
 
     const handleCloseDetail = () => {
@@ -704,7 +692,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
     const fetchRouteFromTmap = async (startLat, startLng, endLat, endLng) => {
         const apiKey = "QPrFw4mVJd3ZoUjdTvZQA6vU82HDgXSf5Pd2eyYH";
-        const url = "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json";
+        const url = "https://apis.openapi.sk.com/tmap/routes?version=1&format=json";
 
         const headers = {
             "Content-Type": "application/json",
@@ -720,6 +708,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             resCoordType: "WGS84GEO",
             startName: "출발지",
             endName: "도착지",
+            searchOption: searchOption, // 추천 경로 (0: 추천, 1: 최단, 2: 최적 등)
         };
 
         try {

@@ -229,4 +229,99 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 		}
 	}
+	
+	@PostMapping("/googleLogin")
+    public ResponseEntity<Map<String, String>> googleLogin(@RequestBody Map<String, String> request) {
+        String code = request.get("code");
+        System.out.println("구글 로그인 시도 - Authorization code: " + code);
+
+        if (code == null || code.isEmpty()) {
+            System.out.println("구글 로그인 실패 - Authorization code 없음");
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", "fail");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tokens);
+        }
+
+        try {
+            // code를 userService.handleGoogleLogin에 전달
+            User googleUser = userService.handleGoogleLogin(request); // Map<String, String> 전달
+
+            if (googleUser == null) {
+                System.out.println("구글 로그인 실패 - 사용자 정보 없음");
+                Map<String, String> tokens = new HashMap<>();
+                tokens.put("accessToken", "fail");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(tokens);
+            }
+
+            String accessToken = JwtProvider.createAccessToken(googleUser.getId(), googleUser.getUserType());
+            String refreshToken = JwtProvider.createRefreshToken();
+
+            System.out.println("구글 로그인 성공 - ID: " + googleUser.getId());
+            System.out.println("발행 accessToken: " + accessToken);
+            System.out.println("발행 refreshToken: " + refreshToken);
+
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", accessToken);
+            tokens.put("refreshToken", refreshToken);
+            tokens.put("userType", googleUser.getUserType());
+
+            return ResponseEntity.ok(tokens);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("구글 로그인 오류: " + e.getMessage());
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", "fail");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tokens);
+        }
+    }
+	
+	@PostMapping("/naverLogin")
+    public ResponseEntity<Map<String, String>> naverLogin(@RequestBody Map<String, String> request) {
+        // 요청 수신 로그
+        String code = request.get("code");
+        System.out.println("네이버 로그인 요청 수신 - Authorization code: {}" + code);
+
+        if (code == null || code.isEmpty()) {
+        	System.out.println("네이버 로그인 실패 - Authorization code가 없음");
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", "fail");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tokens);
+        }
+
+        try {
+            // 네이버 로그인 처리
+            System.out.println("UserService.handleNaverLogin 호출 시작");
+            User naverUser = userService.handleNaverLogin(request);
+            System.out.println("UserService.handleNaverLogin 호출 완료 - 반환된 사용자: {}"+ naverUser);
+
+            if (naverUser == null) {                
+                Map<String, String> tokens = new HashMap<>();
+                tokens.put("accessToken", "fail");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(tokens);
+            }
+
+            // JWT 토큰 생성
+            String accessToken = JwtProvider.createAccessToken(naverUser.getId(), naverUser.getUserType());
+            String refreshToken = JwtProvider.createRefreshToken();
+
+            System.out.println("네이버 로그인 성공 - ID: {}, UserType: {}"+ naverUser.getId()+ naverUser.getUserType());
+            System.out.println("발행된 accessToken: {}"+ accessToken);
+            System.out.println("발행된 refreshToken: {}"+ refreshToken);
+
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", accessToken);
+            tokens.put("refreshToken", refreshToken);
+            tokens.put("userType", naverUser.getUserType());
+
+            System.out.println("네이버 로그인 응답 반환: {}"+ tokens);
+            return ResponseEntity.ok(tokens);
+
+        } catch (Exception e) {
+            System.out.println("네이버 로그인 처리 중 오류 발생");
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", "fail");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tokens);
+        }
+    }
 }

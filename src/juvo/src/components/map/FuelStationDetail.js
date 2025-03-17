@@ -372,9 +372,6 @@ const FuelStationDetail = ({ station, onClose }) => {
                             <button onClick={editingReview ? handleUpdateReview : handleWriteReview}>
                                 {editingReview ? "수정 완료" : "저장"}
                             </button>
-                            <button onClick={() => { setShowReviewForm(false); setEditingReview(null); }}>
-                                취소
-                            </button>
                         </div>
                     )}
                     {showKeywordForm && isLoggedIn && (
@@ -389,8 +386,7 @@ const FuelStationDetail = ({ station, onClose }) => {
                                     {label}
                                 </label>
                             ))}
-                            <button onClick={handleSelectKeyword}>저장</button>
-                            <button onClick={() => setShowKeywordForm(false)}>취소</button>
+                            <button onClick={handleSelectKeyword}>저장</button>                            
                         </div>
                     )}
                 </div>

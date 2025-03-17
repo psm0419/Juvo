@@ -28,7 +28,7 @@ public class ArplApiService2 {
         urlBuilder.append("&" + URLEncoder.encode("prodcd","UTF-8") + "=" + URLEncoder.encode(prodcd, "UTF-8")); // 제품구분
         
         
-        System.out.println("요청 URL: " + urlBuilder.toString());
+        
         
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -55,7 +55,7 @@ public class ArplApiService2 {
         conn.disconnect();
         
         String response = sb.toString();
-        System.out.println("API 응답 데이터: " + (response.length() > 100 ? response.substring(0, 100) + "..." : response));
+        
         
         return response;
     } 
@@ -66,7 +66,7 @@ public class ArplApiService2 {
     	
     	try {
             String jsonText = juyuso(prodcd); 
-            System.out.println("파싱할 JSON 데이터: " + jsonText);
+            
             
             JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObj = (JSONObject)jsonParser.parse(jsonText); 

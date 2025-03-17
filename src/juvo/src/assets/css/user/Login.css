@@ -128,108 +128,93 @@
 }
 
 /* 소셜 로그인 버튼 공통 */
-.login-social-btn {
-    width: 100%;
-    padding: 12px 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
+.login-social-group .login-social-btn {
+    width: 100% !important;
+    padding: 12px 16px !important;
+    border: none !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 10px !important;
+    box-sizing: border-box !important;
+    transition: all 0.3s ease !important;
 }
 
 /* 소셜 아이콘 공통 */
-.login-social-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-    background-size: contain;
-    background-repeat: no-repeat;
+.login-social-group .login-social-icon {
+    width: 24px !important;
+    height: 24px !important;
+    margin-right: 10px !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
 }
 
 /* 네이버 버튼 */
-.naver-login-btn {
-    background-color: #03c75a;
-    color: white;
+.login-social-group .naver-login-btn {
+    background-color: #03c75a !important;
+    color: white !important;
 }
 
-.naver-login-btn:hover {
-    background-color: #02b050;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.login-social-group .naver-login-btn:hover {
+    background-color: #02b050 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
-.naver-icon {
-    background-image: url('../../image/NaverLogo.png');
-}
-
-/* 구글 버튼 */
-.google-login-btn {
-    background-color: white;
-    color: #2b3a55;
-    border: 1px solid #e8ecef;
-}
-
-.google-login-btn:hover {
-    background-color: #f5f5f5;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.google-icon {
-    background-image: url('https://developers.google.com/identity/images/g-logo.png');
+.login-social-group .naver-icon {
+    background-image: url('../../image/NaverLogo.png') !important;
 }
 
 /* 카카오 버튼 */
-.kakao-login-btn {
-    background-color: #fee500;
-    color: #3c1e1e;
+.login-social-group .kakao-login-btn {
+    background-color: #fee500 !important;
+    color: #3c1e1e !important;
 }
 
-.kakao-login-btn:hover {
-    background-color: #fdd835;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.login-social-group .kakao-login-btn:hover {
+    background-color: #fdd835 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
-.kakao-icon {
-    background-image: url('https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_small.png');
+.login-social-group .kakao-icon {
+    background-image: url('https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_small.png') !important;
 }
 
-/* 푸터와 겹치지 않도록 페이지 높이 조정 */
-body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+/* 구글 버튼 */
+.login-social-group .google-login-btn {
+    background-color: white !important;
+    color: #2b3a55 !important;
+    border: 1px solid #e8ecef !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
 }
 
-footer {
-    margin-top: auto;
-    /* 푸터를 하단으로 밀어냄 */
+.login-social-group .google-login-btn:hover {
+    background-color: #f5f5f5 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
-.google-login-wrapper {
-    width: 100%;
-    margin: 10px 0;
-    display: flex;
-    justify-content: center;
+.login-social-group .google-icon {
+    background-image: url('https://developers.google.com/identity/images/g-logo.png') !important;
+    background-size: 20px 20px !important;
+    background-position: center !important;
 }
 
-.google-login-wrapper > div {
-    width: 100% !important;
+/* 커스텀 구글 로그인 버튼 */
+.login-social-group .google-login-btn.custom {
+    background-color: white !important;
+    color: #2b3a55 !important;
+    border: 1px solid #e8ecef !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
 }
 
-.google-login-wrapper button {
-    width: 100% !important;
-    border-radius: 4px !important;
-    height: 40px !important;
-    font-size: 14px !important;
+.login-social-group .google-login-btn.custom:hover {
+    background-color: #f5f5f5 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }

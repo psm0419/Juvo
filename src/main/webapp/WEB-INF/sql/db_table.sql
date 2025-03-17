@@ -1,6 +1,6 @@
 -- users 테이블
 CREATE TABLE users (
-    id VARCHAR2(32) PRIMARY KEY,
+    id VARCHAR2(64) PRIMARY KEY,
     username VARCHAR2(32) ,
     nickname VARCHAR2(48)  UNIQUE,
     pw VARCHAR2(256) ,
@@ -37,7 +37,7 @@ CREATE TABLE juyuso (
 -- 주유소 리뷰 테이블
 CREATE TABLE juyuso_review (
     REVIEW_ID NUMBER PRIMARY KEY,
-    USER_ID VARCHAR2(32) NOT NULL,
+    USER_ID VARCHAR2(64) NOT NULL,
     UNI_ID VARCHAR2(32) NOT NULL,
     starCnt VARCHAR2(36),
     content VARCHAR2(3000),
@@ -85,7 +85,7 @@ CREATE TABLE CHARGING_STATION (
 --1:친절 2:진출입 편함 3: 깔끔한 시설 4: 정량 주유 5:믿음가는 품질 6:사은품 증정 7: 주유시 세차 할인
 CREATE TABLE user_keyword (
     UNI_ID VARCHAR2(32) NOT NULL,
-    user_id VARCHAR2(32) NOT NULL,
+    user_id VARCHAR2(64) NOT NULL,
     keyword NUMBER
 );
 
@@ -97,7 +97,7 @@ CREATE TABLE keyword (
 
 -- 사용자가 좋아하는 주유소
 CREATE TABLE like_juyuso (
-    user_id VARCHAR2(32) NOT NULL,
+    user_id VARCHAR2(64) NOT NULL,
     UNI_ID VARCHAR2(32) NOT NULL
 );
 
@@ -118,18 +118,9 @@ CREATE TABLE black_type (
     black_type VARCHAR2(100) 
 );
 
--- 주유소 신고 테이블
-CREATE TABLE report_juyuso (
-    REPORT_ID NUMBER PRIMARY KEY,
-    USER_ID VARCHAR2(32) NOT NULL,
-    UNI_ID VARCHAR2(32) NOT NULL,
-    content VARCHAR2(3000),
-    create_at DATE
-);
-
 -- 사용자 카드 정보
 CREATE TABLE card (
-    USER_ID VARCHAR2(32) NOT NULL,
+    USER_ID VARCHAR2(64) NOT NULL,
     card_info VARCHAR2(512)
 );
 
@@ -150,7 +141,7 @@ NOCACHE;
 
 create table membership (
     id varchar2(32) primary key,
-    user_id varchar2(32) ,
+    user_id varchar2(64) ,
     name  varchar2(32),
     tel varchar2(32),
     address varchar2(32),
