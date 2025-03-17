@@ -45,10 +45,15 @@
 }
 
 .station-name {
+    width: 260px;
     cursor: pointer;
-    color: #007bff;
+    
 }
-
+.ev-name {
+    width: 160px;
+    cursor: pointer;
+    
+}
 .station-prices {
     display: flex;
     gap: 20px;

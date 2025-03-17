@@ -259,7 +259,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         if (!stationsData || !stationsData.RESULT || !stationsData.RESULT.OIL || stationsData.RESULT.OIL.length === 0) return [];
         return stationsData.RESULT.OIL.filter(station => {
             const brandMatches =
-                (brands.cheap && station.pollDivCd === "RTE") ||
+                (brands.cheap && (station.pollDivCd === "RTO" || station.pollDivCd === "RTX")) ||
                 (brands.skEnergy && station.pollDivCd === "SKE") ||
                 (brands.gsCaltex && station.pollDivCd === "GSC") ||
                 (brands.hyundaiOilbank && station.pollDivCd === "HDO") ||
