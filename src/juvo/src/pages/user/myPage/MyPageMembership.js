@@ -116,7 +116,7 @@ function MyPageMembership() {
     return (
         <div className="mypage-membership-page">
             <header className="mypage-membership-header">
-                <h1 className="favorites-title">멤버십 관리</h1>
+                <h1 className="mypage-membership-title">멤버십 관리</h1>
             </header>
 
             {membershipInfo ? (

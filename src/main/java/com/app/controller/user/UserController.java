@@ -48,7 +48,7 @@ public class UserController {
 			System.out.println("로그인 실패");
 			tokens.put("accessToken", "fail");
 		} else { // 로그인 성공
-			String accessToken = JwtProvider.createAccessToken(loginUser.getId(),loginUser.getUserType());
+			String accessToken = JwtProvider.createAccessToken(loginUser.getId(),loginUser.getUserType(),loginUser.getNickname());
 			String refreshToken = JwtProvider.createRefreshToken();
 			System.out.println("로그인 아이디 : " + loginUser.getId());
 			System.out.println("로그인 타입 : " + loginUser.getUserType());
@@ -219,7 +219,8 @@ public class UserController {
 		String token = refreshToken.replace("Bearer ", "");
 		String userId = JwtProvider.getUserIdFromToken(token);
 		String userType = JwtProvider.getUserTypeFromToken(token);
-		String newAccessToken = JwtProvider.refreshAccessToken(token, userId, userType );
+		String nickname = JwtProvider.getNickNameFromToken(token);
+		String newAccessToken = JwtProvider.refreshAccessToken(token, userId, userType, nickname );
 
 		if (newAccessToken != null) {
 			Map<String, String> tokens = new HashMap<>();
@@ -253,7 +254,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(tokens);
             }
 
-            String accessToken = JwtProvider.createAccessToken(googleUser.getId(), googleUser.getUserType());
+            String accessToken = JwtProvider.createAccessToken(googleUser.getId(), googleUser.getUserType(), googleUser.getNickname());
             String refreshToken = JwtProvider.createRefreshToken();
 
             System.out.println("구글 로그인 성공 - ID: " + googleUser.getId());
@@ -302,7 +303,7 @@ public class UserController {
             }
 
             // JWT 토큰 생성
-            String accessToken = JwtProvider.createAccessToken(naverUser.getId(), naverUser.getUserType());
+            String accessToken = JwtProvider.createAccessToken(naverUser.getId(), naverUser.getUserType(), naverUser.getNickname());
             String refreshToken = JwtProvider.createRefreshToken();
 
             System.out.println("네이버 로그인 성공 - ID: {}, UserType: {}"+ naverUser.getId()+ naverUser.getUserType());
@@ -347,10 +348,11 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(tokens);
             }
 
-            String accessToken = JwtProvider.createAccessToken(kakaoUser.getId(), kakaoUser.getUserType());
+            String accessToken = JwtProvider.createAccessToken(kakaoUser.getId(), kakaoUser.getUserType(), kakaoUser.getNickname());
             String refreshToken = JwtProvider.createRefreshToken();
 
             System.out.println("카카오 로그인 성공 - ID: " + kakaoUser.getId());
+            System.out.println("카카오 nickname: " + kakaoUser.getNickname());
             System.out.println("발행 accessToken: " + accessToken);
             System.out.println("발행 refreshToken: " + refreshToken);
 

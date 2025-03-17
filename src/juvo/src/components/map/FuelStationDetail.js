@@ -15,7 +15,15 @@ const FuelStationDetail = ({ station, onClose }) => {
     const [userId, setUserId] = useState(null);
     const [editingReview, setEditingReview] = useState(null);
     const [visibleReviews, setVisibleReviews] = useState(3);
+    const [userNickname, setUserNickname] = useState(null);
 
+    function decodeBase64URL(base64URL) {
+        const base64 = base64URL.replace(/-/g, '+').replace(/_/g, '/');
+        const padding = base64.length % 4 === 0 ? '' : '='.repeat(4 - (base64.length % 4));
+        const decoded = atob(base64 + padding);
+        // UTF-8 디코딩
+        return new TextDecoder('utf-8').decode(Uint8Array.from(decoded, c => c.charCodeAt(0)));
+    }
     useEffect(() => {
         if (!station?.uniId) {
             console.log("No station uniId provided");
@@ -26,8 +34,14 @@ const FuelStationDetail = ({ station, onClose }) => {
         setIsLoggedIn(!!token);
         if (token) {
             try {
-                const payload = JSON.parse(atob(token.split('.')[1]));
+                const base64Payload = token.split('.')[1];
+                const decodedPayload = decodeBase64URL(base64Payload);
+                const payload = JSON.parse(decodedPayload);
+                console.log("Decoded payload:", payload);
+                console.log("userId:", payload.userId);
+                console.log("nickname:", payload.nickname);
                 setUserId(payload.userId);
+                setUserNickname(payload.nickname || null);
             } catch (e) {
                 console.error('Error decoding token:', e);
             }
@@ -327,7 +341,9 @@ const FuelStationDetail = ({ station, onClose }) => {
                                 {reviews.slice(0, visibleReviews).map((review, index) => (
                                     <div key={index} className="review-item">
                                         <div className="review-header">
-                                            <span className="review-user">{review.USER_ID || "익명"}</span>
+                                            <span className="review-user">{isLoggedIn && review.USER_ID === userId && userNickname 
+                                                    ? userNickname 
+                                                    : review.USER_ID || "익명"}</span>
                                             <span className="review-date">{review.CREATE_AT || "날짜 없음"}</span>
                                         </div>
                                         <div className="review-rating">★ {review.STARCNT || 0}</div>

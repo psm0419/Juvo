@@ -5,7 +5,7 @@
     font-style: normal;
 }
 
-.membership-container {
+.mypage-membership-container {
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -15,10 +15,12 @@
     margin-bottom: 50px; /* 타이틀과 내용 사이 간격 증가 (30px -> 50px) */
 }
 
-.favorites-title {
+.mypage-membership-title {
     text-align: left;
     font-size: 24px;
     color: black;
+    font-family: 'GmarketSansMedium';
+    padding: 40px;
 }
 .subscription-info {
     display: grid;
@@ -75,7 +77,7 @@
     padding: 20px;
     background-color: #2c3e50;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    text-align: center;    
 }
 
 .mypage-membership-tier-card.mypage-membership-subscribed {

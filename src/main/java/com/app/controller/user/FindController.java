@@ -50,7 +50,7 @@ public class FindController {
 
 		try {
 			// 토큰 생성
-			String token = JwtProvider.createAccessToken(user.getId(),user.getUserType());
+			String token = JwtProvider.createAccessToken(user.getId(),user.getUserType(),user.getNickname());
 
 			// 이메일 설정
 			String setFrom = "cording1kyu@gmail.com";
