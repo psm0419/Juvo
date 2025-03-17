@@ -1,7 +1,7 @@
 @font-face {
-    font-family: 'BookkMyungjo-Bd';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2') format('woff2');
-    font-weight: 700;
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
     font-style: normal;
 }
 
@@ -14,30 +14,31 @@
     max-width: 1000px;
     margin: 0 auto;
     text-align: center;
-    font-family: 'BookkMyungjo-Bd';
+    font-family: 'GmarketSansMedium';
 
 }
 
 .header-container {
-    display: flex;
-    align-items: center; /* 세로 중앙 정렬 */
-    gap: 10px; /* 간격 조정 */
+    font-size: 24px;
+    color: #333;
+    text-align: left;
+    width: 200px;
     margin-top: 100px;
-    border-bottom: 2px solid black; /* 연한 회색 밑줄 */
-    padding-bottom: 5px; /* 글씨와 밑줄 사이 여백 */
 }
 
 
 .header-container h3 {
     font-size: 24px;
-    font-weight: bold;
-    margin: 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid black;
+    padding-bottom: 10px;
+
 }
 
 .header-container h4 {
-    font-size: 14px;
+    font-size: 13px;
+    margin: 0px;
     color: gray;
-    margin: 0;
 }
 
 /* 탭 스타일 */
@@ -95,9 +96,7 @@
 }
 
 
-.conversion-form label {
-    font-weight: bold;
-}
+
 
 .conversion-form input, 
 
@@ -138,6 +137,7 @@
 .conversion-table th, .conversion-table td {
     padding: 10px;
     border: 2px solid #ddd;
+    font-size: 13px;
 }
 
 .conversion-table sup {

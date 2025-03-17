@@ -1,14 +1,11 @@
 @font-face {
-    font-family: 'BookkMyungjo-Bd';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2') format('woff2');
-    font-weight: 700;
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
     font-style: normal;
 }
 
-/* MyPageMembership.css */
-.mypage-membership-page {
-    padding: 40px;
-    font-family: 'Arial', sans-serif;
+.membership-container {
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -22,6 +19,52 @@
     text-align: left;
     font-size: 24px;
     color: black;
+}
+.subscription-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.status-box {
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.status-box.subscribed {
+    background-color: #f8f9fa;
+    border: 2px solid #4CAF50;
+}
+
+.status-box.unsubscribed {
+    background-color: #fff;
+    border: 2px solid #e0e0e0;
+    font-family: 'GmarketSansMedium';
+    font-weight: 100;
+}
+
+.status-box h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.5rem;
+    font-family: 'GmarketSansMedium';
+}
+
+.subscription-period, .next-reward {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.price {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.price .amount {
+    font-size: 2.5rem;
     font-weight: bold;
     margin-bottom: 20px;
 }
