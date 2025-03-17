@@ -8,7 +8,7 @@ function MyPageModal({ isOpen, onClose, title, children, onSubmit }) {
             <div className="modal" onClick={(e) => e.stopPropagation()}>
                 <h2 className="modal-title">{title}</h2>
                 {children}
-                <div className="modal-buttons">
+                <div className="modal-button">
                     <button className="modal-submit-btn" onClick={onSubmit}>
                         확인
                     </button>

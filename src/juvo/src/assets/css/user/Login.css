@@ -75,8 +75,8 @@
 .login-submit-btn {
     width: 100%;
     padding: 14px;
-    background-color: #1a73e8;
-    color: white;
+    background-color: #f3b252;
+    color: black;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -89,13 +89,13 @@
 }
 
 .login-submit-btn:disabled {
-    background-color: #d1d9e6;
+    background-color: #f5f5f5;
     cursor: not-allowed;
     box-shadow: none;
 }
 
 .login-submit-btn:not(:disabled):hover {
-    background-color: #1557b0;
+    background-color: #f89400;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
@@ -122,7 +122,7 @@
 }
 
 .find-btn:hover {
-    background-color: #e8ecef;
+    background-color: #f89400;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
@@ -217,4 +217,77 @@
     background-color: #f5f5f5 !important;
     transform: translateY(-1px) !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 갤럭시 S24 (화면 폭 약 400px 이하) */
+@media only screen and (max-width: 400px) {
+    .login-page {
+        padding: 10px;
+    }
+
+    .login-container {
+        max-width: 100%;
+        margin: 20px 10px;
+        padding: 20px 15px;
+    }
+
+    .login-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .login-input {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .login-submit-btn {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .find-btn {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .login-social-btn {
+        padding: 10px 12px !important;
+        font-size: 13px !important;
+    }
+
+    .login-social-icon {
+        width: 20px !important;
+        height: 20px !important;
+        margin-right: 8px !important;
+    }
+}
+
+/* 갤럭시 S24+ 및 S24 Ultra (401px ~ 500px) */
+@media only screen and (min-width: 401px) and (max-width: 500px) {
+    .login-container {
+        max-width: 90%;
+        padding: 25px 20px;
+    }
+
+    .login-title {
+        font-size: 22px;
+    }
+
+    .login-input {
+        padding: 11px 14px;
+    }
+
+    .login-submit-btn {
+        padding: 13px;
+        font-size: 15px;
+    }
+
+    .find-btn {
+        padding: 11px 14px;
+    }
+
+    .login-social-btn {
+        padding: 11px 14px !important;
+    }
 }

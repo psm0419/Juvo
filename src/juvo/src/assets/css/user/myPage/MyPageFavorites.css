@@ -1,3 +1,4 @@
+/* 커스텀 폰트 정의 */
 @font-face {
     font-family: 'BookkMyungjo-Bd';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2') format('woff2');
@@ -5,136 +6,8 @@
     font-style: normal;
 }
 
-/* 페이지 전체 레이아웃 */
-.mp-page {
-    padding: 20px;
-}
-
-/* 컨테이너 */
-.mp-container {
-    max-width: 800px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* 제목 */
-.mp-title {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #1a73e8;
-}
-
-/* 입력 그룹 */
-.mp-form-group {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-    margin-bottom: 20px;
-}
-
-.mp-form-group:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* 라벨 */
-.mp-label {
-    display: block;
-    color: #1a73e8;
-    margin: 0 0 10px 0;
-    font-size: 18px;
-}
-
-/* 입력 필드 */
-.mp-input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 14px;
-    color: #666;
-    margin: 5px 0;
-    background-color: #f8f9fa;
-}
-
-.mp-input:disabled {
-    background-color: #f8f9fa;
-    cursor: not-allowed;
-    border-color: #ddd;
-}
-
-.mp-input:focus {
-    border-color: #1a73e8;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
-}
-
-/* 버튼 그룹 */
-.mp-form-group:last-child {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    background-color: transparent;
-    box-shadow: none;
-    padding: 0;
-}
-
-/* 비밀번호/닉네임 변경 버튼 */
-.mp-change-pw-btn,
-.mp-change-nickname-btn {
-    flex: 1;
-    padding: 8px;
-    background-color: #1a73e8;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.mp-change-pw-btn:hover,
-.mp-change-nickname-btn:hover {
-    background-color: #1557b0;
-}
-
-/* 에러 메시지나 알림을 위한 스타일 */
-.mp-error {
-    font-size: 12px;
-    color: #dc3545;
-    margin-top: 5px;
-}
-
-/* 비활성화된 상태의 스타일 */
-.mp-form-group.disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-    .mp-container {
-        padding: 10px;
-    }
-    
-    .mp-form-group:last-child {
-        flex-direction: column;
-    }
-    
-    .mp-change-pw-btn,
-    .mp-change-nickname-btn {
-        width: 100%;
-        margin: 5px 0;
-    }
-}
-
 .favorites-container {
-    padding: 20px;
+    padding: 40px;
 }
 
 .favorites-title {
@@ -142,7 +15,7 @@
     color: #333;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #1a73e8;
+    border-bottom: 2px solid #f89400; /* 두 번째 정의의 색상(#1a73e8) 사용, #f89400은 제거 */
 }
 
 .favorites-list {
@@ -210,4 +83,63 @@
     background-color: #f8f9fa;
     border-radius: 8px;
     font-size: 16px;
-} 
+}
+
+/* 갤럭시 S24 기준 미디어 쿼리 (뷰포트 너비 360px 이하) */
+@media only screen and (max-width: 360px) {
+    .favorites-container {
+        padding: 20px; /* 패딩 줄이기 */
+    }
+
+    .favorites-title {
+        font-size: 20px; /* 제목 크기 조정 */
+    }
+
+    .favorites-list {
+        grid-template-columns: 1fr; /* 단일 열로 변경 */
+        gap: 15px; /* 간격 줄이기 */
+    }
+
+    .favorites-item {
+        padding: 15px; /* 내부 패딩 줄이기 */
+    }
+
+    .favorites-item h3 {
+        font-size: 16px; /* 제목 크기 조정 */
+    }
+
+    .favorites-item p {
+        font-size: 14px; /* 본문 크기 조정 */
+    }
+
+    .price-info {
+        padding: 8px; /* 패딩 줄이기 */
+    }
+
+    .last-updated {
+        font-size: 10px; /* 업데이트 시간 크기 조정 */
+    }
+
+    .remove-favorite {
+        padding: 6px; /* 버튼 패딩 줄이기 */
+    }
+
+    .no-favorites {
+        padding: 20px; /* 패딩 줄이기 */
+        font-size: 14px; /* 텍스트 크기 조정 */
+    }
+}
+
+/* 세로 모드 (portrait)에서 추가 조정 */
+@media only screen and (max-width: 360px) and (orientation: portrait) {
+    .favorites-container {
+        padding: 15px;
+    }
+}
+
+/* 가로 모드 (landscape)에서 추가 조정 */
+@media only screen and (max-width: 780px) and (orientation: landscape) {
+    .favorites-list {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* 가로 모드에서 열 크기 조정 */
+    }
+}

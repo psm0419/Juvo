@@ -154,10 +154,9 @@ class TokenManager {
         // 마이페이지 관련 경로들을 배열로 정의
         const myPagePaths = [
             '/mypage',
-            '/mypage/favorites',
+            '/mypage/profile',
             '/mypage/membership',
-            '/mypage/reviews',
-            '/mypage/settings'
+            '/mypage/favorites'
             // 필요한 마이페이지 경로 추가
         ];
         
@@ -186,19 +185,14 @@ class TokenManager {
 
     checkSession() {
         const token = localStorage.getItem('accessToken');
-        if (!token) {
-            this.logout(false);  // 강제 리다이렉트 없이 로그아웃
+        if (!token || this.getExpirationFromToken(token) < new Date().getTime()) {
+            this.logout(true); // 항상 리다이렉트
             return false;
         }
-
-        const expiration = this.getExpirationFromToken(token);
-        if (!expiration || expiration < new Date().getTime()) {
-            this.logout(false);  // 강제 리다이렉트 없이 로그아웃
-            return false;
-        }
-
         return true;
     }
+
+   
 }
 
 // 싱글톤 인스턴스 생성
