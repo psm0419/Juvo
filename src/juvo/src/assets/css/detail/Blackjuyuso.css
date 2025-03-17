@@ -5,8 +5,6 @@
     font-style: normal;
 }
 
-
-
 /* 컨테이너 */
 .bj-container {
     width: 100%;
@@ -32,7 +30,6 @@
     width: 300px; /* 구분선 길이 */
     border-bottom: 1px solid black;
     margin-top: 60px;
-
 }
 
 /* 설명 */
@@ -165,5 +162,59 @@
 .bj-page-btn.bj-active {
     background-color: #ff5722;
     font-weight: bold;
-    
+}
+
+/* 갤럭시24를 위한 미디어 쿼리 (max-width: 411px) */
+@media (max-width: 540px) {
+    .bj-container {
+        padding: 0 10px; /* 양쪽 여백 추가 */
+    }
+
+    .bj-header-container {
+        max-width: 100%; /* 전체 너비 사용 */
+    }
+
+    .bj-title {
+        font-size: 20px; /* 글자 크기 줄임 */
+        width: 100%; /* 구분선 전체 너비로 */
+        margin-top: 40px; /* 상단 여백 줄임 */
+    }
+
+    .bj-description {
+        font-size: 12px; /* 글자 크기 줄임 */
+    }
+
+    .bj-filter-container {
+        padding: 10px; /* 패딩 줄임 */
+        gap: 10px; /* 간격 줄임 */
+    }
+
+    .bj-filter-item {
+        min-width: 100%; /* 필터 항목 전체 너비로 */
+    }
+
+    .bj-filter-item select,
+    .bj-filter-item input {
+        font-size: 12px; /* 글자 크기 줄임 */
+    }
+
+    .bj-reset-btn {
+        padding: 6px 10px; /* 버튼 크기 줄임 */
+        font-size: 12px; /* 글자 크기 줄임 */
+    }
+
+    .bj-table-header,
+    .bj-table-cell {
+        font-size: 12px; /* 글자 크기 줄임 */
+        padding: 8px; /* 패딩 줄임 */
+    }
+
+    .bj-pagination {
+        gap: 3px; /* 버튼 간격 줄임 */
+    }
+
+    .bj-page-btn {
+        padding: 6px 10px; /* 버튼 크기 줄임 */
+        font-size: 12px; /* 글자 크기 줄임 */
+    }
 }

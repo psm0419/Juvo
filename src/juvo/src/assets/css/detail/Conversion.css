@@ -5,17 +5,13 @@
     font-style: normal;
 }
 
-/* 전체 스타일 초기화 */
-
-
-/* 컨테이너 스타일 */
+/* Container Styles */
 .conversion-container {
     padding: 20px;
     max-width: 1000px;
     margin: 0 auto;
     text-align: center;
     font-family: 'GmarketSansMedium';
-
 }
 
 .header-container {
@@ -26,22 +22,20 @@
     margin-top: 100px;
 }
 
-
 .header-container h3 {
     font-size: 24px;
     margin-bottom: 20px;
     border-bottom: 2px solid black;
     padding-bottom: 10px;
-
 }
 
 .header-container h4 {
     font-size: 13px;
-    margin: 0px;
+    margin: 0;
     color: gray;
 }
 
-/* 탭 스타일 */
+/* Tab Styles */
 .tabs {
     display: flex;
     margin-top: 10px;
@@ -50,56 +44,50 @@
 }
 
 .tabs button {
-    width: 150px; /* 버튼의 고정된 너비 */
-    padding: 15px 0px;
+    width: 150px;
+    padding: 15px 0;
     border: 1px solid #ddd;
     cursor: pointer;
     background: #f4f4f4;
-    margin: 0; /* 간격 조정 */
+    margin: 0;
     text-align: center;
-    flex-shrink: 0; /* 화면 줄여도 크기 유지 */
-
+    flex-shrink: 0;
 }
 
-/* 클릭된 버튼 초록색 스타일 */
 .tabs button.active {
-    background: #01787c; /* 초록색 */
+    background: #01787c;
     color: white;
     font-weight: bold;
-    position: relative; /* 화살표 위치 조정을 위해 추가 */
+    position: relative;
 }
 
 .tabs button.active::after {
-    content: ""; /* 내용 없음 */
+    content: "";
     position: absolute;
-    bottom: -8px; /* 버튼 아래에 배치 */
+    bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
-    width: 0; 
-    height: 0; 
-    border-left: 8px solid transparent; /* 왼쪽 삼각형 */
-    border-right: 8px solid transparent; /* 오른쪽 삼각형 */
-    border-top: 8px solid #01787c; /* 위쪽 삼각형 (버튼 색과 맞춤) */
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #01787c;
 }
 
-/* 입력 폼 스타일 */
+/* Input Form Styles */
 .conversion-form {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-top: 20px;
-    padding: 20px; /* 내부 여백 */
-    border: 2px solid #ddd; /* 테두리 */
-    border-radius: 8px; /* 모서리 둥글게 */
-    background-color: #f9f9f9; /* 연한 배경색 */
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* 살짝 그림자 */
+    padding: 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-
-
-
-.conversion-form input, 
-
+.conversion-form input,
 .conversion-form select {
     padding: 8px;
     border: 1px solid #ccc;
@@ -107,7 +95,7 @@
 }
 
 .conversion-form button {
-    background-color: #ff6600; /* 주황색 */
+    background-color: #ff6600;
     color: white;
     padding: 8px 15px;
     border: none;
@@ -117,24 +105,22 @@
 }
 
 .conversion-form button:hover {
-    background-color: #e65c00; /* 약간 어두운 주황 */
+    background-color: #e65c00;
 }
 
-/* 테이블 스타일 */
+/* Table Styles */
 .conversion-table {
     width: 100%;
     border-collapse: collapse;
-    
 }
 
-/* 테이블 헤더 중앙 정렬 */
 .conversion-table thead {
-    background-color: #d8d8d8; /* 흐릿한 회색 */
+    background-color: #d8d8d8;
     text-align: center;
 }
 
-/* 셀 스타일 */
-.conversion-table th, .conversion-table td {
+.conversion-table th,
+.conversion-table td {
     padding: 10px;
     border: 2px solid #ddd;
     font-size: 13px;
@@ -145,7 +131,7 @@
     vertical-align: super;
 }
 
-/*변환하기 버튼 눌렀을 때 나오는 결과 칸*/
+/* Result Container */
 .result-container {
     padding: 15px;
     margin: 20px auto;
@@ -153,4 +139,59 @@
     background-color: #dad9d9;
     color: #ff723e;
     font-weight: bold;
+}
+
+/* Media Query for Galaxy S24 (max-width: 411px) */
+@media (max-width: 540px) {
+    .conversion-container {
+        padding: 10px;
+    }
+
+    .header-container {
+        width: 100%;
+        margin-top: 40px;
+    }
+
+    .header-container h3 {
+        font-size: 20px;
+    }
+
+    .header-container h4 {
+        font-size: 12px;
+    }
+
+    .tabs {
+        margin-right: 0;
+        flex-direction: column;
+    }
+
+    .tabs button {
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    .conversion-form {
+        flex-direction: column;
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .conversion-form input,
+    .conversion-form select,
+    .conversion-form button {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .conversion-table th,
+    .conversion-table td {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .result-container {
+        padding: 10px;
+        margin: 10px auto;
+        font-size: 14px;
+    }
 }
