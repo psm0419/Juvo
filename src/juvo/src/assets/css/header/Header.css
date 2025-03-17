@@ -144,7 +144,7 @@
 
 /* 드롭다운 항목 호버 시 효과 */
 .dropdown-item:hover {
-    color: #1a73e8;
+    color: #f89400;
     background: rgba(26, 115, 232, 0.1);
     transform: translateX(5px);
 }
@@ -177,9 +177,9 @@
 .btns .logout:hover,
 .btns .mypage:hover,
 .btns .admin:hover  {
-    background: #1a73e8;
+    background: #f89400;
     color: #fff;
-    border-color: #1a73e8;
+    border-color: #f89400;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

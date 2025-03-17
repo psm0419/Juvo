@@ -1003,7 +1003,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                                 정량 미달 판매
                             </label>
                         </div>
-                        <div className="modal-buttons">
+                        <div className="modal-report-buttons">
                             <button onClick={handleReportSubmit}>신고 제출</button>
                             <button onClick={() => setShowReportModal(false)}>취소</button>
                         </div>

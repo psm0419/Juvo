@@ -315,7 +315,8 @@ public class UserServiceImpl implements UserService {
         String email = (String) responseData.get("email");
         String name = (String) responseData.get("name");
         String nickName = (String) responseData.get("nickname");
-
+        String mobile = (String) responseData.get("mobile");
+        
         System.out.println("INFO: 네이버 사용자 정보 - ID: " + naverId + ", Email: " + email + ", Name: " + name);
 
         // 사용자 확인 및 생성
@@ -329,6 +330,11 @@ public class UserServiceImpl implements UserService {
             user.setNickname(nickName);
             user.setUserType("CUS");
             user.setPw(""); // 소셜 로그인 사용자는 비밀번호 없음
+            if (mobile != null) {
+                user.setTel(mobile.replaceAll("-", "")); // 하이픈 제거 후 tel에 설정
+            } else {
+                user.setTel(null); // mobile이 없으면 null로 설정
+            }
             try {
                 userDAO.insertUser(user);
                 System.out.println("INFO: 새로운 네이버 사용자 등록 완료 - ID: " + naverId);
