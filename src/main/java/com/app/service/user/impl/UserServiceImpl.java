@@ -241,14 +241,24 @@ public class UserServiceImpl implements UserService {
             user.setId(googleId);
             user.setEmail(email);
             user.setUsername(name);            
-            user.setUserType("CUS");
+            user.setUserType("CUS");            
             user.setPw("");
+            String randomNickname = generateRandomNickname();
+            user.setNickname(randomNickname);
+            
             userDAO.insertUser(user);
         }
 
         return user;
     }
+    private String generateRandomNickname() {
+        String prefix = "User"; // 고정 접두사
+        Random random = new Random();
+        int randomNum = random.nextInt(9000) + 1000; // 1000~9999 사이의 숫자 생성
+        String nickname = prefix + randomNum; // 예: "User1234"
 
+        return nickname;
+    }
     @Override
     public User handleNaverLogin(Map<String, String> requestBody) throws Exception {
         System.out.println("네이버 로그인 처리 시작 - 요청 데이터: " + requestBody);
