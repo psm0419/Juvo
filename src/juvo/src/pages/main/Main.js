@@ -151,20 +151,20 @@ function Main() {
 								</div>
 								<div className="todayContrainer">
 									<div className="box">
-										<h4>휘발유</h4>
-										<p>{todayPrices["휘발유"]}</p>
+										<h5>휘발유</h5>
+										<p>{todayPrices["휘발유"].toLocaleString('ko-KR')}원</p>
 									</div>
 									<div className="box">
-										<h4>경유</h4>
-										<p>{todayPrices["경유"]}</p>
+										<h5>경유</h5>
+										<p>{todayPrices["경유"].toLocaleString('ko-KR')}원</p>
 									</div>
 									<div className="box">
-										<h4>고급휘발유</h4>
-										<p>{todayPrices["고급휘발유"]}</p>
+										<h5>고급휘발유</h5>
+										<p>{todayPrices["고급휘발유"].toLocaleString('ko-KR')}원</p>
 									</div>
 									<div className="box noBorder">
-										<h4>등유</h4>
-										<p>{todayPrices["실내등유"]}</p>
+										<h5>등유</h5>
+										<p>{todayPrices["실내등유"].toLocaleString('ko-KR')}원</p>
 									</div>
 								</div>
 							</div>
@@ -172,31 +172,12 @@ function Main() {
 								<div className="cheapSelect">
 									<p className="point_text">저렴한 주유소 Top 5</p>
 									<select className="region" onChange={handleAreaChange} value={selectedArea}>
-										<option value="">지역 선택</option>
-										<option value="서울">서울</option>
-										<option value="경기">경기</option>
-										<option value="강원">강원</option>
-										<option value="충북">충북</option>
-										<option value="충남">충남</option>
-										<option value="전북">전북</option>
-										<option value="전남">전남</option>
-										<option value="경북">경북</option>
-										<option value="경남">경남</option>
-										<option value="부산">부산</option>
-										<option value="제주">제주</option>
-										<option value="대구">대구</option>
-										<option value="인천">인천</option>
-										<option value="광주">광주</option>
-										<option value="대전">대전</option>
-										<option value="울산">울산</option>
-										<option value="세종">세종</option>
-									</select>
-									<select className="region" onChange={handleProductChange} value={selectedProduct}>
-										<option value="휘발유">휘발유</option>
-										<option value="경유">경유</option>
-										<option value="고급휘발유">고급휘발유</option>
-										<option value="실내등유">실내등유</option>
-									</select>
+                                    <option value="">지역 선택</option>
+                                    {Object.keys(areaCodes).map(area => <option key={area} value={area}>{area}</option>)}
+                                </select>
+                                <select className="region" onChange={handleProductChange} value={selectedProduct}>
+                                    {Object.keys(productCodes).map(product => <option key={product} value={product}>{product}</option>)}
+                                </select>
 								</div>
 								<div className="cheapList">
 									<CheapJuyuso cheapJuyusoList={cheapJuyusoList} />

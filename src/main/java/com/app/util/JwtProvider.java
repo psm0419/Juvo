@@ -39,7 +39,7 @@ public class JwtProvider {
 	/*
 	 * AccessToken 생성. 현재 로그인 처리할 사용자의 아이디를 기준으로 토큰 생성
 	 */
-	public static String createAccessToken(String userId, String userType) {
+	public static String createAccessToken(String userId, String userType, String nickname) {
 		Date now = new Date(System.currentTimeMillis());
 
 // SecretKey 는 binary 데이터
@@ -50,16 +50,25 @@ public class JwtProvider {
 		Claims claims = Jwts.claims()
 				.add("userId", userId)
 				.add("userType", userType)
+				.add("nickname", nickname)
 				.build();
 		//claims = Jwts.claims().add("userType", userType).build();
 
-		return Jwts.builder().header().add("typ", "JWT").and().subject("accessToken").issuedAt(now)
-				.issuer("spring server").expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
-				.claims(claims).signWith(getSigningKey(), Jwts.SIG.HS256).compact();
+		String token = Jwts.builder()
+	            .header().add("typ", "JWT").and()
+	            .subject("accessToken")
+	            .issuedAt(now)
+	            .issuer("spring server")
+	            .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
+	            .claims(claims)
+	            .signWith(getSigningKey(), Jwts.SIG.HS256)
+	            .compact();
+	    System.out.println("Generated token: " + token);
+	    return token;
 	}
 
 	public static String createAccessToken(User user) {
-		return createAccessToken(user.getId(), user.getUserType());
+		return createAccessToken(user.getId(), user.getUserType(), user.getNickname());
 	}
 
 	/* 토큰 해석 메소드 - 토큰을 해석하여 저장된 userId 를 획득한다 */
@@ -97,6 +106,22 @@ public class JwtProvider {
 		return userType;
 	}
 
+	public static String getNickNameFromToken(String token) { // throws CustomException {
+
+		String nickname = null;
+		try {
+			nickname = Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload()
+					.get("nickname", String.class);
+		} catch (ExpiredJwtException e) {
+			System.out.println(e.getMessage());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		System.out.println("토큰 해석 userType value : " + nickname);
+
+		return nickname;
+	}
 	/* 유효성 확인(해독된 jwt) */
 	public static boolean isVaildToken(String token) {
 
@@ -126,10 +151,11 @@ public class JwtProvider {
 	/**
 	 * Refresh Token 생성
 	 */
-	public static String createRefreshToken(String userId, String userType) {
+	public static String createRefreshToken(String userId, String userType, String nickname) {
 		Claims claims = Jwts.claims()
 			    .add("userId", userId)
 			    .add("userType", userType)
+			    .add("nickname", nickname)
 			    .build();
 		return Jwts.builder()
 			    .claims(claims)
@@ -142,13 +168,17 @@ public class JwtProvider {
 
 	/**
 	 * Refresh Token을 이용한 새로운 Access Token 발급
+	 * @param nickname2 
+	 * @param userType2 
+	 * @param userId2 
 	 */
-	public static String refreshAccessToken(String refreshToken) {
+	public static String refreshAccessToken(String refreshToken, String userId2, String userType2, String nickname2) {
 		  if (isVaildToken(refreshToken)) {
 		    String userId = getUserIdFromToken(refreshToken);
 		    String userType = getUserTypeFromToken(refreshToken);
+		    String nickname = getNickNameFromToken(refreshToken);
 		    if (userId != null && userType != null) {
-		      return createAccessToken(userId, userType);
+		      return createAccessToken(userId, userType, nickname);
 		    }
 		  }
 		  return null;

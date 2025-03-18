@@ -259,7 +259,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         if (!stationsData || !stationsData.RESULT || !stationsData.RESULT.OIL || stationsData.RESULT.OIL.length === 0) return [];
         return stationsData.RESULT.OIL.filter(station => {
             const brandMatches =
-                (brands.cheap && station.pollDivCd === "RTE") ||
+                (brands.cheap && (station.pollDivCd === "RTO" || station.pollDivCd === "RTX")) ||
                 (brands.skEnergy && station.pollDivCd === "SKE") ||
                 (brands.gsCaltex && station.pollDivCd === "GSC") ||
                 (brands.hyundaiOilbank && station.pollDivCd === "HDO") ||
@@ -1003,7 +1003,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                                 정량 미달 판매
                             </label>
                         </div>
-                        <div className="modal-buttons">
+                        <div className="modal-report-buttons">
                             <button onClick={handleReportSubmit}>신고 제출</button>
                             <button onClick={() => setShowReportModal(false)}>취소</button>
                         </div>

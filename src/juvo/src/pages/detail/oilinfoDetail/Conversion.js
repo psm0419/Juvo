@@ -116,8 +116,8 @@ export default function ConversionForm() {
                             <th>리터</th>
                             <th>입방피트</th>
                             <th>kl(㎥)</th>
-                            <th>갤론(美)</th>
-                            <th>갤론(英)</th>
+                            <th>갤론(US)</th>
+                            <th>갤론(UK)</th>
                             <th>배럴</th>
                             <th>드럼</th>
                             <th>입방인치</th>
@@ -158,7 +158,7 @@ export default function ConversionForm() {
                             <td>61,027</td>
                         </tr>
                         <tr>
-                            <td>갤론(美)</td>
+                            <td>갤론(US)</td>
                             <td>3.78543</td>
                             <td>0.1337</td>
                             <td>0.00379</td>
@@ -169,7 +169,7 @@ export default function ConversionForm() {
                             <td>231</td>
                         </tr>
                         <tr>
-                            <td>갤론(英)</td>
+                            <td>갤론(UK)</td>
                             <td>4.5459</td>
                             <td>0.1605</td>
                             <td>0.00455</td>
@@ -226,8 +226,8 @@ export default function ConversionForm() {
                             <th>숏톤</th>
                             <th>배럴</th>
                             <th>kl(㎥)</th>
-                            <th>1천갤론(英)</th>
-                            <th>1천갤론(美)</th>
+                            <th>1천갤론(UK)</th>
+                            <th>1천갤론(US)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -282,7 +282,7 @@ export default function ConversionForm() {
                             <td>0.264</td>
                         </tr>
                         <tr>
-                            <td>1천갤론(英)</td>
+                            <td>1천갤론(UK)</td>
                             <td>3.91</td>
                             <td>3.83</td>
                             <td>4.29</td>
@@ -292,7 +292,7 @@ export default function ConversionForm() {
                             <td>1.201</td>
                         </tr>
                         <tr>
-                            <td>1천갤론(美)</td>
+                            <td>1천갤론(US)</td>
                             <td>3.25</td>
                             <td>3.19</td>
                             <td>3.58</td>

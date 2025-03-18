@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* 전체 컨테이너 스타일 */
 .faq-detail-container {
     max-width: 800px;
@@ -11,6 +18,7 @@
     border: 1px solid #eee;
     border-radius: 5px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    font-family: 'GmarketSansMedium';
 }
 
 /* 헤더 스타일 */
@@ -86,20 +94,23 @@
     padding: 20px;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 600px) {
+/* 미디어 쿼리 (max-width: 540px) */
+@media (max-width: 540px) {
     .faq-detail-container {
         padding: 20px;
         margin: 20px 10px;
+        margin-top: 60px; /* 상단 여백 줄임 */
     }
 
     .faq-title {
         font-size: 18px;
-        width: 250px;
+        width: 100%; /* 화면 전체 너비 사용 */
+        white-space: normal; /* 긴 제목 줄바꿈 허용 */
     }
 
     .faq-date {
         font-size: 12px;
+        text-align: left; /* 작은 화면에서 가독성을 위해 왼쪽 정렬 */
     }
 
     .faq-content {
@@ -107,7 +118,12 @@
         padding: 10px;
     }
 
+    .faq-content p {
+        margin-bottom: 10px;
+    }
+
     .back-link {
         padding: 8px 16px;
+        font-size: 14px;
     }
 }

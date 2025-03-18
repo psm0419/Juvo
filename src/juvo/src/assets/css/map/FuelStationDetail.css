@@ -21,10 +21,14 @@
 }
 
 .close-btn {
-    position: absolute; /* 부모(.station-title)를 기준으로 위치 */
-    top: 50%; /* 제목 높이의 50% 지점 */
-    right: 0; /* 오른쪽 끝 */
-    transform: translateY(-50%); /* 수직 가운데 정렬 */
+    position: absolute;
+    /* 부모(.station-title)를 기준으로 위치 */
+    top: 50%;
+    /* 제목 높이의 50% 지점 */
+    right: 0;
+    /* 오른쪽 끝 */
+    transform: translateY(-50%);
+    /* 수직 가운데 정렬 */
     background: #f89400;
     color: white;
     border: none;
@@ -33,26 +37,36 @@
     height: 25px;
     cursor: pointer;
     font-size: 14px;
-    display: flex; /* X를 가운데 정렬 */
+    display: flex;
+    /* X를 가운데 정렬 */
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
 }
 
-.station-title {    
+.station-title {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 20px;
-    position: relative; /* 버튼의 위치 기준점 설정 */
-    display: flex; /* flex로 제목과 버튼 배치 */
-    align-items: center; /* 수직 가운데 정렬 */
-    justify-content: space-between; /* 제목 왼쪽, 버튼 오른쪽 */
-    padding-right: 35px; /* 버튼 공간 확보 */
+    position: relative;
+    /* 버튼의 위치 기준점 설정 */
+    display: flex;
+    /* flex로 제목과 버튼 배치 */
+    align-items: center;
+    /* 수직 가운데 정렬 */
+    justify-content: space-between;
+    /* 제목 왼쪽, 버튼 오른쪽 */
+    padding-right: 35px;
+    /* 버튼 공간 확보 */
 }
+
 .station-name {
     max-width: 340px;
-    display: inline-flex; /* 제목과 코드가 붙어 있도록 */
-    align-items: center; /* 수직 정렬 */
-    flex-shrink: 0; /* 줄어들지 않도록 */
+    display: inline-flex;
+    /* 제목과 코드가 붙어 있도록 */
+    align-items: center;
+    /* 수직 정렬 */
+    flex-shrink: 0;
+    /* 줄어들지 않도록 */
 }
 
 .station-title span {
@@ -77,6 +91,7 @@
     padding: 8px 0;
     border-bottom: 1px solid #f0f0f0;
     font-size: 14px;
+    color: #f89400;
 }
 
 .price-item span:first-child {
@@ -172,7 +187,8 @@
     margin-top: 20px;
 }
 
-.write-review-btn, .select-keyword-btn {
+.write-review-btn,
+.select-keyword-btn {
     flex: 1;
     padding: 10px;
     font-size: 14px;
@@ -193,10 +209,11 @@
     cursor: pointer;
     transition: background-color 0.3s;
     font-weight: bold;
-    background-color: #f89400;    
+    background-color: #f89400;
 }
 
-.review-form, .keyword-form {
+.review-form,
+.keyword-form {
     margin-top: 20px;
     padding: 10px;
     border: 1px solid #ddd;
@@ -226,7 +243,8 @@
     margin-right: 5px;
 }
 
-.review-form button, .keyword-form button {
+.review-form button,
+.keyword-form button {
     margin-right: 10px;
     padding: 5px 10px;
     background-color: #43abae;
@@ -236,7 +254,8 @@
     cursor: pointer;
 }
 
-.review-form button:hover, .keyword-form button:hover {
+.review-form button:hover,
+.keyword-form button:hover {
     background-color: #0d9ca4;
 }
 
@@ -245,7 +264,8 @@
     text-align: center;
 }
 
-.write-review-btn, .select-keyword-btn {
+.write-review-btn,
+.select-keyword-btn {
     padding: 10px 20px;
     margin: 0 10px;
     background-color: #43abae;
@@ -255,7 +275,8 @@
     cursor: pointer;
 }
 
-.write-review-btn:hover, .select-keyword-btn:hover {
+.write-review-btn:hover,
+.select-keyword-btn:hover {
     background-color: #0d9ca4;
 }
 
@@ -283,4 +304,183 @@
 
 .review-actions button:first-child:hover {
     background-color: #0d9ca4;
+}
+
+/* FuelStationDetail.css에 추가 */
+@media only screen and (max-width: 540px) {
+    .fuel-station-detail-overlay {
+        padding: 0;
+    }
+
+    .fuel-station-detail {
+        width: 90vw;
+        max-height: 80vh;
+        padding: 15px;
+        font-size: 12px;
+    }
+
+    .station-title {
+        font-size: 16px;
+        padding-right: 25px;
+    }
+
+    .close-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+    }
+
+    .section-title {
+        font-size: 14px;
+    }
+
+    .price-item {
+        font-size: 12px;
+        padding: 5px 0;
+    }
+
+    .price-note {
+        font-size: 10px;
+    }
+
+    .service-icons {
+        gap: 5px;
+    }
+
+    .service-item {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+
+    .quality-cert {
+        font-size: 12px;
+    }
+
+    .review-summary {
+        gap: 5px;
+    }
+
+    .rating {
+        font-size: 14px;
+    }
+
+    .review-count {
+        font-size: 12px;
+    }
+
+    .review-item {
+        font-size: 12px;
+    }
+
+    .review-header {
+        font-size: 12px;
+    }
+
+    .review-rating {
+        font-size: 12px;
+    }
+
+    .review-comment {
+        font-size: 12px;
+    }
+
+    .more-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .review-form textarea {
+        height: 60px;
+        font-size: 12px;
+    }
+
+    .review-form input[type="number"] {
+        width: 80px;
+        font-size: 12px;
+    }
+
+    .review-form button,
+    .keyword-form button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .write-review-btn,
+    .select-keyword-btn {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .review-actions button {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 360px) {
+    .fuel-station-detail {
+        width: 85vw;
+        padding: 10px;
+    }
+
+    .station-title {
+        font-size: 14px;
+        padding-right: 20px;
+    }
+
+    .close-btn {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+    }
+
+    .section-title {
+        font-size: 12px;
+    }
+
+    .price-item {
+        font-size: 10px;
+    }
+
+    .service-item {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+
+    .review-summary {
+        gap: 3px;
+    }
+
+    .rating {
+        font-size: 12px;
+    }
+
+    .review-count {
+        font-size: 10px;
+    }
+
+    .review-item {
+        font-size: 10px;
+    }
+
+    .more-btn {
+        padding: 5px 10px;
+        font-size: 10px;
+    }
+
+    .review-form textarea {
+        height: 50px;
+        font-size: 10px;
+    }
+
+    .review-form input[type="number"] {
+        width: 60px;
+        font-size: 10px;
+    }
+
+    .write-review-btn,
+    .select-keyword-btn {
+        padding: 6px;
+        font-size: 10px;
+    }
 }

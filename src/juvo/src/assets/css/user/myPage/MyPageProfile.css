@@ -16,9 +16,9 @@
 
 /* 컨테이너 */
 .mp-container {
-    width: 60%;
+    width: 100%;
     padding: 40px 40px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'GmarketSansMedium';
     background: linear-gradient(145deg, #ffffff, #f0f4f8);
     border-radius: 12px;
 }
@@ -31,7 +31,7 @@
     font-weight: 600;
     margin-bottom: 25px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #f89400;
+    border-bottom: 2px solid #f89400 !important;
 }
 
 /* 입력 그룹 */
@@ -85,7 +85,7 @@
 .mp-change-nickname-btn {
     flex: 1;
     padding: 14px;
-    background-color: #f3b252;
+    background-color: #f3b252 !important;
     color: black;
     border: none;
     border-radius: 8px;
@@ -99,7 +99,7 @@
 
 .mp-change-pw-btn:hover,
 .mp-change-nickname-btn:hover {
-    background-color: #f89400;
+    background-color: #f89400 !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }

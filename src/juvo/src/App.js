@@ -30,7 +30,6 @@ import { useTokenCleanup } from './util/AxiosConfig';
 import Notice from './pages/detail/guideDetail/Notice';
 import NoticeDetail from './pages/detail/guideDetail/NoticeDetail';
 
-
 function App() {
 	useTokenCleanup();
 	return (
@@ -40,6 +39,7 @@ function App() {
 				<Route path='/user/login' element={<Login />} />
 				<Route path='/user/signup' element={<Signup />} />
 				<Route path="/callback/naver" element={<Login />} />
+				<Route path="/callback/kakao" element={<Login />} />							
 				<Route path="/findPasswordRequest" element={<FindPasswordRequest />} />
 				<Route path="/resetPassword/:token" element={<ResetPassword />} />
 				<Route path='/findIdRequest' element={<FindId />} />

@@ -52,7 +52,7 @@ const FuelStationList = ({ stations, loading, onStationClick, isChargingStation 
                         >
                             <div className="station-name-container">
                                 <span
-                                    className="station-name"
+                                    className="ev-name"
                                     onClick={() => onStationClick(station)}
                                 >
                                     {station.stationName || "이름 없음"}

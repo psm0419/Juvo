@@ -1,17 +1,31 @@
 /* 커스텀 폰트 정의 */
 @font-face {
-    font-family: 'BookkMyungjo-Bd';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2') format('woff2');
-    font-weight: 700;
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
     font-style: normal;
 }
 
+/* 컨테이너 */
 .favorites-container {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
     padding: 40px;
+    font-family: 'GmarketSansMedium';
+}
+
+/* 제목 */
+.favorites-title {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #1a73e8;
 }
 
 .favorites-title {
-    font-size: 24px;
+    font-size: 23px;
     color: #333;
     margin-bottom: 20px;
     padding-bottom: 10px;

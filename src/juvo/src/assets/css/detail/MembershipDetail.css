@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .mbd-membership-detail-container {
     max-width: 420px;
     margin: 50px auto;
@@ -7,6 +14,7 @@
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
     text-align: center;
     color: white;
+    font-family: 'GmarketSansMedium';
 }
 
 .mbd-title {
@@ -27,13 +35,13 @@
     text-align: left;
 }
 
-.mbd-label {  /* 접두사 추가 */
-    font-weight: bold;
+.mbd-label {
     margin-bottom: 5px;
     color: #fff;
 }
 
-.mbd-input, .mbd-select {
+.mbd-input,
+.mbd-select {
     padding: 10px;
     border: none;
     border-radius: 8px;
@@ -52,7 +60,7 @@
 }
 
 .mbd-submit-button {
-    background: #f89400 ;
+    background: #f89400;
     color: #333;
     font-size: 18px;
     font-weight: bold;
@@ -65,4 +73,46 @@
 
 .mbd-submit-button:hover {
     background: #da8300;
+}
+
+/* 미디어 쿼리 (max-width: 540px) */
+@media (max-width: 540px) {
+    .mbd-membership-detail-container {
+        max-width: 100%; /* 화면 전체 너비 사용 */
+        margin: 30px 10px; /* 상단 여백 줄이고 좌우 여백 추가 */
+        padding: 20px;
+    }
+
+    .mbd-title {
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+
+    .mbd-membership-form {
+        gap: 12px;
+    }
+
+    .mbd-label {
+        font-size: 14px;
+    }
+
+    .mbd-input,
+    .mbd-select {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .mbd-form-row {
+        flex-direction: column; /* 작은 화면에서 세로로 정렬 */
+        gap: 12px;
+    }
+
+    .mbd-small-input {
+        width: 100%; /* 전체 너비로 확장 */
+    }
+
+    .mbd-submit-button {
+        font-size: 16px;
+        padding: 10px;
+    }
 }

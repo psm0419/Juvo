@@ -1,3 +1,9 @@
+@font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
 /* 헤더 전체 컨테이너 스타일 */
 .containerHD {
@@ -13,7 +19,6 @@
     align-items: center;
     padding: 10px 40px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    
 }
 
 /* 로고 영역 스타일 */
@@ -42,13 +47,12 @@
     justify-content: space-around;
     align-items: center;
     position: relative;
-    
 }
 
 /* 네비게이션 메뉴 각 항목 스타일 */
 .nav-item {
     padding: 10px 0;
-    
+    position: relative; /* 드롭다운 위치 기준 제공 */
 }
 
 /* 네비게이션 메뉴 링크 스타일 */
@@ -71,7 +75,7 @@
 /* 드롭다운 메뉴 전체 컨테이너 스타일 */
 .dropdown-container {
     position: absolute;
-    top: 100%; /* .nav 바로 아래에 붙도록 설정 */
+    top: 100%;
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
@@ -87,16 +91,15 @@
     visibility: hidden;
     max-height: 0;
     overflow: hidden;
-    transition: opacity 0.4s ease, max-height 0.5s ease, transform 0.4s ease;
+    transition: opacity 0.4s ease, max-height 0.5s ease;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
-/* 네비게이션에 호버 시 드롭다운 표시 */
+/* 네비게이션에 호버 시 드롭다운 표시 (기본 상태) */
 .nav:hover .dropdown-container {
     opacity: 1;
     visibility: visible;
     max-height: 400px;
-    transform: translateX(-50%) translateY(0);
 }
 
 /* 드롭다운 메뉴의 각 열 스타일 */
@@ -144,7 +147,7 @@
 
 /* 드롭다운 항목 호버 시 효과 */
 .dropdown-item:hover {
-    color: #1a73e8;
+    color: #f89400;
     background: rgba(26, 115, 232, 0.1);
     transform: translateX(5px);
 }
@@ -161,7 +164,7 @@
 .btns .signup,
 .btns .logout,
 .btns .mypage,
-.btns .admin  {
+.btns .admin {
     border: 1px solid #d1d9e6;
     padding: 10px 10px;
     cursor: pointer;
@@ -177,25 +180,152 @@
 .btns .logout:hover,
 .btns .mypage:hover,
 .btns .admin:hover  {
-    background: #1a73e8;
+    background: #f89400;
     color: #fff;
-    border-color: #1a73e8;
+    border-color: #f89400;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* 로그인 버튼과 회원가입 버튼 사이, 관리자/마이페이지와 로그아웃 사이 간격 */
-.login, .mypage, .admin {
+.login,
+.mypage,
+.admin {
     margin-right: 5px;
 }
 
-
-/* btn 사이즈*/
-.login, .signup {
+/* btn 사이즈 */
+.login,
+.signup {
     font-size: 0.8rem;
 }
 
-
-.mypage, .admin, .logout {
+.mypage,
+.admin,
+.logout {
     font-size: 0.7rem;
+}
+
+/* 미디어 쿼리 (max-width: 540px) */
+@media (max-width: 540px) {
+    .containerHD {
+        min-width: 100%;
+        height: auto;
+        flex-direction: column;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .logo {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .logo img {
+        width: 50%;
+    }
+
+    .nav {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0;
+    }
+
+    .nav-item {
+        width: 100%;
+        padding: 8px 0;
+        text-align: center;
+        position: relative;
+    }
+
+    .nav a {
+        display: block;
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+
+    /* 드롭다운 컨테이너 스타일 수정 */
+    .dropdown-container {
+        position: static;
+        transform: none;
+        width: 100%;
+        padding: 10px;
+        border-radius: 0;
+        box-shadow: none;
+        background: #f0f4f8;
+        border: none;
+        opacity: 1; /* 기본적으로 보이게 설정 */
+        visibility: hidden;
+        max-height: 0;
+        transition: max-height 0.3s ease; /* 부드러운 전환 */
+    }
+
+    /* 드롭다운 토글 클래스 추가 (JavaScript로 제어 필요) */
+    .dropdown-container.active {
+        visibility: visible;
+        max-height: 500px; /* 충분한 높이 확보 */
+    }
+
+    /* 호버 대신 클릭으로 토글 (기존 호버 제거) */
+    .nav:hover .dropdown-container {
+        opacity: 0;
+        visibility: hidden;
+        max-height: 0;
+    }
+
+    .dropdown-column {
+        min-width: 100%;
+        padding: 5px 0;
+        background: none;
+    }
+
+    .dropdown-column:not(:last-child)::after {
+        display: none;
+    }
+
+    .dropdown-item {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+        text-align: left;
+    }
+
+    .btns {
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btns .login,
+    .btns .signup,
+    .btns .logout,
+    .btns .mypage,
+    .btns .admin {
+        padding: 8px;
+        font-size: 0.7rem;
+        margin: 5px;
+    }
+
+    .login,
+    .mypage,
+    .admin {
+        margin-right: 0;
+    }
+}
+
+/* 추가된 스타일: 드롭다운 토글 버튼 (선택적) */
+@media (max-width: 540px) {
+    .nav-item.has-dropdown::after {
+        content: '▼';
+        font-size: 0.7rem;
+        margin-left: 5px;
+        color: #374051;
+        transition: transform 0.3s ease;
+    }
+
+    .nav-item.has-dropdown.active::after {
+        transform: rotate(180deg);
+    }
 }
