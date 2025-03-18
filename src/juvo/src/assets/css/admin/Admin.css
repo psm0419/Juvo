@@ -277,38 +277,36 @@ h2 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-/* 갤럭시 S24 기준 540px 미디어 쿼리 추가 */
+/* 갤럭시 S24 기준 540px 미디어 쿼리 */
 @media (max-width: 540px) {
-    /* 전체 레이아웃 */
     .admin-layout {
-        flex-direction: column; /* 세로로 쌓이게 */
+        flex-direction: column;
         padding: 10px;
     }
 
     .admin-sidebar {
-        width: 100%; /* 사이드바 전체 너비 */
+        width: 100%;
         margin-bottom: 15px;
     }
 
     .sidebar-title {
-        font-size: 20px; /* 제목 크기 축소 */
+        font-size: 20px;
         margin-bottom: 15px;
     }
 
     .sidebar-nav p {
-        padding: 10px; /* 패딩 축소 */
-        font-size: 14px; /* 글자 크기 축소 */
+        padding: 10px;
+        font-size: 14px;
     }
 
     .admin-content {
-        margin-left: 0; /* 여백 제거 */
+        margin-left: 0;
         padding: 15px;
     }
 
-    /* 고객 관리 */
     h2 {
-        margin: 10px 0 5px 10px; /* 여백 축소 */
-        font-size: 18px; /* 제목 크기 축소 */
+        margin: 10px 0 5px 10px;
+        font-size: 18px;
     }
 
     .customerContainer {
@@ -317,47 +315,60 @@ h2 {
 
     .customerContainer table {
         margin-top: 10px;
-        font-size: 12px; /* 테이블 글자 크기 축소 */
+        font-size: 8px;
     }
 
-    .customerContainer th,
     .customerContainer td {
-        padding: 6px; /* 패딩 축소 */
+        padding: 6px;
+    }
+
+    .customerContainer th:first-child,
+    .customerContainer td:first-child {
+        max-width: 100px;
+        white-space: nowrap;
+        padding: 1px;
     }
 
     .address {
-        width: auto; /* 고정 너비 제거 */
+        width: auto;
     }
 
     .tabButtons {
-        flex-direction: column; /* 탭 버튼 세로로 쌓이게 */
-        align-items: flex-start;
+        flex-direction: row; /* 가로 정렬 */
+        flex-wrap: wrap; /* 버튼이 화면을 넘치지 않도록 줄바꿈 허용 */
+        gap: 5px; /* 버튼 간 간격 */
+        align-items: center;
+        justify-content: flex-start;
     }
 
     .tabButtons button {
-        padding: 6px 12px; /* 버튼 크기 축소 */
+        padding: 6px 12px;
         font-size: 12px;
-        min-width: 70px; /* 최소 너비 조정 */
-        margin-bottom: 5px;
+        min-width: 70px;
+        margin-bottom: 0; /* 세로 정렬 시 사용된 여백 제거 */
     }
 
     .leftTabs,
     .rightTabs {
-        flex-direction: column; /* 탭 그룹도 세로로 */
-        width: 100%;
+        flex-direction: row; /* 가로 정렬 */
+        gap: 5px;
+        width: auto; /* 전체 너비 설정 제거 */
     }
 
     .rightTabs {
-        margin-left: 0; /* 자동 여백 제거 */
+        margin-left: 0;
+    }
+
+    .customerContainer td  {
+        font-size: 10px;
     }
 
     .customerContainer td button {
-        padding: 4px 8px; /* 버튼 크기 축소 */
+        padding: 4px 8px;
         font-size: 12px;
         margin: 2px;
     }
 
-    /* 페이지네이션 */
     .pagination {
         margin-top: 15px;
         gap: 5px;
@@ -369,23 +380,31 @@ h2 {
         font-size: 12px;
     }
 
-    /* 주유소 관리 */
     .gasContainer {
         padding: 10px;
     }
 
     .gasContainer table {
         margin-top: 10px;
-        font-size: 11px; /* 테이블 글자 크기 축소 */
+    }
+
+    .gasContainer td {
+        font-size: 10px;
+        padding: 1px;
     }
 
     .gasContainer th,
     .gasContainer td {
-        padding: 4px; /* 패딩 축소 */
+        padding: 4px;
+    }
+
+    .gasContainer th.address,
+    .gasContainer td:nth-child(5) {
+        display: none;
     }
 
     .gasContainer td button {
-        padding: 4px 8px; /* 버튼 크기 축소 */
+        padding: 4px 8px;
         font-size: 0.7rem;
         margin: 2px;
     }
