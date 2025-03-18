@@ -33,9 +33,9 @@ function GasStationTable({ currentItems, modifyBlack, removeBlack, activeTab }) 
                             <td>{getBlackTypeLabel(station.blackType)}</td>
                             <td>{station.lpgYn === 'Y' ? 'LPG' : '주유소'}</td>
                             <td className="tstationosnm">{station.osNm || ''}</td>
-                            <td>{station.newAdr || ''}</td>
+                            <td className="tstationnewadr">{station.newAdr || ''}</td>
                             <td>{station.status === 1 ? '처리됨' : '미처리'}</td>
-                            <td>
+                            <td className='tstationbtn'>
                                 {activeTab === 'reported' && (
                                     <>
                                         <button onClick={() => modifyBlack(station.uniId)}>추가</button>
