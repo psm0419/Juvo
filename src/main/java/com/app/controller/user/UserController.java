@@ -49,7 +49,7 @@ public class UserController {
 			tokens.put("accessToken", "fail");
 		} else { // 로그인 성공
 			String accessToken = JwtProvider.createAccessToken(loginUser.getId(),loginUser.getUserType(),loginUser.getNickname());
-			String refreshToken = JwtProvider.createRefreshToken();
+			String refreshToken = JwtProvider.createRefreshToken(loginUser.getId(),loginUser.getUserType(),loginUser.getNickname());
 			System.out.println("로그인 아이디 : " + loginUser.getId());
 			System.out.println("로그인 타입 : " + loginUser.getUserType());
 			System.out.println("발행 access Token : " + accessToken);
@@ -255,7 +255,7 @@ public class UserController {
             }
 
             String accessToken = JwtProvider.createAccessToken(googleUser.getId(), googleUser.getUserType(), googleUser.getNickname());
-            String refreshToken = JwtProvider.createRefreshToken();
+            String refreshToken = JwtProvider.createRefreshToken(googleUser.getId(), googleUser.getUserType(), googleUser.getNickname());
 
             System.out.println("구글 로그인 성공 - ID: " + googleUser.getId());
             System.out.println("발행 accessToken: " + accessToken);
@@ -304,7 +304,7 @@ public class UserController {
 
             // JWT 토큰 생성
             String accessToken = JwtProvider.createAccessToken(naverUser.getId(), naverUser.getUserType(), naverUser.getNickname());
-            String refreshToken = JwtProvider.createRefreshToken();
+            String refreshToken = JwtProvider.createRefreshToken(naverUser.getId(), naverUser.getUserType(), naverUser.getNickname());
 
             System.out.println("네이버 로그인 성공 - ID: {}, UserType: {}"+ naverUser.getId()+ naverUser.getUserType());
             System.out.println("발행된 accessToken: {}"+ accessToken);
@@ -349,7 +349,7 @@ public class UserController {
             }
 
             String accessToken = JwtProvider.createAccessToken(kakaoUser.getId(), kakaoUser.getUserType(), kakaoUser.getNickname());
-            String refreshToken = JwtProvider.createRefreshToken();
+            String refreshToken = JwtProvider.createRefreshToken(kakaoUser.getId(), kakaoUser.getUserType(), kakaoUser.getNickname());
 
             System.out.println("카카오 로그인 성공 - ID: " + kakaoUser.getId());
             System.out.println("카카오 nickname: " + kakaoUser.getNickname());

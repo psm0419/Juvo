@@ -151,10 +151,11 @@ public class JwtProvider {
 	/**
 	 * Refresh Token 생성
 	 */
-	public static String createRefreshToken(String userId, String userType) {
+	public static String createRefreshToken(String userId, String userType, String nickname) {
 		Claims claims = Jwts.claims()
 			    .add("userId", userId)
 			    .add("userType", userType)
+			    .add("nickname", nickname)
 			    .build();
 		return Jwts.builder()
 			    .claims(claims)
@@ -167,13 +168,17 @@ public class JwtProvider {
 
 	/**
 	 * Refresh Token을 이용한 새로운 Access Token 발급
+	 * @param nickname2 
+	 * @param userType2 
+	 * @param userId2 
 	 */
-	public static String refreshAccessToken(String refreshToken) {
+	public static String refreshAccessToken(String refreshToken, String userId2, String userType2, String nickname2) {
 		  if (isVaildToken(refreshToken)) {
 		    String userId = getUserIdFromToken(refreshToken);
 		    String userType = getUserTypeFromToken(refreshToken);
+		    String nickname = getNickNameFromToken(refreshToken);
 		    if (userId != null && userType != null) {
-		      return createAccessToken(userId, userType);
+		      return createAccessToken(userId, userType, nickname);
 		    }
 		  }
 		  return null;

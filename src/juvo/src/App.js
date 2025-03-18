@@ -39,8 +39,7 @@ function App() {
 				<Route path='/user/login' element={<Login />} />
 				<Route path='/user/signup' element={<Signup />} />
 				<Route path="/callback/naver" element={<Login />} />
-				<Route path="/callback/kakao" element={<Login />} />
-				<Route path='/socialLogin' element={<SocialLoginTest />} />				
+				<Route path="/callback/kakao" element={<Login />} />							
 				<Route path="/findPasswordRequest" element={<FindPasswordRequest />} />
 				<Route path="/resetPassword/:token" element={<ResetPassword />} />
 				<Route path='/findIdRequest' element={<FindId />} />
