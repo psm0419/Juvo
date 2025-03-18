@@ -49,7 +49,7 @@ public class UserController {
 			tokens.put("accessToken", "fail");
 		} else { // 로그인 성공
 			String accessToken = JwtProvider.createAccessToken(loginUser.getId(),loginUser.getUserType());
-			String refreshToken = JwtProvider.createRefreshToken();
+			String refreshToken = JwtProvider.createRefreshToken(loginUser.getId(),loginUser.getUserType());
 			System.out.println("로그인 아이디 : " + loginUser.getId());
 			System.out.println("로그인 타입 : " + loginUser.getUserType());
 			System.out.println("발행 access Token : " + accessToken);
@@ -120,6 +120,17 @@ public class UserController {
 
 		boolean checkDupNickname = userService.checkDupNickname(nickname); // 중복 체크 -> DB
 		if (checkDupNickname == true) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	@PostMapping("/user/checkDupEmail") // 이메일 중복 확인
+	public boolean checkDupEmail(@RequestBody String email, HttpServletRequest request) {
+
+		boolean checkDupEmail = userService.checkDupEmail(email); // 중복 체크 -> DB
+		if (checkDupEmail == true) {
 			return false;
 		} else {
 			return true;
@@ -216,10 +227,22 @@ public class UserController {
 
 	@PostMapping("/user/refreshToken")
 	public ResponseEntity<Map<String, String>> refreshAccessToken(@RequestHeader("Authorization") String refreshToken) {
+	    String token = refreshToken.replace("Bearer ", "");
+	    String newAccessToken = JwtProvider.refreshAccessToken(token);
+	    if (newAccessToken != null) {
+	        Map<String, String> tokens = new HashMap<>();
+	        tokens.put("accessToken", newAccessToken);
+	        return ResponseEntity.ok(tokens);
+	    } else {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "유효하지 않은 Refresh Token"));
+	    }
+	}
+	
+	/*public ResponseEntity<Map<String, String>> refreshAccessToken(@RequestHeader("Authorization") String refreshToken) {
 		String token = refreshToken.replace("Bearer ", "");
-		String userId = JwtProvider.getUserIdFromToken(token);
-		String userType = JwtProvider.getUserTypeFromToken(token);
-		String newAccessToken = JwtProvider.refreshAccessToken(token, userId, userType );
+		String userId = JwtProvider.getUserIdFromToken(refreshToken);
+		String userType = JwtProvider.getUserTypeFromToken(refreshToken);
+		String newAccessToken = JwtProvider.refreshAccessToken(refreshToken);
 
 		if (newAccessToken != null) {
 			Map<String, String> tokens = new HashMap<>();
@@ -228,7 +251,7 @@ public class UserController {
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 		}
-	}
+	}*/
 	
 	@PostMapping("/googleLogin")
     public ResponseEntity<Map<String, String>> googleLogin(@RequestBody Map<String, String> request) {
@@ -254,7 +277,7 @@ public class UserController {
             }
 
             String accessToken = JwtProvider.createAccessToken(googleUser.getId(), googleUser.getUserType());
-            String refreshToken = JwtProvider.createRefreshToken();
+            String refreshToken = JwtProvider.createRefreshToken(googleUser.getId(), googleUser.getUserType());
 
             System.out.println("구글 로그인 성공 - ID: " + googleUser.getId());
             System.out.println("발행 accessToken: " + accessToken);
@@ -300,10 +323,15 @@ public class UserController {
                 tokens.put("accessToken", "fail");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(tokens);
             }
-
+         // userType이 null인 경우 기본값 설정
+            if (naverUser.getUserType() == null) {
+                naverUser.setUserType("CUS");
+                System.out.println("userType이 null이므로 기본값 'CUS'로 설정");
+            }
+            
             // JWT 토큰 생성
             String accessToken = JwtProvider.createAccessToken(naverUser.getId(), naverUser.getUserType());
-            String refreshToken = JwtProvider.createRefreshToken();
+            String refreshToken = JwtProvider.createRefreshToken(naverUser.getId(), naverUser.getUserType());
 
             System.out.println("네이버 로그인 성공 - ID: {}, UserType: {}"+ naverUser.getId()+ naverUser.getUserType());
             System.out.println("발행된 accessToken: {}"+ accessToken);
@@ -318,9 +346,11 @@ public class UserController {
             return ResponseEntity.ok(tokens);
 
         } catch (Exception e) {
-            System.out.println("네이버 로그인 처리 중 오류 발생");
+        	System.err.println("네이버 로그인 처리 중 오류 발생: " + e.getMessage());
+            e.printStackTrace(); // 상세 예외 로그 출력
             Map<String, String> tokens = new HashMap<>();
             tokens.put("accessToken", "fail");
+            tokens.put("message", "서버 오류: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tokens);
         }
     }

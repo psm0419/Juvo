@@ -74,6 +74,11 @@ public class UserServiceImpl implements UserService {
     public boolean checkDupId(String id) {
         return userDAO.checkDupId(id) != null;
     }
+    
+    @Override
+    public boolean checkDupEmail(String email) {
+        return userDAO.checkDupEmail(email) != null;
+    }
 
     @Override
     public boolean checkDupNickname(String nickname) {
@@ -99,6 +104,8 @@ public class UserServiceImpl implements UserService {
     public int changeNickname(User user) {
         return userDAO.changeNickname(user);
     }
+    
+   
 
     @Override
     public User findIdByRequest(User requestUser) {
@@ -344,4 +351,6 @@ public class UserServiceImpl implements UserService {
         System.out.println("INFO: 네이버 로그인 처리 완료 - 반환 사용자: " + user);
         return user;
     }
+
+	
 }

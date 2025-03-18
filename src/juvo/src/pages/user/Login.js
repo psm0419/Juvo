@@ -4,6 +4,7 @@ import '../../assets/css/user/Login.css';
 import Header from '../../components/header/Header';
 import axiosInstance from '../../util/AxiosConfig';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 
 function LoginInner() {
     const [id, setId] = useState('');
