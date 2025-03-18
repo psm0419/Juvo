@@ -114,7 +114,7 @@ function CustomerManagement() {
                         {currentItems.length > 0 ? (
                             currentItems.map(customer => (
                                 <tr key={customer.id}>
-                                    <td>{customer.id || 'N/A'}</td>
+                                    <td className='tcustomerid'>{customer.id || 'N/A'}</td>
                                     <td>{customer.username || 'N/A'}</td>
                                     <td>{customer.membership === 0 ? '일반회원' : 'Pass가입회원'}</td>
                                     <td>{customer.email || 'N/A'}</td>

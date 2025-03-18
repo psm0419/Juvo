@@ -32,7 +32,7 @@ function GasStationTable({ currentItems, modifyBlack, removeBlack, activeTab }) 
                             <td>{station.uniId || ''}</td>
                             <td>{getBlackTypeLabel(station.blackType)}</td>
                             <td>{station.lpgYn === 'Y' ? 'LPG' : '주유소'}</td>
-                            <td>{station.osNm || ''}</td>
+                            <td className="tstationosnm">{station.osNm || ''}</td>
                             <td>{station.newAdr || ''}</td>
                             <td>{station.status === 1 ? '처리됨' : '미처리'}</td>
                             <td>
