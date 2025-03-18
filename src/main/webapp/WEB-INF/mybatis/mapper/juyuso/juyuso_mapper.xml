@@ -203,6 +203,7 @@
 		SELECT UNI_ID, black_type, LPG_YN, OS_NM, NEW_ADR, status 
 		FROM black_juyuso
 		WHERE status = 1
+		ORDER BY NEW_ADR ASC
 	</select>
 	
 	<select id="findBlackList" resultType="Black">
