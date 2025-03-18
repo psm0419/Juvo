@@ -4,17 +4,43 @@ import axiosInstance from "../../axiosInstance/axioslnstance";
 import "../../../assets/css/detail/MembershipDetail.css";
 
 function MembershipDetail() {
-
     const navigate = useNavigate();
+
+    // 추가된 상태: 로딩 및 가입 여부 확인
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSubscribed, setIsSubscribed] = useState(false);
+
+    // 사용자의 가입 상태 확인
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
         if (!token) {
             alert("로그인이 필요합니다.");
             navigate("/user/login");
+            return;
         }
+
+        const checkSubscriptionStatus = async () => {
+            try {
+                const response = await axiosInstance.get("/membership/status");
+                if (response.data.isSubscribed) {
+                    setIsSubscribed(true);
+                    navigate("/"); // 이미 가입된 경우 홈으로 리다이렉트
+                } else {
+                    setIsSubscribed(false);
+                }
+            } catch (error) {
+                console.error("가입 상태 확인 오류:", error);
+                alert("가입 상태를 확인하는 데 실패했습니다.");
+                navigate("/user/login");
+            } finally {
+                setIsLoading(false); // 로딩 완료
+            }
+        };
+
+        checkSubscriptionStatus();
     }, [navigate]);
 
-    // 상태 선언
+    // 기존 상태 선언
     const [formData, setFormData] = useState({
         name: "",
         tel: "",
@@ -24,7 +50,7 @@ function MembershipDetail() {
         cardNumber: "",
         cvc: "",
         expiry: "",
-        createdAt: "", // createdAt 초기값 추가
+        createdAt: "",
     });
     const [validFields, setValidFields] = useState({
         name: null,
@@ -34,7 +60,7 @@ function MembershipDetail() {
         cardNumber: null,
         cvc: null,
         expiry: null,
-        createdAt: true, // createdAt은 자동 설정되므로 항상 유효
+        createdAt: true,
     });
     const [errorMessages, setErrorMessages] = useState({});
 
@@ -135,7 +161,6 @@ function MembershipDetail() {
                 newErrorMessages.expiry = "MM/YY 형식으로 입력해주세요.";
             }
 
-            // createdAt은 자동 설정되므로 항상 유효
             newValidFields.createdAt = true;
 
             setValidFields(newValidFields);
@@ -190,7 +215,6 @@ function MembershipDetail() {
             return;
         }
 
-        // 현재 날짜를 연월일만 포함하도록 설정 (예: "2025-03-13")
         const today = new Date();
         const createdAt = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
         const updatedFormData = { ...formData, createdAt };
@@ -216,6 +240,17 @@ function MembershipDetail() {
         if (!validFields.expiry) return refs.expiry.current.focus();
     };
 
+    // 로딩 중일 때 표시
+    if (isLoading) {
+        return <div>로딩 중...</div>;
+    }
+
+    // 가입된 경우 렌더링하지 않음 (navigate로 이미 처리됨)
+    if (isSubscribed) {
+        return null;
+    }
+
+    // 기존 렌더링 부분
     return (
         <div className="mbd-membership-detail-container">
             <h1 className="mbd-title">JUVO 멤버십 가입</h1>
@@ -227,17 +262,10 @@ function MembershipDetail() {
                         name="name"
                         ref={refs.name}
                         value={formData.name}
-                        className={`mbd-input ${formData.name.length > 0
-                            ? validFields.name
-                                ? "valid"
-                                : "invalid"
-                            : ""
-                            }`}
+                        className={`mbd-input ${formData.name.length > 0 ? (validFields.name ? "valid" : "invalid") : ""}`}
                         onChange={handleChange}
                     />
-                    <span
-                        className={`validation-msg ${validFields.name ? "valid" : "invalid"}`}
-                    >
+                    <span className={`validation-msg ${validFields.name ? "valid" : "invalid"}`}>
                         {errorMessages.name}
                     </span>
                 </div>
@@ -249,17 +277,10 @@ function MembershipDetail() {
                         name="tel"
                         ref={refs.tel}
                         value={formData.tel}
-                        className={`mbd-input ${formData.tel.length > 0
-                            ? validFields.tel
-                                ? "valid"
-                                : "invalid"
-                            : ""
-                            }`}
+                        className={`mbd-input ${formData.tel.length > 0 ? (validFields.tel ? "valid" : "invalid") : ""}`}
                         onChange={handleChange}
                     />
-                    <span
-                        className={`validation-msg ${validFields.tel ? "valid" : "invalid"}`}
-                    >
+                    <span className={`validation-msg ${validFields.tel ? "valid" : "invalid"}`}>
                         {errorMessages.tel}
                     </span>
                 </div>
@@ -271,17 +292,10 @@ function MembershipDetail() {
                         name="address"
                         ref={refs.address}
                         value={formData.address}
-                        className={`mbd-input ${formData.address.length > 0
-                            ? validFields.address
-                                ? "valid"
-                                : "invalid"
-                            : ""
-                            }`}
+                        className={`mbd-input ${formData.address.length > 0 ? (validFields.address ? "valid" : "invalid") : ""}`}
                         onChange={handleChange}
                     />
-                    <span
-                        className={`validation-msg ${validFields.address ? "valid" : "invalid"}`}
-                    >
+                    <span className={`validation-msg ${validFields.address ? "valid" : "invalid"}`}>
                         {errorMessages.address || "주소를 입력해주세요."}
                     </span>
                 </div>
@@ -293,17 +307,10 @@ function MembershipDetail() {
                         name="detailAddress"
                         ref={refs.detailAddress}
                         value={formData.detailAddress}
-                        className={`mbd-input ${formData.detailAddress.length > 0
-                            ? validFields.detailAddress
-                                ? "valid"
-                                : "invalid"
-                            : ""
-                            }`}
+                        className={`mbd-input ${formData.detailAddress.length > 0 ? (validFields.detailAddress ? "valid" : "invalid") : ""}`}
                         onChange={handleChange}
                     />
-                    <span
-                        className={`validation-msg ${validFields.detailAddress ? "valid" : "invalid"}`}
-                    >
+                    <span className={`validation-msg ${validFields.detailAddress ? "valid" : "invalid"}`}>
                         {errorMessages.detailAddress || "상세 주소를 입력해주세요."}
                     </span>
                 </div>
@@ -335,18 +342,11 @@ function MembershipDetail() {
                         name="cardNumber"
                         ref={refs.cardNumber}
                         value={formData.cardNumber}
-                        className={`mbd-input ${formData.cardNumber.length > 0
-                            ? validFields.cardNumber
-                                ? "valid"
-                                : "invalid"
-                            : ""
-                            }`}
+                        className={`mbd-input ${formData.cardNumber.length > 0 ? (validFields.cardNumber ? "valid" : "invalid") : ""}`}
                         onChange={handleCardNumberChange}
                         maxLength="16"
                     />
-                    <span
-                        className={`validation-msg ${validFields.cardNumber ? "valid" : "invalid"}`}
-                    >
+                    <span className={`validation-msg ${validFields.cardNumber ? "valid" : "invalid"}`}>
                         {errorMessages.cardNumber}
                     </span>
                 </div>
@@ -359,18 +359,11 @@ function MembershipDetail() {
                             name="cvc"
                             ref={refs.cvc}
                             value={formData.cvc}
-                            className={`mbd-input ${formData.cvc.length > 0
-                                ? validFields.cvc
-                                    ? "valid"
-                                    : "invalid"
-                                : ""
-                                }`}
+                            className={`mbd-input ${formData.cvc.length > 0 ? (validFields.cvc ? "valid" : "invalid") : ""}`}
                             onChange={handleCvcChange}
                             maxLength="3"
                         />
-                        <span
-                            className={`validation-msg ${validFields.cvc ? "valid" : "invalid"}`}
-                        >
+                        <span className={`validation-msg ${validFields.cvc ? "valid" : "invalid"}`}>
                             {errorMessages.cvc}
                         </span>
                     </div>
@@ -382,18 +375,11 @@ function MembershipDetail() {
                             name="expiry"
                             ref={refs.expiry}
                             value={formData.expiry}
-                            className={`mbd-input ${formData.expiry.length > 0
-                                ? validFields.expiry
-                                    ? "valid"
-                                    : "invalid"
-                                : ""
-                                }`}
+                            className={`mbd-input ${formData.expiry.length > 0 ? (validFields.expiry ? "valid" : "invalid") : ""}`}
                             onChange={handleExpiryChange}
                             maxLength="5"
                         />
-                        <span
-                            className={`validation-msg ${validFields.expiry ? "valid" : "invalid"}`}
-                        >
+                        <span className={`validation-msg ${validFields.expiry ? "valid" : "invalid"}`}>
                             {errorMessages.expiry}
                         </span>
                     </div>
@@ -402,16 +388,12 @@ function MembershipDetail() {
                 <button
                     type="submit"
                     className="mbd-submit-button"
-                    disabled={
-                        !Object.values(validFields).every((field) => field === true) ||
-                        formData.cardCompany === ""
-                    }
+                    disabled={!Object.values(validFields).every((field) => field === true) || formData.cardCompany === ""}
                 >
                     가입하기
                 </button>
             </form>
         </div>
-
     );
 }
 
