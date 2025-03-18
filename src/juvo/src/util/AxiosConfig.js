@@ -22,13 +22,12 @@ class TokenManager {
     setupEventListeners() {
         if (typeof window === 'undefined') return;
 
-        const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+        const events = ['mousedown', 'keydown', 'touchstart'];
         const activityHandler = () => {
             const token = localStorage.getItem('accessToken');
-            console.log('[디버깅] 사용자 활동 감지 - accessToken:', token);
+            
             if (token) {
                 const expiration = this.getExpirationFromToken(token);
-                console.log('[디버깅] 활동 시 토큰 만료 시간:', new Date(expiration));
                 if (expiration) {
                     if (expiration < new Date().getTime()) {
                         // console.log('[디버깅] 토큰 만료로 로그아웃');
@@ -62,14 +61,12 @@ class TokenManager {
     }
 
     cleanup() {
-        console.log('[디버깅] 이벤트 리스너 정리 시작');
         this.eventListeners.forEach(({ event, handler, type }) => {
             if (type === 'interval') {
                 clearInterval(handler);
                 // console.log('[디버깅] 세션 체크 인터벌 정리');
             } else {
                 window.removeEventListener(event, handler);
-                console.log('[디버깅] 이벤트 리스너 제거:', event);
             }
         });
         this.eventListeners = [];
@@ -77,7 +74,7 @@ class TokenManager {
         if (this.refreshTimeout) {
             clearTimeout(this.refreshTimeout);
             this.refreshTimeout = null;
-            console.log('[디버깅] 갱신 타이머 정리');
+            
         }
     }
 
@@ -86,14 +83,13 @@ class TokenManager {
 
         this.tokenExpireTime = expiresIn;
         this.scheduleTokenRefresh();
-        console.log('[디버깅] 만료 시간 설정:', new Date(this.tokenExpireTime));
+        
     }
 
     getExpirationFromToken(token) {
         try {
             const payload = JSON.parse(atob(token.split('.')[1]));
             const expiration = payload.exp * 1000; // 밀리초로 변환
-            console.log('[디버깅] 토큰 만료 시간 추출:', new Date(expiration));
             return expiration;
         } catch (e) {
             console.error('토큰 만료 시간 파싱 실패:', e);
@@ -104,12 +100,11 @@ class TokenManager {
     scheduleTokenRefresh() {
         if (this.refreshTimeout) {
             clearTimeout(this.refreshTimeout);
-            console.log('[디버깅] 기존 갱신 타이머 정리');
+            
         }
 
         const timeUntilExpire = this.tokenExpireTime - new Date().getTime();
         const refreshTime = timeUntilExpire - (5 * 60 * 1000); // 만료 5분 전
-        console.log('[디버깅] 갱신 예약까지 남은 시간(ms):', refreshTime);
 
         if (refreshTime > 0) {
             this.refreshTimeout = setTimeout(() => {
@@ -121,14 +116,13 @@ class TokenManager {
                     }
                 });
             }, refreshTime);
-            console.log('[디버깅] 갱신 타이머 설정');
+            
         }
     }
 
     async refreshToken() {
         if (this.refreshing) return this.refreshing;
         const refreshToken = localStorage.getItem('refreshToken');
-        console.log('[디버깅] 갱신 시도 - refreshToken:', refreshToken);
         if (!refreshToken) throw new Error('리프레시 토큰이 없습니다.');
         try {
             this.refreshing = axios.post('/user/refreshToken', {}, {
@@ -141,7 +135,6 @@ class TokenManager {
                 localStorage.setItem('accessToken', response.data.accessToken);
                 const newExpiration = this.getExpirationFromToken(response.data.accessToken);
                 this.setTokenExpireTime(newExpiration);
-                console.log('[디버깅] 새 accessToken 저장:', response.data.accessToken);
                 return response.data.accessToken;
             }
         } catch (error) {
