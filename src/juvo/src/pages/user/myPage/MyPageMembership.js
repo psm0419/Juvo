@@ -123,7 +123,7 @@ function MyPageMembership() {
                 <div className="mypage-membership-tier-card mypage-membership-subscribed">
                     <h2 className="mypage-membership-tier-title">{membershipInfo.name}</h2>
                     <p className="mypage-membership-tier-subtitle">구독 {subscriptionDays}일째</p>
-                    <p className="mypage-membership-tier-info">아이디: {membershipInfo.user_id}</p>
+                    <p className="mypage-membership-tier-info">아이디: {membershipInfo.userId}</p>                    
                     <p className="mypage-membership-tier-info">전화번호: {membershipInfo.tel}</p>
                     <ul className="mypage-membership-tier-features">
                         {premiumFeatures.map((feature, index) => (

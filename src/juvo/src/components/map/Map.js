@@ -57,6 +57,10 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         self: false,
     });
     const [regions, setRegions] = useState({});
+    const stationsToShow = showFavoritesOnly
+        ? filteredStations.filter(station => favoriteStations.includes(station.uniId))
+        : filteredStations;
+    const chargingStationsToShow = filteredChargingStations;
 
     const getMarkerImage = (pollDivCd, isChargingStation = false) => {
         const kakao = window.kakao;
@@ -288,25 +292,50 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
     // 주유소 마커 업데이트
     useEffect(() => {
-        if (activeTab !== "주유소" || !mapRef.current || !filteredStations.length) return;
-        console.log('Filtered stations:', filteredStations); // 필터링 전 데이터 확인
+        if (activeTab !== "주유소" || !mapRef.current) {
+            console.log('Not updating fuel markers: Wrong tab or map not ready');
+            return;
+        }
+    
+        console.log('Starting fuel markers update');
+        console.log('Filtered stations:', filteredStations);
         console.log('Favorite stations:', favoriteStations);
         const kakao = window.kakao;
         const geocoder = new kakao.maps.services.Geocoder();
-
-        fuelMarkers.forEach(marker => marker?.setMap(null)); //기존 마커 제거
-
+    
+        // 기존 마커 제거
+        console.log('Removing existing fuel markers:', fuelMarkers.length);
+        fuelMarkers.forEach(marker => {
+            if (marker) {
+                marker.setMap(null); // 지도에서 제거
+                if (marker.infoWindow) marker.infoWindow.close(); // 정보창 닫기
+            }
+        });
+        setFuelMarkers([]); // 상태 초기화
+        console.log('Fuel markers cleared');
+    
+        // 필터링된 주유소가 없으면 종료
+        if (!filteredStations.length) {
+            console.log("No filtered stations to display, exiting.");
+            return;
+        }
+    
         const stationsToShow = showFavoritesOnly
-            ? filteredStations.filter(station => {
-                const isFavorite = favoriteStations.includes(station.uniId);
-                return isFavorite;
-            })
+            ? filteredStations.filter(station => favoriteStations.includes(station.uniId))
             : filteredStations;
-
+    
+        // 즐겨찾기 필터링 후에도 결과가 없으면 종료
+        if (!stationsToShow.length) {
+            console.log("No stations to show after favorite filter, exiting.");
+            return;
+        }
+    
+        console.log('Stations to show:', stationsToShow.length);
+    
         const promises = stationsToShow.map(station => {
             const address = station.NEW_ADR || station.newAdr || station.VAN_ADR || station.vanAdr;
             if (!address) return Promise.resolve(null);
-
+    
             return new Promise(resolve => {
                 geocoder.addressSearch(address, (result, status) => {
                     if (status === kakao.maps.services.Status.OK) {
@@ -315,7 +344,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                             resolve(null);
                             return;
                         }
-
+    
                         const markerImage = getMarkerImage(station.pollDivCd);
                         const marker = new kakao.maps.Marker({
                             position: coords,
@@ -404,8 +433,8 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
         Promise.all(promises).then(markers => {
             const validMarkers = markers.filter(m => m);
+            console.log('Fuel markers updated:', validMarkers.length);
             setFuelMarkers(validMarkers);
-            console.log("Fuel markers updated:", validMarkers.length);
         });
 
         window.showDetail = (uniId, lat, lng) => {
@@ -454,13 +483,15 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             openReportModal(uniId);
         };
 
-        
+
 
         return () => {
+            console.log('Cleanup: Removing fuel markers');
             fuelMarkers.forEach(marker => {
                 if (marker && kakao.maps.event) {
                     kakao.maps.event.removeListener(marker, "click");
                 }
+                if (marker) marker.setMap(null);
             });
             if (window.activeInfoWindows?.length > 0) {
                 window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
@@ -954,7 +985,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
                 <div className="map-station-list">
                     <FuelStationList
-                        stations={activeTab === "주유소" ? filteredStations : filteredChargingStations}
+                        stations={activeTab === "주유소" ? stationsToShow : chargingStationsToShow}
                         loading={loading || !isDataLoaded}
                         onStationClick={handleStationClick}
                         isChargingStation={activeTab === "충전소"}
