@@ -79,6 +79,11 @@ public class UserServiceImpl implements UserService {
     public boolean checkDupId(String id) {
         return userDAO.checkDupId(id) != null;
     }
+    
+    @Override
+    public boolean checkDupEmail(String email) {
+        return userDAO.checkDupEmail(email) != null;
+    }
 
     @Override
     public boolean checkDupNickname(String nickname) {
@@ -104,6 +109,8 @@ public class UserServiceImpl implements UserService {
     public int changeNickname(User user) {
         return userDAO.changeNickname(user);
     }
+    
+   
 
     @Override
     public User findIdByRequest(User requestUser) {
@@ -366,6 +373,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+	
     @Override
     public User handleKakaoLogin(Map<String, String> requestBody) throws Exception {
         System.out.println("카카오 로그인 처리 시작 - 요청 데이터: " + requestBody);

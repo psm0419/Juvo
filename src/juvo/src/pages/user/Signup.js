@@ -5,7 +5,7 @@ import '../../assets/css/user/Signup.css';
 
 function Signup() {
     let navigate = useNavigate();
-
+    
     let [id, setId] = useState("");
     let [validId, setValidId] = useState(null);
     let [idMsg, setIdMsg] = useState("");
@@ -46,6 +46,15 @@ function Signup() {
     let [isEmailAuth, setIsEmailAuth] = useState(null);
 
     let axiosAuthCode;
+
+    useEffect(() => {
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken != null) {
+            navigate('/'); // 홈 화면으로 리다이렉트
+        }
+    }, [navigate]);
+
+
     // 정규식 객체
     const REGEX = {
         ID: /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/,
@@ -265,7 +274,7 @@ function Signup() {
     };
 
     const handleCheckDupEmail = () => {
-        axios.post("/user/checkDupEmail", { email }, { headers: { "Content-Type": "application/json" } })
+        axios.post("/user/checkDupEmail",  email , { headers: { "Content-Type": "text/plain" } }) // 텍스트 보내서 비교
             .then((response) => {
                 console.log("서버 응답:", response.data); // 응답 확인
                 setCheckDupEmail(response.data);

@@ -14,6 +14,7 @@ public interface UserService {
 	public int signupUser(User user); 
 	public boolean checkDupId(String id);
 	public boolean checkDupNickname(String nickname);
+	public boolean checkDupEmail(String email);
 	public User checkUserByToken(String id);
 	public int changePassword(User findUser);
 	public User findUserById(String id);

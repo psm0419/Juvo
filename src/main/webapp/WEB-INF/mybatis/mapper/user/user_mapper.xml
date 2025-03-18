@@ -46,6 +46,12 @@
 		WHERE nickname = #{nickname}	
 	</select>
 	
+	<select id="checkDupEmail" resultType="User" parameterType="String">
+		select *
+		FROM users
+		WHERE email = #{email}	
+	</select>
+	
 	<select id="checkUserByToken" resultType="User" parameterType="String">
 		select *
 		FROM users

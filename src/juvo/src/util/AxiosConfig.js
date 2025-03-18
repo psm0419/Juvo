@@ -149,6 +149,8 @@ class TokenManager {
             if (error.response?.status === 401) {
                 console.log('[디버깅] 401 에러로 로그아웃');
                 this.logout(true);
+            } else {
+                this.showErrorPage('토큰 갱신 중 오류가 발생했습니다.');
             }
             throw error;
         } finally {
@@ -182,6 +184,7 @@ class TokenManager {
 
         const currentPath = window.location.pathname;
         if (this.shouldRedirectToLogin(currentPath) || forceRedirect) {
+            
             if (currentPath !== 'user/login') {
                 sessionStorage.setItem('redirectUrl', currentPath);
                 console.log('[디버깅] 리다이렉트 URL 저장:', currentPath);
