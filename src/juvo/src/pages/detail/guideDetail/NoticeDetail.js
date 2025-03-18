@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom'; // Link 추가
 import axios from 'axios';
 import '../../../assets/css/detail/NoticeDetail.css';
 
@@ -25,9 +25,14 @@ const NoticeDetail = () => {
 
     return (
         <div className="notice-detail">
-            <h2 className="detail-title">{notice.title}</h2>
-            <p className="detail-date">작성일: {notice.createdDate}</p>
+            <div className="notice-header">
+                <h2 className="detail-title">{notice.title}</h2>
+                <p className="detail-date">작성일: {notice.createdDate}</p>
+            </div>
             <div className="detail-content">{notice.content}</div>
+            <div className="notice-footer">
+                <Link to="/detail/guideDetail/Notice" className="back-link">목록보기</Link>
+            </div>
         </div>
     );
 };
