@@ -1,10 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../axiosInstance/axioslnstance";
 import "../../../assets/css/detail/MembershipDetail.css";
 
 function MembershipDetail() {
+
     const navigate = useNavigate();
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            alert("로그인이 필요합니다.");
+            navigate("/user/login");
+        }
+    }, [navigate]);
 
     // 상태 선언
     const [formData, setFormData] = useState({
@@ -185,12 +193,10 @@ function MembershipDetail() {
         // 현재 날짜를 연월일만 포함하도록 설정 (예: "2025-03-13")
         const today = new Date();
         const createdAt = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-        const updatedFormData = { ...formData, createdAt }; // formData에 createdAt 추가
+        const updatedFormData = { ...formData, createdAt };
 
         try {
-            await axios.post("/api/membership", updatedFormData, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            await axiosInstance.post("/membership", updatedFormData);
             alert("멤버십 가입이 완료되었습니다!");
             navigate("/mypage/membership");
         } catch (error) {
@@ -405,6 +411,7 @@ function MembershipDetail() {
                 </button>
             </form>
         </div>
+
     );
 }
 
