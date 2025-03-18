@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.dto.user.User;
 import com.app.service.user.UserService;
 import com.app.util.JwtProvider;
-import com.app.util.LoginManager;
 import com.app.util.SHA256Encryptor;
 
 @RestController
@@ -116,9 +116,9 @@ public class UserController {
 	}
 
 	@PostMapping("/user/checkDupNickname") // 닉네임 중복 확인
-	public boolean checkDupNickname(@RequestBody String nickname, HttpServletRequest request) {
+	public boolean checkDupNickname(@RequestBody User user, HttpServletRequest request) {
 
-		boolean checkDupNickname = userService.checkDupNickname(nickname); // 중복 체크 -> DB
+		boolean checkDupNickname = userService.checkDupNickname(user.getNickname()); // 중복 체크 -> DB
 		if (checkDupNickname == true) {
 			return false;
 		} else {
@@ -128,7 +128,7 @@ public class UserController {
 
 	@PostMapping("/user/checkDupEmail") // 이메일 중복 확인
 	public boolean checkDupEmail(@RequestBody String email, HttpServletRequest request) {
-
+		System.out.println(email);
 		boolean checkDupEmail = userService.checkDupEmail(email); // 중복 체크 -> DB
 		if (checkDupEmail == true) {
 			return false;
@@ -226,7 +226,21 @@ public class UserController {
 	}
 
 	@PostMapping("/user/refreshToken")
-	public ResponseEntity<Map<String, String>> refreshAccessToken(@RequestHeader("Authorization") String refreshToken) {
+	  public ResponseEntity<Map<String, String>>
+	  refreshAccessToken(@RequestHeader("Authorization") String refreshToken) {
+	  String token = refreshToken.replace("Bearer ", "");
+	 
+	  String newAccessToken = JwtProvider.refreshAccessToken(token);
+	  
+	  if (newAccessToken != null) {
+	  Map<String, String> tokens = new HashMap<>();
+	  tokens.put("accessToken", newAccessToken);
+	  return ResponseEntity.ok(tokens);
+	  } else {
+	  return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+	  }
+	  }
+	/*public ResponseEntity<Map<String, String>> refreshAccessToken(@RequestHeader("Authorization") String refreshToken) {
 		String token = refreshToken.replace("Bearer ", "");
 		String newAccessToken = JwtProvider.refreshAccessToken(token);
 		if (newAccessToken != null) {
@@ -236,27 +250,11 @@ public class UserController {
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "유효하지 않은 Refresh Token"));
 		}
-	}
+	}*/
 
-	/*
-	 * public ResponseEntity<Map<String, String>>
-	 * refreshAccessToken(@RequestHeader("Authorization") String refreshToken) {
-	 * String token = refreshToken.replace("Bearer ", "");
-	 * String userId = JwtProvider.getUserIdFromToken(token);
-	 * String userType = JwtProvider.getUserTypeFromToken(token);
-	 * String nickname = JwtProvider.getNickNameFromToken(token);
-	 * String newAccessToken = JwtProvider.refreshAccessToken(token, userId,
-	 * userType, nickname );
-	 * 
-	 * if (newAccessToken != null) {
-	 * Map<String, String> tokens = new HashMap<>();
-	 * tokens.put("accessToken", newAccessToken);
-	 * return ResponseEntity.ok(tokens);
-	 * } else {
-	 * return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-	 * }
-	 * }
-	 */
+	
+
+	 
 
 	@PostMapping("/googleLogin")
 	public ResponseEntity<Map<String, String>> googleLogin(@RequestBody Map<String, String> request) {
