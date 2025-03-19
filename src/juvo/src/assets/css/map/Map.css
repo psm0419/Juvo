@@ -466,7 +466,7 @@
         top: 120px; /* 헤더 높이 고려 */
         left: 0;
         width: 70vw; /* 화면의 85% 너비 */
-        height: calc(100% - 90px); /* 헤더 제외한 높이 */
+        height: calc(100% - 200px); /* 헤더 제외한 높이 */
         border-radius: 0 12px 12px 0; /* 오른쪽만 둥글게 */
         box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15); /* 오른쪽 그림자 */
         padding: 10px 0;

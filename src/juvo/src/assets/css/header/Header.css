@@ -208,7 +208,7 @@
 @media (max-width: 540px) {
     .containerHD {
         min-width: 100%;
-        height: auto;
+        height: 90px;
         flex-wrap: wrap;
         padding: 10px 15px;
         font-size: 0.9rem;
@@ -225,7 +225,7 @@
 
     .hamburger {
         display: block;
-        width: 50%;
+        width: 10%;
         text-align: right;
     }
 
@@ -282,9 +282,10 @@
     }
 
     .btns {
-        width: 100%;
+        width: 160px;        
         justify-content: center;
-        margin-top: 10px;
+        margin-top: -70px;
+        margin-left: 320px;
         flex-wrap: wrap;
     }
 

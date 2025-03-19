@@ -15,7 +15,7 @@ const FuelStationList = ({ stations, loading, onStationClick, isChargingStation 
     if (!stations || stations.length === 0) {
         return (
             <div className="no-stations-text">
-                {isChargingStation ? "충전소가 없습니다." : "주유소가 없습니다."}
+                {isChargingStation ? "로딩중.." : "로딩중.."}
             </div>
         );
     }
