@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../../assets/css/user/myPage/MyPageMembership.css';
+import Swal from 'sweetalert2'; // SweetAlert2 임포트
 
 function MyPageMembership() {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ function MyPageMembership() {
     const fetchMembershipInfo = async () => {
         const token = getToken();
         if (!token) {
-            alert("로그인이 필요합니다.");
+            Swal.fire("로그인이 필요합니다.");
             navigate("/user/login");
             return;
         }
@@ -46,10 +47,10 @@ function MyPageMembership() {
         } catch (error) {
             console.error("멤버십 정보 조회 오류:", error);
             if (error.response?.status === 401) {
-                alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+                Swal.fire("세션이 만료되었습니다. 다시 로그인해주세요.");
                 navigate("/user/login");
             } else {
-                alert("멤버십 정보를 불러오는데 실패했습니다.");
+                Swal.fire("멤버십 정보를 불러오는데 실패했습니다.");
             }
             setIsLoading(false);
         }
@@ -63,11 +64,19 @@ function MyPageMembership() {
             await axios.post("/api/membership/subscribe", {}, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
-            alert("구독이 시작되었습니다!");
+            Swal.fire({
+                title: "구독이 시작되었습니다!",
+                icon: "success",
+                draggable: true
+            });
             fetchMembershipInfo();
         } catch (error) {
             console.error("구독 신청 오류:", error);
-            alert("구독 신청에 실패했습니다.");
+            Swal.fire({
+                icon: "error",
+                title: "앗..!",
+                text: "구독 신청에 실패했습니다.",
+            });
         }
     };
 
@@ -75,20 +84,33 @@ function MyPageMembership() {
         const token = getToken();
         if (!token) return;
 
-        if (!window.confirm("정말로 구독을 해지하시겠습니까?")) {
-            return;
-        }
-
-        try {
-            await axios.post("/api/membership/unsubscribe", {}, {
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-            alert("구독이 해지되었습니다.");
-            fetchMembershipInfo();
-        } catch (error) {
-            console.error("구독 해지 오류:", error);
-            alert("구독 해지에 실패했습니다.");
-        }
+        Swal.fire({
+            title: "정말로 구독 해지 하실건가요?",
+            text: "해지 하시면 상당한 혜택을 포기하시게 됩니다.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "네! 해지 할래요!",
+            cancelButtonText: "조금 더 해볼게요!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await axios.post("/api/membership/unsubscribe", {}, {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+                    Swal.fire({
+                        title: "구독 취소 완료.",
+                        text: "그동안 JUVO 구독 서비스를 이용해주셔서 감사했습니다.",
+                        icon: "success"
+                    });
+                    fetchMembershipInfo();
+                } catch (error) {
+                    console.error("구독 해지 오류:", error);
+                    Swal.fire("구독 해지에 실패했습니다.");
+                }
+            }
+        });
     };
 
     const handleNavigateToDetail = () => {

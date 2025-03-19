@@ -12,9 +12,8 @@ function AdminPrivateRoute({ children }) {
     if (!token || userType?.trim().toUpperCase() !== "ADM") {
         Swal.fire({
             icon: "error",
-            title: "Oops...",
+            title: "페이지 접속 불가",
             text: "관리자 권한이 필요합니다.",
-            footer: '<a href="#">Why do I have this issue?</a>'
         }).then(() => {
             return <Navigate to="/user/login" replace />;
         });
