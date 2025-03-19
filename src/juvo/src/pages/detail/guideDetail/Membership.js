@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../../assets/css/detail/Membership.css';
 import PremiumStar from '../../../assets/image/PremiumStar.png';
 import Free from '../../../assets/image/free.png';
+import Swal from 'sweetalert2';
 
 const Membership = () => {
     const navigate = useNavigate();
@@ -15,8 +16,18 @@ const Membership = () => {
         if (isLoggedIn()) {
             navigate('/detail/guideDetail/MembershipDetail');
         } else {
-            alert('로그인을 해주세요.');
-            navigate('/user/login');
+            Swal.fire({
+                title: '경고',
+                text: '로그인이 필요합니다.',
+                icon: 'warning',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#f89400',  // 확인 버튼 색상 변경
+                customClass: {
+                    confirmButton: 'my-custom-button'  // 선택적으로 추가
+                }
+            }).then(() => {
+                navigate('/user/login');
+            });
         }
     };
 

@@ -258,6 +258,10 @@
         display: none; /* 모바일에서 드롭다운 숨김 */
     }
 
+    .nav:hover .dropdown-container {
+        display: none;
+    }
+    
     .mobile-submenu {
         display: block;
         background: #f0f4f8;
