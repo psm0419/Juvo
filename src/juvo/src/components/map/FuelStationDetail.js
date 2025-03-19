@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../assets/css/map/FuelStationDetail.css';
+import Swal from "sweetalert2";
 
 const FuelStationDetail = ({ station, onClose }) => {
     const [reviews, setReviews] = useState([]);
@@ -119,12 +120,24 @@ const FuelStationDetail = ({ station, onClose }) => {
     const handleWriteReview = async () => {
         const token = localStorage.getItem('accessToken');
         if (!token) {
-            alert('로그인이 필요합니다.');
+            Swal.fire({
+                icon: "warning",
+                title: "경고",
+                text: "로그인이 필요합니다.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });
             return;
         }
 
         if (!reviewContent || !reviewRating || isNaN(reviewRating) || reviewRating < 0 || reviewRating > 5) {
-            alert('리뷰 내용과 유효한 별점(0~5)을 입력해주세요.');
+            Swal.fire({
+                            icon: "warning",
+                            title: "경고",
+                            text: "리뷰 내용과 유효한 별점(0~5)을 입력해주세요.",
+                            confirmButtonText: "확인",
+                            confirmButtonColor: "#f89400",
+                        })            
             return;
         }
 
@@ -159,7 +172,7 @@ const FuelStationDetail = ({ station, onClose }) => {
             alert(`리뷰 저장 중 오류가 발생했습니다: ${error.message}`);
         }
     };
-    
+
     const handleSelectKeyword = async () => {
         const token = localStorage.getItem('accessToken');
         if (!token) {
@@ -285,7 +298,7 @@ const FuelStationDetail = ({ station, onClose }) => {
 
     return (
         <div className="fuel-station-detail-overlay">
-            <div className="fuel-station-detail">                
+            <div className="fuel-station-detail">
                 <h2 className="station-title">
                     <span className="station-name">
                         {station.OS_NM || "이름 없음"}({station.pollDivCd || "이름 없음"})
@@ -341,9 +354,9 @@ const FuelStationDetail = ({ station, onClose }) => {
                                 {reviews.slice(0, visibleReviews).map((review, index) => (
                                     <div key={index} className="review-item">
                                         <div className="review-header">
-                                            <span className="review-user">{isLoggedIn && review.USER_ID === userId && userNickname 
-                                                    ? userNickname 
-                                                    : review.USER_ID || "익명"}</span>
+                                            <span className="review-user">{isLoggedIn && review.USER_ID === userId && userNickname
+                                                ? userNickname
+                                                : review.USER_ID || "익명"}</span>
                                             <span className="review-date">{review.CREATE_AT || "날짜 없음"}</span>
                                         </div>
                                         <div className="review-rating">★ {review.STARCNT || 0}</div>
@@ -357,9 +370,9 @@ const FuelStationDetail = ({ station, onClose }) => {
                                     </div>
                                 ))}
                                 {visibleReviews < reviews.length && (
-                                    <button 
-                                        onClick={handleShowMore} 
-                                        className="more-btn"                                        
+                                    <button
+                                        onClick={handleShowMore}
+                                        className="more-btn"
                                     >
                                         더보기
                                     </button>
@@ -402,7 +415,7 @@ const FuelStationDetail = ({ station, onClose }) => {
                                     {label}
                                 </label>
                             ))}
-                            <button onClick={handleSelectKeyword}>저장</button>                            
+                            <button onClick={handleSelectKeyword}>저장</button>
                         </div>
                     )}
                 </div>

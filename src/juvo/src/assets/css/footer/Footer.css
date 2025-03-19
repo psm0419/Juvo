@@ -83,3 +83,9 @@
 .pipe {
     margin: 0 10px;
 }
+
+@media only screen and (max-width: 540px) {
+    .containerFT {
+        display: none;
+    }
+}
