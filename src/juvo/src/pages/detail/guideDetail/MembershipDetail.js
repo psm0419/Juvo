@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosInstance/axioslnstance";
 import "../../../assets/css/detail/MembershipDetail.css";
+import Swal from "sweetalert2";
 
 function MembershipDetail() {
     const navigate = useNavigate();
@@ -51,12 +52,12 @@ function MembershipDetail() {
         EXPIRY: /^(0[1-9]|1[0-2])\/\d{2}$/,
     };
 
-    // 로그인 체크 (훅 내부에서만 조건문 사용)
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
         if (!token) {
-            alert("로그인이 필요합니다.");
-            navigate("/user/login");
+            Swal.fire("로그인이 필요합니다!").then(() => {
+                navigate("/user/login");
+            });
         }
     }, [navigate]);
 
@@ -70,8 +71,9 @@ function MembershipDetail() {
                     if (res.data) {
                         setIsSubscribed(true);
                         if (userType === "CUS") {
-                            alert("이미 가입한 회원입니다.");
-                            navigate("/mypage/membership");
+                            Swal.fire("이미 가입한 회원입니다.").then(() => {
+                                navigate("/mypage/membership");
+                            });
                         }
                     }
                 })
@@ -89,32 +91,6 @@ function MembershipDetail() {
         const validateFields = () => {
             const newValidFields = {};
             const newErrorMessages = {};
-
-            newValidFields.name =
-                formData.name.length === 0
-                    ? null
-                    : REGEX.NAME.test(formData.name)
-                        ? true
-                        : false;
-            newErrorMessages.name =
-                formData.name.length === 0
-                    ? ""
-                    : REGEX.NAME.test(formData.name)
-                        ? "사용 가능한 이름입니다."
-                        : "2~15자 이내의 한글 이름만 가능합니다.";
-
-            newValidFields.tel =
-                formData.tel.length === 0
-                    ? null
-                    : REGEX.TEL.test(formData.tel)
-                        ? true
-                        : false;
-            newErrorMessages.tel =
-                formData.tel.length === 0
-                    ? ""
-                    : REGEX.TEL.test(formData.tel)
-                        ? "사용 가능한 전화번호입니다."
-                        : "유효한 전화번호 형식이 아닙니다. (예: 01012345678)";
 
             newValidFields.address = formData.address.length === 0 ? null : true;
             newErrorMessages.address =
@@ -213,18 +189,24 @@ function MembershipDetail() {
             Object.values(validFields).every((field) => field === true) &&
             formData.cardCompany !== "";
 
-        if (!isValid) {
-            alert("입력한 정보를 다시 확인해주세요.");
-            focusInvalidField();
-            return;
-        }
+            if (!isValid) {
+                Swal.fire({
+                    icon: "error",
+                    title: "다시 한 번 확인해주세요!",
+                    text: "입력한 정보를 다시 확인해주세요.",
+                }).then(() => {
+                    focusInvalidField(); // Swal.fire 후에 focusInvalidField 호출
+                });
+                return;
+            }
 
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-            alert("로그인이 필요합니다.");
-            navigate("/user/login");
-            return;
-        }
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                Swal.fire("로그인이 필요합니다!").then(() => {
+                    navigate("/user/login");
+                });
+                return;
+            }
 
         const today = new Date();
         const createdAt = `${today.getFullYear()}-${String(
@@ -234,11 +216,22 @@ function MembershipDetail() {
 
         try {
             await axiosInstance.post("/api/membership", updatedFormData);
-            alert("멤버십 가입이 완료되었습니다!");
-            navigate("/mypage/membership");
+            // 멤버십 가입 성공 시 알림
+            Swal.fire({
+                title: "멤버십 가입 완료!",
+                icon: "success",
+                draggable: true, // 드래그 가능
+            }).then(() => {
+                navigate("/mypage/membership");
+            });
         } catch (error) {
             console.error("멤버십 가입 오류:", error);
-            alert("멤버십 가입에 실패했습니다. 다시 시도해주세요.");
+            // 멤버십 가입 실패 시 알림
+            Swal.fire({
+                icon: "error",
+                title: "다시 한 번 확인해주세요!",
+                text: "멤버십 가입에 실패했습니다. 다시 시도해주세요.",
+            });
         }
     };
 
@@ -251,48 +244,6 @@ function MembershipDetail() {
         <div className="mbd-membership-detail-container">
             <h1 className="mbd-title">JUVO 멤버십 가입</h1>
             <form onSubmit={handleSubmit} className="mbd-membership-form">
-                {/* 이름 입력 */}
-                <div className="mbd-form-group">
-                    <label className="mbd-label">이름</label>
-                    <input
-                        type="text"
-                        name="name"
-                        ref={refs.name}
-                        value={formData.name}
-                        className={`mbd-input ${formData.name.length > 0
-                                ? validFields.name
-                                    ? "valid"
-                                    : "invalid"
-                                : ""
-                            }`}
-                        onChange={handleChange}
-                    />
-                    <span className={`validation-msg ${validFields.name ? "valid" : "invalid"}`}>
-                        {errorMessages.name}
-                    </span>
-                </div>
-
-                {/* 전화번호 입력 */}
-                <div className="mbd-form-group">
-                    <label className="mbd-label">전화번호</label>
-                    <input
-                        type="tel"
-                        name="tel"
-                        ref={refs.tel}
-                        value={formData.tel}
-                        className={`mbd-input ${formData.tel.length > 0
-                                ? validFields.tel
-                                    ? "valid"
-                                    : "invalid"
-                                : ""
-                            }`}
-                        onChange={handleChange}
-                    />
-                    <span className={`validation-msg ${validFields.tel ? "valid" : "invalid"}`}>
-                        {errorMessages.tel}
-                    </span>
-                </div>
-
                 {/* 주소 입력 */}
                 <div className="mbd-form-group">
                     <label className="mbd-label">카드 배송 받을 주소</label>

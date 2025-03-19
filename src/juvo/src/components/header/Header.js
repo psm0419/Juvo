@@ -4,6 +4,7 @@ import MembershipIcon from '../../assets/image/PremiumStar.png';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from "sweetalert2";
 
 function Header() {
     const navigate = useNavigate();
@@ -66,8 +67,15 @@ function Header() {
         setIsLogin(false);
         setUserType(null);
         setMembership(null);
-        alert('로그아웃 되었습니다.');
-        navigate('/');
+    
+        Swal.fire({
+            title: "로그아웃 되었습니다!",
+            icon: "success",
+            draggable: true,
+            confirmButtonText: "확인",
+        }).then(() => {
+            navigate('/');
+        });
     };
 
     const handleLogin = () => {
@@ -75,25 +83,39 @@ function Header() {
         navigate("/user/login");
     };
 
-    const handleMyPageClick = () => {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            alert('로그인이 필요합니다.');
+const handleMyPageClick = () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "로그인이 필요합니다!",
+            footer: '<a href="#">Why do I have this issue?</a>',
+            confirmButtonText: "확인",
+        }).then(() => {
             navigate('/login');
-            return;
-        }
-        navigate("/myPage/profile");
-    };
+        });
+        return;
+    }
+    navigate("/myPage/profile");
+};
 
-    const handleAdminClick = () => {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            alert('로그인이 필요합니다.');
-            navigate('user/login');
-            return;
-        }
-        navigate("/admin");
-    };
+const handleAdminClick = () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "로그인이 필요합니다!",
+            footer: '<a href="#">Why do I have this issue?</a>',
+            confirmButtonText: "확인",
+        }).then(() => {
+            navigate('/user/login');
+        });
+        return;
+    }
+    navigate("/admin");
+};
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
