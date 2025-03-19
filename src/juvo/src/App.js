@@ -27,11 +27,8 @@ import ResetPassword from './pages/user/ResetPassword';
 import Membership from './pages/detail/guideDetail/Membership';
 import MembershipDetail from './pages/detail/guideDetail/MembershipDetail';
 import { useTokenCleanup } from './util/AxiosConfig';
-import SocialLoginTest from './pages/user/socialLogin/SocialLoginTest';
-import KakaoPost from './pages/user/socialLogin/KakaoPost';
 import Notice from './pages/detail/guideDetail/Notice';
 import NoticeDetail from './pages/detail/guideDetail/NoticeDetail';
-
 
 function App() {
 	useTokenCleanup();
@@ -42,15 +39,11 @@ function App() {
 				<Route path='/user/login' element={<Login />} />
 				<Route path='/user/signup' element={<Signup />} />
 				<Route path="/callback/naver" element={<Login />} />
-				<Route path='/socialLogin' element={<SocialLoginTest />} />
-				<Route path='/login/auth2/code/kakao' element={<KakaoPost />} />
+				<Route path="/callback/kakao" element={<Login />} />							
 				<Route path="/findPasswordRequest" element={<FindPasswordRequest />} />
 				<Route path="/resetPassword/:token" element={<ResetPassword />} />
-
 				<Route path='/findIdRequest' element={<FindId />} />
-
 				<Route path="/admin" element={<Admin />} />
-
 				<Route path="/mypage" element={<MyPageLayout />}>
 					<Route path="profile" element={<MyPageProfile />} />
 					<Route path="favorites" element={<MyPageFavorites />} />

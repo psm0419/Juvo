@@ -39,6 +39,13 @@ public class UserDAOImpl implements UserDAO {
 		System.out.println(checkDupNickname);
 		return checkDupNickname;
 	}
+	
+	@Override
+	public User checkDupEmail(String email) {
+		User checkDupEmail = sqlSessionTemplate.selectOne("user_mapper.checkDupEmail", email);
+		System.out.println(checkDupEmail);
+		return checkDupEmail;
+	}
 
 	@Override
 	public User checkUserByToken(String id) {
@@ -118,4 +125,6 @@ public class UserDAOImpl implements UserDAO {
 	 }
 		
 	}
+
+	
 }

@@ -1,3 +1,4 @@
+/* 기존 스타일 유지 */
 @import url('https://fonts.googleapis.com/css2?family=Candal&display=swap');
 
 * {
@@ -14,8 +15,6 @@ select {
     cursor: url('../../image/mouse2.cur'), auto;
 }
 
-
-
 /* 전체 컨테이너 */
 .containerM {}
 
@@ -24,125 +23,74 @@ select {
     position: relative;
     width: 100%;
     height: 900px;
-    /* 동영상 높이 고정 */
     overflow: hidden;
-    /* 동영상이 넘치지 않도록 */
 }
 
-/* 동영상 스타일 */
 .bg-video {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    /* .mainTop 높이에 맞춤 */
     object-fit: cover;
-    /* 동영상이 가로/세로 비율 유지하며 꽉 차게 */
     z-index: 1;
-    /* 동영상을 텍스트 뒤에 배치 */
 }
 
-/* 기존 img 스타일은 동영상으로 대체되므로 비활성화 */
 .mainTop img {
     display: none;
-    /* 이미지 사용 중지 */
 }
 
-/* 사진 위 텍스트 - 개선된 스타일 */
 .textOverlay {
     position: absolute;
     top: 60%;
-    /* 시작 위치를 조금 아래로 설정 */
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
     z-index: 2;
     padding: 20px;
-
-    /* 애니메이션 추가 */
     opacity: 0;
-    /* 처음엔 투명 */
     animation: slideUp 2s ease-out forwards;
 }
 
-/* 아래에서 위로 올라오는 애니메이션 */
 @keyframes slideUp {
     from {
         top: 70%;
-        /* 아래에서 시작 */
         opacity: 0;
     }
-
     to {
         top: 50%;
-        /* 최종 위치 */
         opacity: 1;
     }
 }
 
 .textOverlay p:nth-child(1) {
     font-size: 2.5rem;
-    /* 주요 텍스트 크기 증가 */
     font-weight: 700;
-    /* 더 굵게 */
     color: #f89400;
-    /* JUVO 노랑 톤 */
     margin-bottom: 10px;
     font-family: 'Candal', sans-serif;
 }
 
 .textOverlay p:nth-child(2) {
     font-size: 1.8rem;
-    /* 보조 텍스트 크기 조정 */
     font-weight: 500;
     color: #374051;
-    /* JUVO 오렌지 톤 */
     margin-bottom: 15px;
     font-family: 'Candal', sans-serif;
 }
 
 .textOverlay p:nth-child(3) {
     font-size: 1.1rem;
-    /* 세부 설명 크기 조정 */
     font-weight: 400;
     color: #374051;
     max-width: 80%;
-    /* 텍스트 너비 제한 */
     margin-left: auto;
     margin-right: auto;
     font-family: 'Candal', sans-serif;
 }
 
-/* 애니메이션 정의 */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-        transform: translate(-50%, -60%);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
-}
-
-/* 선택적: 텍스트 가독성을 더 높이기 위한 오버레이 (이미 .textOverlay에 적용) */
-/*
-.mainTop::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3); 
-    z-index: 1;
-}
-*/
-
-/* 유가부분 */
+/* 유가 부분 */
 .mainMiddle {
     width: 100%;
     height: 500px;
@@ -167,7 +115,6 @@ select {
 
 .rmiddle {
     border: none;
-    /* 유가추이 보더 삭제 */
 }
 
 .lmiddlet {
@@ -175,12 +122,12 @@ select {
 }
 
 .point_text2 {
-    font-size: 1.3rem;
+    font-size: 0.9rem;
     font-weight: bold;
 }
 
 .lmiddlet .point_text2 span {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: rgb(59, 59, 59);
 }
 
@@ -189,6 +136,7 @@ select {
     margin-top: 15px;
     display: flex;
     justify-content: space-around;
+    background-color: white;
 }
 
 .todayContrainer .box {
@@ -201,12 +149,17 @@ select {
     align-items: center;
 }
 
+.todayContrainer .box h5 {
+    font-size: 0.8rem;
+    color: #296392;
+}
+
 .todayContrainer .box p {
     margin-top: 5px;
-    color: rgb(97, 96, 96);
+    color: #333;
+    font-size: 15px;
     font-weight: bold;
     font-family: 'Arial', sans-serif;
-    /* 깔끔한 서체 */
 }
 
 .todayContrainer .noBorder {
@@ -220,14 +173,13 @@ select {
 
 .lmiddleb select {
     width: 45%;
-    height: 30px;
+    height: 28px;
     margin-top: 15px;
     margin-right: 5%;
     border: 1px solid rgb(165, 165, 165);
     border-radius: 5px;
-    /* 둥근 테두리 추가 */
+    font-size: 0.7rem;
     font-family: 'Noto Sans KR', sans-serif;
-    /* 한국어 지원 서체 */
 }
 
 .cheapList {
@@ -238,46 +190,45 @@ select {
 }
 
 .cheapList li {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    padding: 9px;
+    margin: 5px;
+    font-family: 'Noto Sans KR', sans-serif;
+    border-radius: 5px;
+    border: 1px solid rgb(243, 242, 242);
     list-style: none;
+}
+
+.juyuso-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px;
-    font-family: 'Noto Sans KR', sans-serif;
-    /* background: #f9f9f9; */
-    border-radius: 5px;
+    width: 100%;
 }
 
-.avgList div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+.juyuso-name {
+    text-align: left;
 }
 
-.avgItem {
-    background: #f5f5f5;
-    padding: 4px;
-    border-radius: 8px;
-    text-align: center;
-    width: 80px;
-    font-size: 0.8rem;
-    font-family: 'Noto Sans KR', sans-serif;
+.juyuso-price {
+    color: #f89400;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-align: right;
 }
 
 .chart {
+    width: 100%;
+    margin: 0px 20px;
     margin-top: 50px;
 }
 
-.text {
-    margin-top: 150px;
-}
-
-/* 차트.css */
+/* 지도 */
 .avg-by-region {
     position: relative;
-    width: 330px;
+    width: 300px;
     height: 400px;
+    margin-left: 50px;
 }
 
 .map-image {
@@ -294,17 +245,22 @@ select {
     font-weight: bold;
     text-align: center;
     background-color: rgba(255, 255, 255, 0.9);
-    padding: 2px 4px;
+    padding: 3px 5px;
     border-radius: 2px;
     white-space: nowrap;
     transition: all 0.3s ease;
     z-index: 1;
     font-family: 'Noto Sans KR', sans-serif;
+    box-shadow: 10px 10px 20px rgba(88, 88, 88, 0.2);
 }
 
-.item:hover {
+.avg-item p span {
+    color: #296392;
+}
+
+.avg-item:hover {
     transform: translateY(-5px) scale(1.2);
-    box-shadow: 10px 10px 20px rgba(88, 88, 88, 0.2);
+    box-shadow: 10px 10px 20px rgba(65, 65, 65, 0.2);
     z-index: 10;
 }
 
@@ -315,35 +271,6 @@ select {
     transform: translate(-50%, -50%);
     color: black;
     font-family: 'Noto Sans KR', sans-serif;
-}
-
-/* 반응형 디자인 추가 */
-@media (max-width: 768px) {
-    .mainTop {
-        height: 300px;
-    }
-
-    .bg-video {
-        height: 300px;
-    }
-
-    .textOverlay {
-        top: 50px;
-        padding: 15px;
-        font-size: 1.2rem;
-    }
-
-    .textOverlay p:nth-child(1) {
-        font-size: 1.8rem;
-    }
-
-    .textOverlay p:nth-child(2) {
-        font-size: 1.2rem;
-    }
-
-    .textOverlay p:nth-child(3) {
-        font-size: 0.9rem;
-    }
 }
 
 /* 공지사항 멤버십 부분 */
@@ -371,7 +298,6 @@ select {
     padding-left: 30px;
 }
 
-/* 공지사항 */
 .mainotice_title {
     display: flex;
     justify-content: space-between;
@@ -397,23 +323,20 @@ select {
     padding: 15px;
     margin-bottom: 10px;
     background-color: #f9f9f9;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
-    transition: all 0.3s ease;
     text-decoration: none;
     color: inherit;
 }
 
 .notice_box:hover {
     border-color: #f5f3f3;
-    border: 1px solid #e0e0e0;
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
     transform: translateY(-2px);
 }
 
 .notice_text {
-    text-decoration: none;
     font-size: 0.8rem;
     font-weight: bold;
     color: #f89400;
@@ -424,27 +347,18 @@ select {
     text-decoration: none;
 }
 
-/* 반응형 디자인 - 공지사항 */
-@media (max-width: 768px) {
-    .mainotice {
-        padding: 10px;
-    }
-
-    .mainotice h3 {
-        font-size: 1.2rem;
-    }
-
-    .notice-item {
-        padding: 10px;
-        margin-bottom: 8px;
-    }
-
-    .notice-title {
-        font-size: 0.9rem;
-    }
+.sale {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* 멤버십 */
+.sale img {
+    width: 100%;
+    height: 200px;
+    border-radius: 5%;
+}
+
 .membership {
     display: flex;
     justify-content: space-between;
@@ -462,23 +376,202 @@ select {
     box-shadow: 10px 10px 20px rgba(88, 88, 88, 0.2);
 }
 
-/* 텍스트 강조 class */
 .point_text {
     font-size: 1.1rem;
     font-weight: bold;
     font-family: 'Noto Sans KR', sans-serif;
 }
 
-.info-window-route-options {
-    margin: 10px 0;
-    text-align: center;
+/* 기존 768px 미디어 쿼리 */
+@media (max-width: 768px) {
+    .mainTop {
+        height: 300px;
+    }
+
+    .bg-video {
+        height: 300px;
+    }
+
+    .textOverlay {
+        top: 50px;
+        padding: 15px;
+    }
+
+    .textOverlay p:nth-child(1) {
+        font-size: 1.8rem;
+    }
+
+    .textOverlay p:nth-child(2) {
+        font-size: 1.2rem;
+    }
+
+    .textOverlay p:nth-child(3) {
+        font-size: 0.9rem;
+    }
+
+    .mainotice {
+        padding: 10px;
+    }
+
+    .mainotice h3 {
+        font-size: 1.2rem;
+    }
+
+    .notice_box {
+        padding: 10px;
+        margin-bottom: 8px;
+    }
+
+    .notice_text {
+        font-size: 0.9rem;
+    }
 }
 
-.info-window-route-options label {
-    margin: 0 10px;
-    font-size: 14px;
-}
+/* 갤럭시 S24 기준 540px 미디어 쿼리 추가 */
+@media (max-width: 540px) {
+    /* 상단 동영상 섹션 */
+    .mainTop {
+        height: 200px; /* 더 작은 화면에 맞게 높이 축소 */
+    }
 
-.info-window-route-options input[type="radio"] {
-    margin-right: 5px;
+    .bg-video {
+        height: 200px;
+    }
+
+    .textOverlay {
+        top: 50%; /* 중앙 정렬 */
+        padding: 10px;
+    }
+
+    .textOverlay p:nth-child(1) {
+        font-size: 1.4rem; /* 텍스트 크기 더 축소 */
+        margin-bottom: 5px;
+    }
+
+    .textOverlay p:nth-child(2) {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+
+    .textOverlay p:nth-child(3) {
+        font-size: 0.75rem;
+        max-width: 90%;
+    }
+
+    /* 중간 유가 섹션 */
+    .mainMiddle {
+        height: auto; /* 높이 자동 조정 */
+        padding: 10px;
+    }
+
+    .middleContainer {
+        flex-direction: column; /* 세로로 쌓이게 */
+        padding: 0;
+    }
+
+    .middle {
+        width: 100%; /* 전체 너비 */
+        border-right: none;
+        border-bottom: 1px solid rgb(199, 199, 199);
+        padding: 15px;
+    }
+
+    .rmiddle {
+        border-bottom: none; /* 마지막 섹션 구분선 제거 */
+    }
+
+    .lmiddlet {
+        height: auto;
+    }
+
+    .todayContrainer {
+        flex-wrap: wrap; /* 줄바꿈 허용 */
+        justify-content: space-between;
+    }
+
+    .todayContrainer .box {
+        width: 48%; /* 두 개씩 배치 */
+        border-right: none;
+        margin-bottom: 10px;
+        padding: 5px;
+    }
+
+    .todayContrainer .box h5 {
+        font-size: 0.7rem;
+    }
+
+    .todayContrainer .box p {
+        font-size: 0.9rem;
+    }
+
+    .lmiddleb select {
+        width: 100%; /* 셀렉트 박스 전체 너비 */
+        margin-right: 0;
+        margin-bottom: 10px;
+        font-size: 0.65rem;
+    }
+
+    .cheapList li {
+        font-size: 0.7rem;
+        padding: 7px;
+        margin: 3px;
+    }
+
+    .juyuso-price {
+        font-size: 0.8rem;
+    }
+
+    .chart {
+        margin: 10px 0; /* 차트 마진 축소 */
+    }
+
+    .avg-by-region {
+        width: 100%; /* 지도 전체 너비 */
+        height: 300px; /* 지도 높이 조정 */
+        margin-left: 0;
+    }
+
+    .avg-item {
+        font-size: 0.6rem; /* 지도 아이템 글자 축소 */
+        padding: 2px 4px;
+    }
+
+    /* 하단 공지사항 및 멤버십 섹션 */
+    .mainBottom {
+        flex-direction: column;
+        padding: 15px;
+        height: auto;
+    }
+
+    .lbottom, .mbottom, .rbottom {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .mainotice {
+        padding: 10px 0;
+    }
+
+    .notice_box {
+        padding: 8px;
+        margin-bottom: 6px;
+    }
+
+    .notice_text {
+        font-size: 0.7rem;
+    }
+
+    .more {
+        font-size: 0.65rem;
+    }
+
+    .membership img {
+        width: 80%; /* 멤버십 이미지 크기 조정 */
+        margin: 0 auto;
+        display: block;
+    }
+
+    .point_text {
+        font-size: 0.9rem; /* 강조 텍스트 축소 */
+    }
 }

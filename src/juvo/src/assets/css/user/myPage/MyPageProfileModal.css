@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'BookkMyungjo-Bd';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
 /* 모달 오버레이 */
 .modal-overlay {
     position: fixed;
@@ -36,7 +43,7 @@
 .modal .mp-input {
     width: 100%;
     padding: 12px 15px;
-    border: 1px solid #e0e0e0;
+    border: 2px solid #e0e0e0;
     border-radius: 6px;
     font-size: 14px;
     color: #333;
@@ -45,17 +52,13 @@
 }
 
 .modal .mp-input.mp-valid {
-    border-color: #4a90e2;
+    border-color: #03c75a;
 }
 
 .modal .mp-input.mp-invalid {
     border-color: #e74c3c;
 }
 
-.modal .mp-input:focus {
-    border-color: #4a90e2;
-    outline: none;
-}
 
 /* 유효성 메시지 */
 .modal .mp-message {
@@ -68,7 +71,7 @@
 }
 
 .modal .mp-message.mp-valid {
-    color: #4a90e2;
+    color: #03c75a;
 }
 
 .modal .mp-message.mp-invalid {
@@ -76,7 +79,7 @@
 }
 
 /* 모달 버튼 그룹 */
-.modal-buttons {
+.modal-button {
     display: flex;
     gap: 10px;
     margin-top: 25px;
@@ -86,7 +89,7 @@
 .modal-submit-btn {
     flex: 1;
     padding: 12px;
-    background-color: #4a90e2;
+    background-color: #f3b252; /* 기본 색상 수정 */
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -98,7 +101,7 @@
 }
 
 .modal-submit-btn:hover {
-    background-color: #357abd;
+    background-color: #f89400; /* hover 색상 수정 */
 }
 
 /* 모달 취소 버튼 */
@@ -118,4 +121,63 @@
 
 .modal-cancel-btn:hover {
     background-color: #d0d0d0;
+}
+
+/* 갤럭시 S24 기준 미디어 쿼리 (뷰포트 너비 360px 이하) */
+@media only screen and (max-width: 360px) {
+    .modal {
+        padding: 15px; /* 모달 패딩 줄이기 */
+        max-width: 300px; /* 모달 최대 너비 조정 */
+        margin: 10px; /* 화면 가장자리와의 여백 추가 */
+    }
+
+    .modal-title {
+        font-size: 18px; /* 제목 크기 조정 */
+        margin-bottom: 15px; /* 간격 줄이기 */
+    }
+
+    .modal .mp-input {
+        padding: 10px 12px; /* 입력 필드 패딩 줄이기 */
+        font-size: 13px; /* 텍스트 크기 조정 */
+    }
+
+    .modal .mp-message {
+        font-size: 11px; /* 유효성 메시지 크기 조정 */
+        margin-top: 5px; /* 간격 줄이기 */
+    }
+
+    .modal-buttons {
+        flex-direction: column; /* 버튼을 수직으로 쌓음 */
+        gap: 8px; /* 버튼 간격 줄이기 */
+        margin-top: 20px; /* 위쪽 간격 조정 */
+    }
+
+    .modal-submit-btn,
+    .modal-cancel-btn {
+        padding: 10px; /* 버튼 패딩 줄이기 */
+        font-size: 13px; /* 버튼 텍스트 크기 조정 */
+    }
+}
+
+/* 가로 모드 (landscape)에서 추가 조정 */
+@media only screen and (max-width: 780px) and (orientation: landscape) {
+    .modal {
+        padding: 20px; /* 가로 모드에서 패딩 약간 유지 */
+        max-width: 500px; /* 가로 모드에서 너비 확장 */
+    }
+
+    .modal-title {
+        font-size: 19px;
+    }
+
+    .modal-buttons {
+        flex-direction: row; /* 가로 모드에서는 버튼 수평 유지 */
+        gap: 8px;
+    }
+
+    .modal-submit-btn,
+    .modal-cancel-btn {
+        padding: 11px;
+        font-size: 14px;
+    }
 }

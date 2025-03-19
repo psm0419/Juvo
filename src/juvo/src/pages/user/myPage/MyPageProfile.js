@@ -43,6 +43,7 @@ function MyPage() {
     useEffect(() => {
         const token = getToken();
         if (!token) {
+            alert("로그인이 필요합니다.");
             navigate("/user/login");
             return;
         }
@@ -198,7 +199,7 @@ function MyPage() {
             <div className="mp-page">
 
                 <div className="mp-container">
-                    <h1 className="mp-title">정보 수정</h1>
+                    <h1 className="mp-title">내 정보</h1>
 
                     <div className="mp-form-group">
                         <label className="mp-label">아이디</label>

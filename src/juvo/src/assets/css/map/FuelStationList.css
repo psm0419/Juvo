@@ -1,9 +1,12 @@
 /* FuelStationList.css */
 .fuel-station-list-container {
     margin-top: 10px;
-    max-height: calc(100% - 60px); /* 플라이박스 높이에 맞게 조정 */
-    overflow-y: auto; /* 스크롤바 항상 활성화 */
-    padding-bottom: 20px; /* 하단 패딩 추가 */
+    max-height: calc(100% - 60px);
+    /* 플라이박스 높이에 맞게 조정 */
+    overflow-y: auto;
+    /* 스크롤바 항상 활성화 */
+    padding-bottom: 20px;
+    /* 하단 패딩 추가 */
 }
 
 .loading-text,
@@ -42,10 +45,15 @@
 }
 
 .station-name {
+    width: 250px;
     cursor: pointer;
-    color: #007bff;
+    
 }
-
+.ev-name {
+    width: 160px;
+    cursor: pointer;
+    
+}
 .station-prices {
     display: flex;
     gap: 20px;
@@ -56,4 +64,81 @@
 .brand-logo {
     width: 20px;
     height: 16px;
+}
+
+/* FuelStationList.css에 추가 */
+@media only screen and (max-width: 540px) {
+    .fuel-station-list-container {
+        padding: 5px;
+        max-height: calc(50vh - 160px);
+        /* 사이드바 내에서 높이 조정 */
+    }
+
+    .loading-text,
+    .no-stations-text {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    .header-row {
+        font-size: 12px;
+        padding: 3px 5px;
+    }
+
+    .header-prices {
+        gap: 10px;
+    }
+
+    .station-item {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    .station-name-container {
+        gap: 5px;
+    }
+
+    .station-name {
+        font-size: 12px;
+    }
+
+    .station-prices {
+        gap: 10px;
+        font-size: 12px;
+    }
+
+    .brand-logo {
+        width: 16px;
+        height: 12px;
+    }
+}
+
+@media only screen and (max-width: 360px) {
+    .fuel-station-list-container {
+        max-height: calc(60vh - 140px);
+        /* 더 작은 화면에서 높이 증가 */
+    }
+
+    .header-row {
+        font-size: 10px;
+    }
+
+    .station-item {
+        font-size: 10px;
+        padding: 3px;
+    }
+
+    .station-name {
+        font-size: 10px;
+    }
+
+    .station-prices {
+        gap: 8px;
+        font-size: 10px;
+    }
+
+    .brand-logo {
+        width: 14px;
+        height: 10px;
+    }
 }

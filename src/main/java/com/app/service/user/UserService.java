@@ -14,6 +14,7 @@ public interface UserService {
 	public int signupUser(User user); 
 	public boolean checkDupId(String id);
 	public boolean checkDupNickname(String nickname);
+	public boolean checkDupEmail(String email);
 	public User checkUserByToken(String id);
 	public int changePassword(User findUser);
 	public User findUserById(String id);
@@ -30,8 +31,8 @@ public interface UserService {
 	public int removeUser(String id);
 	public boolean updateMembership(User user);
 	
-	// 구글 로그인용 메서드 추가
+	// sns 로그인용 메서드 추가
 	User handleGoogleLogin(Map<String, String> requestBody) throws Exception;
 	User handleNaverLogin(Map<String, String> requestBody) throws Exception;
-	
+	User handleKakaoLogin(Map<String, String> requestBody) throws Exception;
 }

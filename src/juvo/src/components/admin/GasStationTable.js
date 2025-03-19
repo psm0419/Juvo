@@ -20,7 +20,7 @@ function GasStationTable({ currentItems, modifyBlack, removeBlack, activeTab }) 
                     <th>위반 유형</th>
                     <th>업종 구분</th>
                     <th>상호</th>
-                    <th>도로명 주소</th>
+                    <th className="address">도로명 주소</th>
                     <th>상태</th>
                     <th></th>
                 </tr>
@@ -32,10 +32,10 @@ function GasStationTable({ currentItems, modifyBlack, removeBlack, activeTab }) 
                             <td>{station.uniId || ''}</td>
                             <td>{getBlackTypeLabel(station.blackType)}</td>
                             <td>{station.lpgYn === 'Y' ? 'LPG' : '주유소'}</td>
-                            <td>{station.osNm || ''}</td>
-                            <td>{station.newAdr || ''}</td>
+                            <td className="tstationosnm">{station.osNm || ''}</td>
+                            <td className="tstationnewadr">{station.newAdr || ''}</td>
                             <td>{station.status === 1 ? '처리됨' : '미처리'}</td>
-                            <td>
+                            <td className='tstationbtn'>
                                 {activeTab === 'reported' && (
                                     <>
                                         <button onClick={() => modifyBlack(station.uniId)}>추가</button>

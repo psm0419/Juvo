@@ -1,3 +1,4 @@
+/* 커스텀 폰트 정의 */
 @font-face {
     font-family: 'BookkMyungjo-Bd';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2') format('woff2');
@@ -8,38 +9,40 @@
 /* 페이지 전체 레이아웃 */
 .mp-page {
     display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 10px;
     box-sizing: border-box;
 }
 
 /* 컨테이너 */
 .mp-container {
-    max-width: 460px;
     width: 100%;
-    margin: 40px auto;
-    padding: 30px 30px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 40px 40px;
+    font-family: 'GmarketSansMedium';
     background: linear-gradient(145deg, #ffffff, #f0f4f8);
-    border: 1px solid #e8ecef;
     border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 /* 제목 */
 .mp-title {
-    text-align: center;
+    text-align: left;
     color: #1e2a44;
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f89400 !important;
 }
 
 /* 입력 그룹 */
 .mp-form-group {
     margin-bottom: 20px;
+}
+
+.mp-form-group:last-child {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 /* 라벨 */
@@ -77,20 +80,13 @@
     outline: none;
 }
 
-/* 버튼 그룹 */
-.mp-form-group:last-child {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-
 /* 비밀번호/닉네임 변경 버튼 */
 .mp-change-pw-btn,
 .mp-change-nickname-btn {
     flex: 1;
     padding: 14px;
-    background-color: #1a73e8;
-    color: white;
+    background-color: #f3b252 !important;
+    color: black;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -103,7 +99,76 @@
 
 .mp-change-pw-btn:hover,
 .mp-change-nickname-btn:hover {
-    background-color: #1557b0;
+    background-color: #f89400 !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 갤럭시 S24 기준 미디어 쿼리 (뷰포트 너비 360px 이하) */
+@media only screen and (max-width: 360px) {
+    .mp-page {
+        padding: 5px; /* 페이지 패딩 줄이기 */
+    }
+
+    .mp-container {
+        padding: 20px; /* 컨테이너 패딩 줄이기 */
+    }
+
+    .mp-title {
+        font-size: 20px; /* 제목 크기 조정 */
+        margin-bottom: 20px; /* 간격 줄이기 */
+    }
+
+    .mp-form-group {
+        margin-bottom: 15px; /* 입력 그룹 간격 줄이기 */
+    }
+
+    .mp-label {
+        font-size: 12px; /* 라벨 크기 조정 */
+        margin-bottom: 6px; /* 간격 줄이기 */
+    }
+
+    .mp-input {
+        padding: 10px 12px; /* 입력 필드 패딩 줄이기 */
+        font-size: 13px; /* 텍스트 크기 조정 */
+    }
+
+    .mp-form-group:last-child {
+        flex-direction: column; /* 버튼을 수직으로 쌓음 */
+        gap: 8px; /* 버튼 간격 줄이기 */
+        margin-top: 15px; /* 위쪽 간격 조정 */
+    }
+
+    .mp-change-pw-btn,
+    .mp-change-nickname-btn {
+        padding: 12px; /* 버튼 패딩 줄이기 */
+        font-size: 14px; /* 버튼 텍스트 크기 조정 */
+    }
+
+    .mp-change-pw-btn:hover,
+    .mp-change-nickname-btn:hover {
+        transform: none; /* 작은 화면에서는 hover 효과 단순화 */
+    }
+}
+
+/* 가로 모드 (landscape)에서 추가 조정 */
+@media only screen and (max-width: 780px) and (orientation: landscape) {
+    .mp-container {
+        padding: 30px; /* 가로 모드에서 패딩 약간 유지 */
+    }
+
+    .mp-title {
+        font-size: 22px;
+    }
+
+    .mp-form-group:last-child {
+        flex-direction: row; /* 가로 모드에서는 버튼 수평 유지 */
+        gap: 8px;
+    }
+
+    .mp-change-pw-btn,
+    .mp-change-nickname-btn {
+        padding: 12px;
+        font-size: 15px;
+    }
 }

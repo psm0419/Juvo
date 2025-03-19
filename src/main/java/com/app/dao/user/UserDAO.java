@@ -40,5 +40,7 @@ public interface UserDAO {
 	public int removeUser(String id);
 
 	public boolean updateMembership(User user);
+
+	public User checkDupEmail(String email);
 	
 }

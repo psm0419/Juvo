@@ -5,7 +5,7 @@ import '../../assets/css/user/Signup.css';
 
 function Signup() {
     let navigate = useNavigate();
-
+    
     let [id, setId] = useState("");
     let [validId, setValidId] = useState(null);
     let [idMsg, setIdMsg] = useState("");
@@ -31,6 +31,7 @@ function Signup() {
     let [email, setEmail] = useState("");
     let [validEmail, setValidEmail] = useState(null);
     let [emailMsg, setEmailMsg] = useState("");
+    let [checkDupEmail, setCheckDupEmail] = useState(null); // 이메일 중복 확인 상태 추가
 
     let [tel, setTel] = useState("");
     let [validTel, setValidTel] = useState(null);
@@ -45,18 +46,27 @@ function Signup() {
     let [isEmailAuth, setIsEmailAuth] = useState(null);
 
     let axiosAuthCode;
+
+    useEffect(() => {
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken != null) {
+            navigate('/'); // 홈 화면으로 리다이렉트
+        }
+    }, [navigate]);
+
+
     // 정규식 객체
     const REGEX = {
-        ID: /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/,/// 첫글자는 소문자, 대문자 알파벳
-        PWD: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/, //소문자, 대문자, 숫자, 특수문자 !@#$%가 꼭 들어있고 8~24글자
-        NAME: /^[가-힣]{2,15}$/, // 자음 모음 불가, 2~15
-        EMAIL: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i, //이메일 정규식
-        JUMIN: /^(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/, // 생년월일 정규식
-        NICKNAME: /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{6,16}$/, //닉네임 정규식 6자 이상 16자 이하, 영어 또는 숫자 또는 한글로 구성
-        TEL: /^01(0|1|2|6|9)[-\s]?\d{3,4}[-\s]?\d{4}$/ // 휴대전화 번호 정규식
+        ID: /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/,
+        PWD: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/,
+        NAME: /^[가-힣]{2,15}$/,
+        EMAIL: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+        JUMIN: /^(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/,
+        NICKNAME: /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{6,16}$/,
+        TEL: /^01(0|1|2|6|9)[-\s]?\d{3,4}[-\s]?\d{4}$/
     }
 
-    // 각 유효성 검증 및 메시지
+    // 유효성 검증 및 메시지
     useEffect(() => {
         const validateFields = () => {
             // ID 유효성 검사
@@ -72,7 +82,7 @@ function Signup() {
                 );
             } else {
                 setValidId(false);
-                setIdMsg(" 영문으로 시작 한 영문+숫자로 구성 된 4~24자의 아이디");
+                setIdMsg("영문으로 시작한 영문+숫자로 구성된 4~24자의 아이디");
             }
 
             // 비밀번호 유효성 검사
@@ -105,7 +115,13 @@ function Signup() {
                 setValidEmail(null);
             } else if (REGEX.EMAIL.test(email)) {
                 setValidEmail(true);
-                setEmailMsg(isEmailAuth ? "인증이 완료되었습니다." : "사용 가능한 이메일입니다. 인증을 진행해주세요.");
+                setEmailMsg(
+                    checkDupEmail === true
+                        ? isEmailAuth
+                            ? "인증이 완료되었습니다."
+                            : "사용 가능한 이메일입니다. 인증을 진행해주세요."
+                        : "이메일 중복 확인을 진행해주세요."
+                );
             } else {
                 setValidEmail(false);
                 setEmailMsg("이메일 형식이 올바르지 않습니다.");
@@ -120,7 +136,7 @@ function Signup() {
                 setUsernameMsg("사용 가능한 이름입니다.");
             } else {
                 setValidUsername(false);
-                setUsernameMsg("자음과 모음만 따로 기입하는건 불가능 하며 2~16자 이내의 이름만 가능합니다.");
+                setUsernameMsg("자음과 모음만 따로 기입하는건 불가능하며 2~16자 이내의 이름만 가능합니다.");
             }
 
             // 닉네임 유효성 검사
@@ -170,15 +186,14 @@ function Signup() {
             }
         };
 
-        // 디바운스 처리
         const timeoutId = setTimeout(validateFields, 500);
         return () => clearTimeout(timeoutId);
     }, [
         id, pw, pwCheck, email, username, jumin, nickname, tel, isEmailAuth,
-        checkDupId, checkDupNickname
+        checkDupId, checkDupNickname, checkDupEmail
     ]);
 
-    //각 입력 필드에 대한 참조 추가
+    // 각 입력 필드에 대한 참조 추가
     const ref = {
         id: useRef(null),
         pw: useRef(null),
@@ -189,6 +204,7 @@ function Signup() {
         tel: useRef(null),
         jumin: useRef(null)
     }
+
     // 유효성 검증 실패 시 해당 필드로 포커스 이동 함수
     const focusInvalidField = () => {
         if (!validId || checkDupId !== true) {
@@ -203,7 +219,7 @@ function Signup() {
             ref.pwCheck.current.focus();
             return false;
         }
-        if (!validEmail || !isEmailAuth) {
+        if (!validEmail || checkDupEmail !== true || !isEmailAuth) { // 중복 확인 추가
             ref.email.current.focus();
             return false;
         }
@@ -211,7 +227,7 @@ function Signup() {
             ref.username.current.focus();
             return false;
         }
-        if (!validNickname) {
+        if (!validNickname || checkDupNickname !== true) {
             ref.nickname.current.focus();
             return false;
         }
@@ -220,11 +236,12 @@ function Signup() {
             return false;
         }
         if (!validTel) {
-            ref.validTel.current.focus();
+            ref.tel.current.focus();
             return false;
         }
         return true;
     };
+
     // 모든 유효성 검증 통과 여부
     const isValidSuccess = () => {
         return (
@@ -232,12 +249,14 @@ function Signup() {
             validPw &&
             pwMatch &&
             validEmail &&
+            checkDupEmail === true && // 이메일 중복 확인 통과 여부 추가
             isEmailAuth &&
             validUsername &&
             validNickname &&
             validJumin &&
             validTel &&
-            checkDupId === true
+            checkDupId === true &&
+            checkDupNickname === true
         );
     }
 
@@ -253,6 +272,20 @@ function Signup() {
                 alert("오류가 발생했습니다. 다시 시도해주세요.");
             });
     };
+
+    const handleCheckDupEmail = () => {
+        axios.post("/user/checkDupEmail",  email , { headers: { "Content-Type": "text/plain" } }) // 텍스트 보내서 비교
+            .then((response) => {
+                console.log("서버 응답:", response.data); // 응답 확인
+                setCheckDupEmail(response.data);
+                setEmailMsg(response.data ? "사용 가능한 이메일입니다. 인증을 진행해주세요." : "이미 사용 중인 이메일입니다.");
+            })
+            .catch((error) => {
+                console.error("이메일 중복 확인 오류:", error);
+                alert("오류가 발생했습니다. 다시 시도해주세요.");
+            });
+    };
+
     // 이메일 인증 요청 핸들러
     const handleEmailAuth = () => {
         axios
@@ -260,7 +293,7 @@ function Signup() {
             .then((response) => {
                 alert("이메일로 인증번호가 발송되었습니다.");
                 axiosAuthCode = response.data;
-                console.log("서버에서 받은 returnCode:", axiosAuthCode); // 응답 데이터 확인
+                console.log("서버에서 받은 returnCode:", axiosAuthCode);
 
                 setAuthCode(axiosAuthCode);
                 setInputAuthCode(false);
@@ -271,6 +304,7 @@ function Signup() {
                 alert("이메일 인증 중 오류가 발생했습니다.");
             });
     };
+
     // 인증번호 확인 핸들러
     const handleCheckAuthCode = () => {
         let inputCode = document.getElementById("checkAuthCode").value;
@@ -283,6 +317,7 @@ function Signup() {
             alert("인증번호를 다시 확인해주세요.");
         }
     };
+
     // 닉네임 중복 확인 핸들러
     const handleCheckDupNickname = () => {
         axios.post("/user/checkDupNickname", { nickname }, { headers: { "Content-Type": "application/json" } })
@@ -295,7 +330,8 @@ function Signup() {
                 alert("오류가 발생했습니다. 다시 시도해주세요.");
             });
     };
-    // 회원가입 핸들
+
+    // 회원가입 핸들러
     const handleSignup = () => {
         if (!isValidSuccess()) {
             alert("입력한 정보를 다시 확인해주세요.");
@@ -321,7 +357,7 @@ function Signup() {
         setId(e.target.value);
         setValidId(null);
         setIdMsg("");
-        setCheckDupId(null); // 아이디 변경 시 중복 확인 상태 초기화
+        setCheckDupId(null);
     };
 
     const handlePwChange = (e) => {
@@ -340,9 +376,9 @@ function Signup() {
         setEmail(e.target.value);
         setValidEmail(null);
         setEmailMsg("");
+        setCheckDupEmail(null); // 이메일 변경 시 중복 확인 상태 초기화
         setIsEmailAuth(null);
-        setInputAuthCode(true); // 이메일 변경 시 인증번호 입력란 숨기기
-        // 인증번호 입력란과 버튼 초기화
+        setInputAuthCode(true);
         const authCodeInput = document.getElementById("checkAuthCode");
         const authCodeButton = document.getElementById("checkAuthCode_btn");
         if (authCodeInput) authCodeInput.value = "";
@@ -360,7 +396,7 @@ function Signup() {
         setNickname(e.target.value);
         setValidNickname(null);
         setNicknameMsg("");
-        setCheckDupNickname(null); // 닉네임 변경 시 중복 확인 상태 초기화
+        setCheckDupNickname(null);
     };
 
     const handleTelChange = (e) => {
@@ -376,13 +412,12 @@ function Signup() {
     };
 
     return (
-
         <div className="signup-container">
             <h1 className="signup-title">회원가입</h1>
 
             <div className="input-group">
                 <div className="input-with-button">
-                <input
+                    <input
                         type="text"
                         ref={ref.id}
                         value={id}
@@ -428,7 +463,6 @@ function Signup() {
                         onChange={handlePwChange}
                     />
                 </div>
-
                 <span className={`validation-msg ${validPw ? 'valid' : 'invalid'}`}>
                     {pwMsg}
                 </span>
@@ -450,7 +484,7 @@ function Signup() {
 
             <div className="input-group">
                 <div className="input-with-button">
-                <input
+                    <input
                         type="text"
                         ref={ref.email}
                         value={email}
@@ -458,6 +492,8 @@ function Signup() {
                             email.length > 0
                                 ? isEmailAuth
                                     ? 'valid'
+                                    : checkDupEmail === true
+                                    ? 'pending'
                                     : validEmail
                                     ? 'pending'
                                     : 'invalid'
@@ -466,7 +502,12 @@ function Signup() {
                         placeholder="이메일"
                         onChange={handleEmailChange}
                     />
-                    {validEmail && !isEmailAuth && (
+                    {validEmail && checkDupEmail !== true && (
+                        <button className="check-button" onClick={handleCheckDupEmail}>
+                            중복 확인
+                        </button>
+                    )}
+                    {validEmail && checkDupEmail === true && !isEmailAuth && (
                         <button className="auth-button" onClick={handleEmailAuth}>
                             이메일 인증
                         </button>
@@ -477,6 +518,8 @@ function Signup() {
                         email.length > 0
                             ? isEmailAuth
                                 ? 'valid'
+                                : checkDupEmail === true
+                                ? 'pending'
                                 : validEmail
                                 ? 'pending'
                                 : 'invalid'
@@ -485,7 +528,6 @@ function Signup() {
                 >
                     {emailMsg}
                 </span>
-
 
                 <div className="auth-code-group" hidden={inputAuthCode}>
                     <div className="input-with-button">
@@ -511,10 +553,10 @@ function Signup() {
                     placeholder="이름"
                     onChange={handleUsernameChange}
                 />
-
                 <span className={`validation-msg ${validUsername ? 'valid' : 'invalid'}`}>
                     {usernameMsg}
                 </span>
+
                 <div className="input-with-button">
                     <input
                         type="text"
@@ -539,7 +581,6 @@ function Signup() {
                         onChange={handleTelChange}
                     />
                 </div>
-
                 <span className={`validation-msg ${validTel ? 'valid' : 'invalid'}`}>
                     {telMsg}
                 </span>
@@ -568,14 +609,15 @@ function Signup() {
                     )}
                 </div>
                 <span
-                    className={`validation-msg ${nickname.length > 0
+                    className={`validation-msg ${
+                        nickname.length > 0
                             ? checkDupNickname === true
                                 ? 'valid'
                                 : validNickname
-                                    ? 'pending'
-                                    : 'invalid'
+                                ? 'pending'
+                                : 'invalid'
                             : ''
-                        }`}
+                    }`}
                 >
                     {nicknameMsg}
                 </span>

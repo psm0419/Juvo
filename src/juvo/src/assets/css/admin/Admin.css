@@ -1,8 +1,7 @@
-
-
+/* 기존 스타일 유지 */
 .admin-layout {
     display: flex;
-    min-height: calc(100vh - 200px); /* header와 footer 높이를 제외 */
+    min-height: calc(100vh - 200px);
     padding: 20px;
     background-color: #f5f5f5;
 }
@@ -57,11 +56,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 사용할 색상
-background-color: #2196F3;
-background-color: #1976D2;
-*/
-
 /* 고객 관리 */
 h2 {
     margin: 20px 0px 10px 20px;
@@ -91,6 +85,10 @@ h2 {
     color: #444;
 }
 
+.address {
+    width: 270px;
+}
+
 .customerContainer td {
     font-size: 13px;
 }
@@ -102,8 +100,8 @@ h2 {
 /* 탭 버튼 스타일 */
 .tabButtons {
     margin-bottom: 20px;
-    display: flex; /* flex로 레이아웃 유지 */
-    align-items: center; /* 세로 정렬 */
+    display: flex;
+    align-items: center;
 }
 
 .tabButtons button {
@@ -116,8 +114,8 @@ h2 {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    white-space: nowrap; 
-    min-width: 80px; 
+    white-space: nowrap;
+    min-width: 80px;
 }
 
 .tabButtons button:hover {
@@ -132,11 +130,11 @@ h2 {
 .leftTabs,
 .rightTabs {
     display: flex;
-    gap: 0; 
+    gap: 0;
 }
 
 .rightTabs {
-    margin-left: auto; 
+    margin-left: auto;
 }
 
 /* 관리 버튼 스타일 */
@@ -152,19 +150,16 @@ h2 {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* 수정 버튼 */
 .customerContainer td button:first-child {
     background-color: #6b7280;
     color: white;
 }
 
-/* 삭제 버튼 */
 .customerContainer td button:last-child {
     background-color: #9ca3af;
     color: white;
 }
 
-/* 버튼 호버 효과 */
 .customerContainer td button:first-child:hover {
     background-color: #4b5563;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
@@ -218,7 +213,7 @@ h2 {
 
 /* 주유소 관리 */
 .gasContainer {    
-    padding: 20px;
+    padding: 5px;
 }
 
 .gasContainer table {
@@ -237,7 +232,7 @@ h2 {
 
 .gasContainer th {
     background-color: #fafafa;
-    font-size: 0.9rem;
+    font-size: 12px;
     font-weight: 600;
     color: #444;
 }
@@ -250,7 +245,6 @@ h2 {
     font-size: 12px;
 }
 
-/* 추가/삭제 버튼 스타일 */
 .gasContainer button {
     padding: 6px 12px;
     margin: 0 5px;
@@ -263,14 +257,24 @@ h2 {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+.tstationosnm {
+    max-width: 100px;
+}
+
+.tstationbtn {
+    width: 70px;
+}
+
 .gasContainer td button:first-child {
     background-color: #6b7280;
     color: white;
+    margin: 3px;
 }
 
 .gasContainer td button:last-child {
     background-color: #9ca3af;
     color: white;
+    margin: 3px;
 }
 
 .gasContainer td button:first-child:hover {
@@ -281,4 +285,179 @@ h2 {
 .gasContainer td button:last-child:hover {
     background-color: #7c8899;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* 갤럭시 S24 기준 540px 미디어 쿼리 */
+@media (max-width: 540px) {
+    .admin-layout {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .sidebar-title {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .sidebar-nav p {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .admin-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    h2 {
+        margin: 10px 0 5px 10px;
+        font-size: 18px;
+    }
+
+    .customerContainer {
+        padding: 10px;
+    }
+
+    .customerContainer table {
+        margin-top: 10px;
+        font-size: 8px;
+    }
+
+    .customerContainer td {
+        padding: 6px;
+    }
+
+    .customerContainer th:first-child,
+    .customerContainer td:first-child {
+        max-width: 100px;
+        white-space: normal;
+        padding: 1px;
+    }
+
+    .address {
+        width: auto;
+    }
+
+    .tabButtons {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 5px;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .tabButtons button {
+        padding: 6px 12px;
+        font-size: 12px;
+        min-width: 70px;
+        margin-bottom: 0;
+    }
+
+    /* GasStationTabs의 버튼 정렬 조정 */
+    .gasContainer .tabButtons {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: space-between; /* 버튼 간 간격을 균등하게 분배 */
+    }
+
+    .gasContainer .leftTabs {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 5px;
+        width: 100%; /* 전체 너비를 사용하여 버튼이 잘 배치되도록 */
+    }
+
+    .gasContainer .leftTabs button {
+        flex: 1 1 calc(25% - 5px); /* 4개 버튼이 한 줄에 배치되도록 */
+        max-width: calc(25% - 5px); /* 4개 버튼이 한 줄에 맞도록 */
+        box-sizing: border-box;
+    }
+
+    .gasContainer .rightTabs {
+        flex-direction: row;
+        gap: 5px;
+        width: 100%; /* 전체 너비를 사용하여 버튼이 잘 배치되도록 */
+        justify-content: flex-start;
+    }
+
+    .gasContainer .rightTabs button {
+        flex: 1 1 calc(50% - 5px); /* 2개 버튼이 한 줄에 배치되도록 */
+        max-width: calc(50% - 5px); /* 2개 버튼이 한 줄에 맞도록 */
+        box-sizing: border-box;
+    }
+
+    .leftTabs,
+    .rightTabs {
+        flex-direction: row;
+        gap: 5px;
+        width: auto;
+    }
+
+    .rightTabs {
+        margin-left: 0;
+    }
+
+    .customerContainer td  {
+        font-size: 10px;
+    }
+
+    .tcustomerid {
+        max-width: 118px;
+    }
+
+    .customerContainer td button {
+        padding: 4px 8px;
+        font-size: 12px;
+        margin: 2px;
+    }
+
+    .pagination {
+        margin-top: 15px;
+        gap: 5px;
+    }
+
+    .pagination button {
+        width: 25px;
+        height: 25px;
+        font-size: 12px;
+    }
+
+    .gasContainer {
+        padding: 10px;
+    }
+
+    .gasContainer table {
+        margin-top: 10px;
+    }
+
+    .gasContainer td {
+        font-size: 10px;
+        padding: 1px;
+    }
+
+    .gasContainer th,
+    .gasContainer td {
+        padding: 4px;
+    }
+
+    .tstationbtn {
+        max-width: 55px;
+    }
+
+    .gasContainer th.address,
+    .gasContainer td:nth-child(5) {
+        display: none;
+    }
+
+    .gasContainer td button {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+        margin: 2px;
+    }
 }

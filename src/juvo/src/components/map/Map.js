@@ -37,6 +37,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const [favoriteStations, setFavoriteStations] = useState([]); // 사용자별 즐겨찾기 uniId 목록
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
     const [searchOption, setSearchOption] = useState("0");
+    const [isMarkerLoading, setIsMarkerLoading] = useState(false);
 
     const openReportModal = (uniId) => {
         setReportUniId(uniId);
@@ -57,6 +58,10 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         self: false,
     });
     const [regions, setRegions] = useState({});
+    const stationsToShow = showFavoritesOnly
+        ? filteredStations.filter(station => favoriteStations.includes(station.uniId))
+        : filteredStations;
+    const chargingStationsToShow = filteredChargingStations;
 
     const getMarkerImage = (pollDivCd, isChargingStation = false) => {
         const kakao = window.kakao;
@@ -259,7 +264,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
         if (!stationsData || !stationsData.RESULT || !stationsData.RESULT.OIL || stationsData.RESULT.OIL.length === 0) return [];
         return stationsData.RESULT.OIL.filter(station => {
             const brandMatches =
-                (brands.cheap && station.pollDivCd === "RTE") ||
+                (brands.cheap && (station.pollDivCd === "RTO" || station.pollDivCd === "RTX")) ||
                 (brands.skEnergy && station.pollDivCd === "SKE") ||
                 (brands.gsCaltex && station.pollDivCd === "GSC") ||
                 (brands.hyundaiOilbank && station.pollDivCd === "HDO") ||
@@ -288,25 +293,50 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
     // 주유소 마커 업데이트
     useEffect(() => {
-        if (activeTab !== "주유소" || !mapRef.current || !filteredStations.length) return;
-        console.log('Filtered stations:', filteredStations); // 필터링 전 데이터 확인
+        if (activeTab !== "주유소" || !mapRef.current) {
+            console.log('Not updating fuel markers: Wrong tab or map not ready');
+            return;
+        }
+        setIsMarkerLoading(true);        
+        console.log('Filtered stations:', filteredStations);
         console.log('Favorite stations:', favoriteStations);
         const kakao = window.kakao;
         const geocoder = new kakao.maps.services.Geocoder();
-
-        fuelMarkers.forEach(marker => marker?.setMap(null)); //기존 마커 제거
-
+    
+        // 기존 마커 제거
+        console.log('Removing existing fuel markers:', fuelMarkers.length);
+        fuelMarkers.forEach(marker => {
+            if (marker) {
+                marker.setMap(null); // 지도에서 제거
+                if (marker.infoWindow) marker.infoWindow.close(); // 정보창 닫기
+            }
+        });
+        setFuelMarkers([]); // 상태 초기화
+        console.log('Fuel markers cleared');
+    
+        // 필터링된 주유소가 없으면 종료
+        if (!filteredStations.length) {
+            setIsMarkerLoading(false);
+            console.log("No filtered stations to display, exiting.");
+            return;
+        }
+    
         const stationsToShow = showFavoritesOnly
-            ? filteredStations.filter(station => {
-                const isFavorite = favoriteStations.includes(station.uniId);
-                return isFavorite;
-            })
+            ? filteredStations.filter(station => favoriteStations.includes(station.uniId))
             : filteredStations;
-
+    
+        // 즐겨찾기 필터링 후에도 결과가 없으면 종료
+        if (!stationsToShow.length) {
+            setIsMarkerLoading(false); // 즐겨찾기 필터링 후 데이터가 없으면 바로 로딩 해제
+            return;
+        }
+    
+        console.log('Stations to show:', stationsToShow.length);
+    
         const promises = stationsToShow.map(station => {
             const address = station.NEW_ADR || station.newAdr || station.VAN_ADR || station.vanAdr;
             if (!address) return Promise.resolve(null);
-
+    
             return new Promise(resolve => {
                 geocoder.addressSearch(address, (result, status) => {
                     if (status === kakao.maps.services.Status.OK) {
@@ -315,7 +345,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                             resolve(null);
                             return;
                         }
-
+    
                         const markerImage = getMarkerImage(station.pollDivCd);
                         const marker = new kakao.maps.Marker({
                             position: coords,
@@ -404,8 +434,9 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
         Promise.all(promises).then(markers => {
             const validMarkers = markers.filter(m => m);
+            console.log('Fuel markers updated:', validMarkers.length);
             setFuelMarkers(validMarkers);
-            console.log("Fuel markers updated:", validMarkers.length);
+            setIsMarkerLoading(false);
         });
 
         window.showDetail = (uniId, lat, lng) => {
@@ -454,13 +485,15 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             openReportModal(uniId);
         };
 
-        
+
 
         return () => {
+            console.log('Cleanup: Removing fuel markers');
             fuelMarkers.forEach(marker => {
                 if (marker && kakao.maps.event) {
                     kakao.maps.event.removeListener(marker, "click");
                 }
+                if (marker) marker.setMap(null);
             });
             if (window.activeInfoWindows?.length > 0) {
                 window.activeInfoWindows.forEach(activeWindow => activeWindow?.close());
@@ -472,6 +505,8 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     // 충전소 마커 업데이트
     useEffect(() => {
         if (activeTab !== "충전소" || !mapRef.current || !originalChargingStations.length) return;
+
+        setIsMarkerLoading(true);
 
         const kakao = window.kakao;
         const geocoder = new kakao.maps.services.Geocoder();
@@ -563,6 +598,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
             const filteredStationsData = validStations.map(item => item.station);
             setFilteredChargingStations(filteredStationsData);
             setChargingMarkers(markers);
+            setIsMarkerLoading(false);
             console.log("Charging markers updated:", markers.length);
         };
 
@@ -804,10 +840,12 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     };
 
     const handleBrandChange = key => {
+        setIsMarkerLoading(true);
         setBrands(prev => ({ ...prev, [key]: !prev[key] }));
     };
 
     const handleAdditionalInfoChange = key => {
+        setIsMarkerLoading(true);
         setAdditionalInfo(prev => ({ ...prev, [key]: !prev[key] }));
     };
 
@@ -855,6 +893,14 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                         <span>소요 시간: {routeInfo.time} 분</span>
                     </div>
                 )}
+                {isMarkerLoading && (
+                <div className="loading-overlay">
+                    <div className="loading-container">
+                        <div className="loading-spinner"></div>
+                        <div className="loading-text">로딩 중...</div>
+                    </div>
+                </div>
+            )}
             </div>
             {selectedDetailStation && <FuelStationDetail station={selectedDetailStation} onClose={handleCloseDetail} />}
             <div className="map-sidebar">
@@ -900,6 +946,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                                             type="checkbox"
                                             checked={brands[key]}
                                             onChange={() => handleBrandChange(key)}
+                                            disabled={isMarkerLoading}
                                         />
                                         <span>{label}</span>
                                     </label>
@@ -921,6 +968,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                                             type="checkbox"
                                             checked={additionalInfo[key]}
                                             onChange={() => handleAdditionalInfoChange(key)}
+                                            disabled={isMarkerLoading}
                                         />
                                         <span>{label}</span>
                                     </label>
@@ -954,7 +1002,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
 
                 <div className="map-station-list">
                     <FuelStationList
-                        stations={activeTab === "주유소" ? filteredStations : filteredChargingStations}
+                        stations={activeTab === "주유소" ? stationsToShow : chargingStationsToShow}
                         loading={loading || !isDataLoaded}
                         onStationClick={handleStationClick}
                         isChargingStation={activeTab === "충전소"}
@@ -1003,7 +1051,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                                 정량 미달 판매
                             </label>
                         </div>
-                        <div className="modal-buttons">
+                        <div className="modal-report-buttons">
                             <button onClick={handleReportSubmit}>신고 제출</button>
                             <button onClick={() => setShowReportModal(false)}>취소</button>
                         </div>

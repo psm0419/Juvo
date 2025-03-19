@@ -18,11 +18,12 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 10;
     width: 400px;
-    height: 650px;    
+    height: 650px;
     border: 1px solid #e0e0e0;
     transition: all 0.3s ease;
     padding: 0;
-    overflow: hidden; /* 전체 영역에 스크롤 제거 */
+    overflow: hidden;
+    /* 전체 영역에 스크롤 제거 */
 }
 
 .map-tabs {
@@ -43,14 +44,14 @@
     background-color: #f89400;
     color: white;
     border-top-left-radius: 6px;
-    border-top-right-radius: 6px;    
+    border-top-right-radius: 6px;
 }
 
 .map-tab-inactive {
     background-color: #f5f5f5;
     color: #888;
     border-top-left-radius: 6px;
-    border-top-right-radius: 6px;    
+    border-top-right-radius: 6px;
 }
 
 .map-section {
@@ -104,15 +105,19 @@
 /* 상단 UI 고정 높이 설정 */
 .map-top-section {
     padding-bottom: 10px;
-    max-height: 300px; /* 상단 UI의 최대 높이 제한 */
-    overflow-y: auto; /* 상단 UI가 넘치면 스크롤 가능 */
+    max-height: 300px;
+    /* 상단 UI의 최대 높이 제한 */
+    overflow-y: auto;
+    /* 상단 UI가 넘치면 스크롤 가능 */
 }
 
 /* 주유소 목록에만 스크롤 적용 */
 .map-station-list {
-    overflow-y: auto;    
-    max-height: calc(700px - 310px); /* 상단 UI 최대 높이 + 패딩 고려 */
-    padding: 0 10px 10px; /* 내부 패딩 추가 */
+    overflow-y: auto;
+    max-height: calc(700px - 310px);
+    /* 상단 UI 최대 높이 + 패딩 고려 */
+    padding: 0 10px 10px;
+    /* 내부 패딩 추가 */
     padding-bottom: 20px;
 }
 
@@ -186,9 +191,11 @@
     border-radius: 5px;
     cursor: pointer;
 }
-.info-window-button:hover{    
-    background-color: #0d9ca4;    
+
+.info-window-button:hover {
+    background-color: #0d9ca4;
 }
+
 .info-window-button2 {
     padding: 5px 10px;
     background-color: lightcoral;
@@ -197,8 +204,9 @@
     border-radius: 5px;
     cursor: pointer;
 }
-.info-window-button2:hover{    
-    background-color: red;    
+
+.info-window-button2:hover {
+    background-color: red;
 }
 
 .info-window-divider {
@@ -276,9 +284,11 @@
     font-size: 14px;
     font-weight: bold;
 }
-.info-window-route-button:hover {    
-    background-color: #0d9ca4;    
+
+.info-window-route-button:hover {
+    background-color: #0d9ca4;
 }
+
 .route-info {
     position: absolute;
     top: 20px;
@@ -324,27 +334,28 @@
     margin: 10px 0;
 }
 
-.modal-buttons {
+.modal-report-buttons {
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
 }
 
-.modal-buttons button {
+.modal-report-buttons button {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
 
-.modal-buttons button:first-child {
+.modal-report-buttons button:first-child {
     background-color: #ff4500;
     color: white;
 }
 
-.modal-buttons button:last-child {
+.modal-report-buttons button:last-child {
     background-color: #ccc;
 }
+
 .favorite-toggle-btn {
     margin-left: 10px;
     padding: 5px 10px;
@@ -368,4 +379,307 @@
 .favorite-toggle-btn:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+/* 로딩 오버레이 스타일 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* 반투명 검정 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 다른 요소 위에 표시 */
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* 스피너와 텍스트 사이 간격 */
+}
+
+/* 로딩 스피너 스타일 (회전하는 원) */
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3; /* 밝은 회색 */
+    border-top: 5px solid #3498db; /* 파란색 */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* 로딩 텍스트 스타일 (고정) */
+.loading-text {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* 스피너 회전 애니메이션 */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media only screen and (max-width: 540px) {
+
+    /* Map.css */
+    .map-container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        /* 모바일에서 전체 화면 높이 사용 */
+    }
+
+    .map {
+        height: 50vh;
+        /* 지도 높이를 줄여서 콘텐츠와 균형 맞춤 */
+        margin-bottom: 10px;
+    }
+
+    .map-sidebar {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50vh;
+        /* 하단에 고정된 사이드바 */
+        border-radius: 0;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+        padding: 10px;
+    }
+
+    .map-tabs {
+        flex-direction: row;
+        justify-content: space-around;
+        margin-bottom: 5px;
+    }
+
+    .map-tab {
+        width: auto;
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    .map-section {
+        padding: 5px;
+    }
+
+    .map-options {
+        gap: 5px;
+    }
+
+    .map-option-label {
+        font-size: 12px;
+    }
+
+    .map-station-list {
+        max-height: calc(50vh - 150px);
+        /* 탭과 버튼 공간을 뺀 나머지 */
+        padding: 5px;
+    }
+
+    .station-item {
+        font-size: 12px;
+        padding: 5px 0;
+    }
+
+    .info-window {
+        width: 90vw;
+        /* 화면 너비의 90% */
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .info-window-title {
+        font-size: 14px;
+    }
+
+    .info-window-table th,
+    .info-window-table td {
+        padding: 3px;
+        font-size: 12px;
+    }
+
+    .info-window-route-button {
+        padding: 6px;
+        font-size: 12px;
+    }
+
+    .route-info {
+        font-size: 14px;
+        padding: 3px 8px;
+    }
+
+    .modal-content {
+        width: 90vw;
+        padding: 15px;
+    }
+
+    .favorite-toggle-btn {
+        font-size: 16px;
+        padding: 3px 8px;
+    }
+
+    /* FuelStationList.css */
+    .fuel-station-list-container {
+        padding: 5px;
+        max-height: calc(50vh - 160px);
+    }
+
+    .header-row {
+        font-size: 12px;
+        padding: 3px 5px;
+    }
+
+    .station-name {
+        font-size: 12px;
+    }
+
+    .station-prices {
+        gap: 10px;
+        font-size: 12px;
+    }
+
+    .brand-logo {
+        width: 16px;
+        height: 12px;
+    }
+
+    /* FuelStationDetail.css */
+    .fuel-station-detail-overlay {
+        padding: 0;
+    }
+
+    .fuel-station-detail {
+        width: 90vw;
+        max-height: 80vh;
+        padding: 15px;
+        font-size: 12px;
+    }
+
+    .station-title {
+        font-size: 16px;
+        padding-right: 25px;
+    }
+
+    .close-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+    }
+
+    .section-title {
+        font-size: 14px;
+    }
+
+    .price-item {
+        font-size: 12px;
+        padding: 5px 0;
+    }
+
+    .service-item {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+
+    .review-summary {
+        gap: 5px;
+    }
+
+    .rating {
+        font-size: 14px;
+    }
+
+    .review-count {
+        font-size: 12px;
+    }
+
+    .review-item {
+        font-size: 12px;
+    }
+
+    .review-header {
+        font-size: 12px;
+    }
+
+    .review-rating {
+        font-size: 12px;
+    }
+
+    .more-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .review-form textarea {
+        height: 60px;
+        font-size: 12px;
+    }
+
+    .review-form input[type="number"] {
+        width: 80px;
+        font-size: 12px;
+    }
+
+    .write-review-btn,
+    .select-keyword-btn {
+        padding: 8px;
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 360px) {
+    .map {
+        height: 40vh;
+        /* 더 작은 화면에서 지도 비율 조정 */
+    }
+
+    .map-sidebar {
+        height: 60vh;
+        /* 사이드바를 더 크게 */
+    }
+
+    .map-tab {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
+
+    .map-option-label {
+        font-size: 10px;
+    }
+
+    .map-station-list {
+        max-height: calc(60vh - 140px);
+    }
+
+    .station-item {
+        font-size: 10px;
+    }
+
+    .info-window {
+        width: 85vw;
+        padding: 8px;
+    }
+
+    .info-window-title {
+        font-size: 12px;
+    }
+
+    .fuel-station-detail {
+        width: 85vw;
+        padding: 10px;
+    }
+
+    .station-title {
+        font-size: 14px;
+    }
+
+    .section-title {
+        font-size: 12px;
+    }
 }
