@@ -27,13 +27,11 @@
     cursor: pointer;
 }
 
-/* 로고 이미지 스타일 */
 .logo img {
     width: 90%;
     transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* 로고 이미지 호버 시 효과 */
 .logo img:hover {
     transform: scale(1.05);
     filter: brightness(1.1);
@@ -49,13 +47,11 @@
     position: relative;
 }
 
-/* 네비게이션 메뉴 각 항목 스타일 */
 .nav-item {
     padding: 10px 0;
-    position: relative; /* 드롭다운 위치 기준 제공 */
+    position: relative;
 }
 
-/* 네비게이션 메뉴 링크 스타일 */
 .nav a {
     text-decoration: none;
     cursor: pointer;
@@ -65,7 +61,6 @@
     border-radius: 5px;
 }
 
-/* 네비게이션 메뉴 링크 호버 시 효과 */
 .nav a:hover {
     color: #f89400;
     transform: translateY(-2px);
@@ -76,51 +71,41 @@
 .dropdown-container {
     position: absolute;
     top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
     width: 100%;
     background: linear-gradient(145deg, #ffffff, #f0f4f8);
     border: 1px solid #e8ecef;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
-    display: flex;
+    display: none;
+    flex-wrap: wrap;
     justify-content: space-around;
     padding: 25px;
     z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    max-height: 0;
-    overflow: hidden;
-    transition: opacity 0.4s ease, max-height 0.5s ease;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    gap: 50px;
 }
 
-/* 네비게이션에 호버 시 드롭다운 표시 (기본 상태) */
 .nav:hover .dropdown-container {
-    opacity: 1;
-    visibility: visible;
-    max-height: 400px;
+    display: flex;
 }
 
-/* 드롭다운 메뉴의 각 열 스타일 */
 .dropdown-column {
     display: flex;
     flex-direction: column;
     min-width: 150px;
     padding: 10px 15px;
-    position: relative;
     background: rgba(255, 255, 255, 0.5);
     border-radius: 8px;
     transition: transform 0.3s ease;
+    gap: 5px;
 }
 
-/* 드롭다운 열 호버 시 효과 */
 .dropdown-column:hover {
     transform: translateY(-3px);
     background: rgba(255, 255, 255, 0.9);
 }
 
-/* 드롭다운 열 사이에 세로 구분선 추가 */
 .dropdown-column:not(:last-child)::after {
     content: '';
     position: absolute;
@@ -132,7 +117,6 @@
     opacity: 0.7;
 }
 
-/* 드롭다운 메뉴의 각 항목 스타일 */
 .dropdown-item {
     padding: 10px 15px;
     text-decoration: none;
@@ -145,7 +129,6 @@
     align-items: center;
 }
 
-/* 드롭다운 항목 호버 시 효과 */
 .dropdown-item:hover {
     color: #f89400;
     background: rgba(26, 115, 232, 0.1);
@@ -159,7 +142,6 @@
     justify-content: flex-end;
 }
 
-/* 로그인 로그아웃 회원가입 마이페이지 관리자 버튼 스타일 */
 .btns .login,
 .btns .signup,
 .btns .logout,
@@ -174,12 +156,11 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-/* 로그인 로그아웃 회원가입 마이페이지 관리자페이지 버튼 호버 시 효과 */
 .btns .login:hover,
 .btns .signup:hover,
 .btns .logout:hover,
 .btns .mypage:hover,
-.btns .admin:hover  {
+.btns .admin:hover {
     background: #f89400;
     color: #fff;
     border-color: #f89400;
@@ -187,14 +168,12 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* 로그인 버튼과 회원가입 버튼 사이, 관리자/마이페이지와 로그아웃 사이 간격 */
 .login,
 .mypage,
 .admin {
     margin-right: 5px;
 }
 
-/* btn 사이즈 */
 .login,
 .signup {
     font-size: 0.8rem;
@@ -206,89 +185,96 @@
     font-size: 0.7rem;
 }
 
-/* 미디어 쿼리 (max-width: 540px) */
+/* 햄버거 버튼 스타일 */
+.hamburger {
+    display: none;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #374051;
+}
+
+/* 모바일 서브메뉴 (기본적으로 숨김) */
+.mobile-submenu {
+    display: none;
+}
+
+.mobile-submenu-section {
+    margin-bottom: 15px;
+}
+
+/* 모바일 환경 (max-width: 540px) */
 @media (max-width: 540px) {
     .containerHD {
         min-width: 100%;
         height: auto;
-        flex-direction: column;
+        flex-wrap: wrap;
         padding: 10px 15px;
         font-size: 0.9rem;
     }
 
     .logo {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 10px;
+        width: 50%;
+        text-align: left;
     }
 
     .logo img {
+        width: 70%;
+    }
+
+    .hamburger {
+        display: block;
         width: 50%;
+        text-align: right;
     }
 
     .nav {
         width: 100%;
+        display: none;
+    }
+
+    .nav.open {
+        display: flex;
         flex-direction: column;
         align-items: stretch;
-        padding: 0;
     }
 
     .nav-item {
         width: 100%;
         padding: 8px 0;
-        text-align: center;
-        position: relative;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        display: none;
     }
 
     .nav a {
         display: block;
-        padding: 8px 10px;
+        padding: 10px 15px;
         font-size: 0.9rem;
     }
 
-    /* 드롭다운 컨테이너 스타일 수정 */
     .dropdown-container {
-        position: static;
-        transform: none;
-        width: 100%;
-        padding: 10px;
-        border-radius: 0;
-        box-shadow: none;
+        display: none; /* 모바일에서 드롭다운 숨김 */
+    }
+
+    .mobile-submenu {
+        display: block;
         background: #f0f4f8;
-        border: none;
-        opacity: 1; /* 기본적으로 보이게 설정 */
-        visibility: hidden;
-        max-height: 0;
-        transition: max-height 0.3s ease; /* 부드러운 전환 */
+        padding: 10px;
     }
 
-    /* 드롭다운 토글 클래스 추가 (JavaScript로 제어 필요) */
-    .dropdown-container.active {
-        visibility: visible;
-        max-height: 500px; /* 충분한 높이 확보 */
-    }
-
-    /* 호버 대신 클릭으로 토글 (기존 호버 제거) */
-    .nav:hover .dropdown-container {
-        opacity: 0;
-        visibility: hidden;
-        max-height: 0;
-    }
-
-    .dropdown-column {
-        min-width: 100%;
-        padding: 5px 0;
-        background: none;
-    }
-
-    .dropdown-column:not(:last-child)::after {
-        display: none;
-    }
-
-    .dropdown-item {
+    .mobile-submenu .dropdown-item {
+        padding: 8px 15px;
         font-size: 0.8rem;
-        padding: 6px 10px;
-        text-align: left;
+        color: #2b3a55;
+        text-decoration: none;
+        display: block;
+    }
+
+    .mobile-submenu .dropdown-item:hover {
+        color: #f89400;
+        background: rgba(26, 115, 232, 0.1);
     }
 
     .btns {
@@ -312,20 +298,5 @@
     .mypage,
     .admin {
         margin-right: 0;
-    }
-}
-
-/* 추가된 스타일: 드롭다운 토글 버튼 (선택적) */
-@media (max-width: 540px) {
-    .nav-item.has-dropdown::after {
-        content: '▼';
-        font-size: 0.7rem;
-        margin-left: 5px;
-        color: #374051;
-        transition: transform 0.3s ease;
-    }
-
-    .nav-item.has-dropdown.active::after {
-        transform: rotate(180deg);
     }
 }
