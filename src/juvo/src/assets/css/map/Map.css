@@ -7,7 +7,7 @@
 
 .map {
     width: 100%;
-    height: 700px;
+    height: 800px;
     margin-bottom: 20px;
 }
 
@@ -34,11 +34,11 @@
 .map-sidebar-toggle {
     position: absolute;
     top: 37%;
-    left: 420px; /* 사이드바 너비(400px) + 간격(20px) */
+    left: 420px;
     transform: translateY(-50%);
     width: 20px;
     height: 40px;
-    background-color: #43abae;
+    background-color: #f89400;
     color: white;
     border: none;
     border-radius: 0 6px 6px 0;
@@ -52,7 +52,7 @@
 }
 
 .map-sidebar-toggle:hover {
-    background-color: #0d9ca4;
+    background-color: #d17e01;
 }
 .map-sidebar-toggle.closed {
     left: 0; /* 닫힌 상태에서 버튼 위치 */
@@ -486,7 +486,7 @@
         transform: translateY(-50%);
         width: 20px;
         height: 40px;
-        background-color: #43abae;
+        background-color: #f89400;
         color: white;
         border: none;
         border-radius: 0 6px 6px 0; /* 오른쪽만 둥글게 */
@@ -508,7 +508,7 @@
     }
 
     .map-sidebar-toggle:hover {
-        background-color: #0d9ca4;
+        background-color: #d17e01;
     }
 
     .map-station-list {
@@ -531,5 +531,20 @@
 
     .map-option-label {
         font-size: 12px;
+    }
+
+    .route-info {
+        position: absolute;
+        width: 320px;
+        top: 620px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 5px 10px;
+        border-radius: 5px;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        font-size: 20px;
+        text-align: center;
     }
 }

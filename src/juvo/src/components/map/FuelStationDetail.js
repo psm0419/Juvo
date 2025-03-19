@@ -52,6 +52,16 @@ const FuelStationDetail = ({ station, onClose }) => {
         fetchKeywords();
     }, [station?.uniId]);
 
+    // 오버레이 클릭 시 닫기
+    const handleOverlayClick = (e) => {
+        if (e.target.className === 'fuel-station-detail-overlay') {
+            onClose();
+        }
+    };
+    // 내부 컨텐츠 클릭 시 이벤트 전파 방지
+    const handleContentClick = (e) => {
+        e.stopPropagation();
+    };
     const fetchReviews = async () => {
         try {
             const response = await fetch(`/api/reviews?uniId=${station.uniId}`, {
@@ -132,12 +142,12 @@ const FuelStationDetail = ({ station, onClose }) => {
 
         if (!reviewContent || !reviewRating || isNaN(reviewRating) || reviewRating < 0 || reviewRating > 5) {
             Swal.fire({
-                            icon: "warning",
-                            title: "경고",
-                            text: "리뷰 내용과 유효한 별점(0~5)을 입력해주세요.",
-                            confirmButtonText: "확인",
-                            confirmButtonColor: "#f89400",
-                        })            
+                icon: "warning",
+                title: "경고",
+                text: "리뷰 내용과 유효한 별점(0~5)을 입력해주세요.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            })
             return;
         }
 
@@ -159,29 +169,59 @@ const FuelStationDetail = ({ station, onClose }) => {
             const data = await response.json();
             console.log('Review save response:', data);
             if (data.status === 'success') {
-                alert('리뷰가 저장되었습니다.');
+                Swal.fire({
+                    icon: "success",
+                    title: "성공",
+                    text: "리뷰가 저장되었습니다.",
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                });
                 setReviewContent('');
                 setReviewRating('');
                 setShowReviewForm(false);
                 fetchReviews();
             } else {
-                alert(data.message || '리뷰 저장에 실패했습니다.');
+                Swal.fire({
+                    icon: "error",
+                    title: "실패",
+                    text: "리뷰 저장에 실패했습니다.",
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                });
             }
         } catch (error) {
             console.error('Error saving review:', error);
-            alert(`리뷰 저장 중 오류가 발생했습니다: ${error.message}`);
+            Swal.fire({
+                icon: "error",
+                title: "실패",
+                text: "리뷰 저장중 오류가 발생했습니다.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });
         }
     };
 
     const handleSelectKeyword = async () => {
         const token = localStorage.getItem('accessToken');
         if (!token) {
-            alert('로그인이 필요합니다.');
+            Swal.fire({
+                icon: "warning",
+                title: "경고",
+                text: "로그인이 필요 합니다.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });
             return;
         }
 
         if (selectedKeywords.length === 0) {
-            alert('최소 하나의 키워드를 선택해주세요.');
+            Swal.fire({
+                icon: "warning",
+                title: "경고",
+                text: "최소 하나의 키워드를 선택해주세요.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });
             return;
         }
 
@@ -201,17 +241,35 @@ const FuelStationDetail = ({ station, onClose }) => {
             const data = await response.json();
             console.log('Keyword save response:', data);
             if (data.status === 'success') {
-                alert('키워드가 저장되었습니다.');
+                Swal.fire({
+                    icon: "success",
+                    title: "성공",
+                    text: "키워드가 저장되었습니다.",
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                });
                 setSelectedKeywords([]);
                 setShowKeywordForm(false);
                 fetchKeywords(); // 전체 키워드 갱신
                 fetchUserKeywords(); // 사용자 키워드 갱신
             } else {
-                alert(data.message || '키워드 저장에 실패했습니다.');
+                Swal.fire({
+                    icon: "error",
+                    title: "실패",
+                    text: "키워드 저장에 실패했습니다.",
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                });
             }
         } catch (error) {
             console.error('Error saving keywords:', error);
-            alert(`키워드 저장 중 오류가 발생했습니다: ${error.message}`);
+            Swal.fire({
+                icon: "error",
+                title: "실패",
+                text: "키워드 저장중 오류가 발생했습니다.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });
         }
     };
 
@@ -225,7 +283,13 @@ const FuelStationDetail = ({ station, onClose }) => {
     const handleUpdateReview = async () => {
         const token = localStorage.getItem('accessToken');
         if (!token) {
-            alert('로그인이 필요합니다.');
+            Swal.fire({
+                icon: "warning",
+                title: "경고",
+                text: "로그인이 필요 합니다.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });
             return;
         }
 
@@ -235,14 +299,26 @@ const FuelStationDetail = ({ station, onClose }) => {
             setEditingReview(null);
         } catch (error) {
             console.error('Error updating review:', error);
-            alert('리뷰 수정 중 오류가 발생했습니다.');
+            Swal.fire({
+                icon: "error",
+                title: "실패",
+                text: "리뷰 수정 중 오류가 발생했습니다.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });
         }
     };
 
     const handleDeleteReview = async (review, refresh = true) => {
         const token = localStorage.getItem('accessToken');
         if (!token) {
-            alert('로그인이 필요합니다.');
+            Swal.fire({
+                icon: "warning",
+                title: "경고",
+                text: "로그인이 필요 합니다.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });
             return;
         }
 
@@ -263,15 +339,33 @@ const FuelStationDetail = ({ station, onClose }) => {
             console.log('Review delete response:', data);
             if (data.status === 'success') {
                 if (refresh) {
-                    alert('리뷰가 삭제되었습니다.');
+                    Swal.fire({
+                        icon: "success",
+                        title: "성공",
+                        text: "리뷰가 삭제 되었습니다.",
+                        confirmButtonText: "확인",
+                        confirmButtonColor: "#f89400",
+                    });
                     fetchReviews();
                 }
             } else {
-                alert(data.message || '리뷰 삭제에 실패했습니다.');
+                Swal.fire({
+                    icon: "error",
+                    title: "실패",
+                    text: "리뷰 삭제에 실패하였습니다.",
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                });
             }
         } catch (error) {
             console.error('Error deleting review:', error);
-            alert(`리뷰 삭제 중 오류가 발생했습니다: ${error.message}`);
+            Swal.fire({
+                icon: "error",
+                title: "실패",
+                text: "리뷰 삭제 중 오류가 발생했습니다.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });
         }
     };
 
@@ -297,8 +391,8 @@ const FuelStationDetail = ({ station, onClose }) => {
     };
 
     return (
-        <div className="fuel-station-detail-overlay">
-            <div className="fuel-station-detail">
+        <div className="fuel-station-detail-overlay" onClick={handleOverlayClick}>
+            <div className="fuel-station-detail" onClick={handleContentClick}>
                 <h2 className="station-title">
                     <span className="station-name">
                         {station.OS_NM || "이름 없음"}({station.pollDivCd || "이름 없음"})
