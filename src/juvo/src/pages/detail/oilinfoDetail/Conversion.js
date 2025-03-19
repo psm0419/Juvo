@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import '../../../assets/css/detail/Conversion.css';
+import Swal from "sweetalert2";
+
 
 export default function ConversionForm() {
     const [inputValue, setInputValue] = useState("");
@@ -36,7 +38,7 @@ export default function ConversionForm() {
         const value = parseFloat(inputValue.trim());
 
         if (isNaN(value) || inputValue.trim() === "") {
-            alert("숫자를 입력하세요!");
+            Swal.fire("숫자를 입력하세요!"); // SweetAlert2로 알림을 표시
             return;
         }
 
