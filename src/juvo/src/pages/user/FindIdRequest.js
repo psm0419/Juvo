@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../assets/css/user/FindIdRequest.css';
+import Swal from "sweetalert2";
 
 function FindId() {
     let navigate = useNavigate();
@@ -92,7 +93,13 @@ function FindId() {
 
     const handleFindId = () => {
         if (!isValidSuccess()) {
-            alert("입력한 정보를 다시 확인해주세요.");
+            Swal.fire({
+                icon: "warning",
+                title: "경고",
+                text: "입력한 정보를 다시 확인해주세요.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });            
             focusInvalidField();
             return;
         }
@@ -107,15 +114,32 @@ function FindId() {
                 
                 if (userId != null) {
                     setFoundId(userId);
-                    alert("아이디를 성공적으로 찾았습니다.");
+                    Swal.fire({
+                        icon: "success",
+                        title: "성공",
+                        text: "아이디를 성공적으로 찾았습니다.",
+                        confirmButtonText: "확인",
+                        confirmButtonColor: "#f89400",
+                    });                    
                 } else {
-                    alert("일치하는 사용자를 찾을 수 없습니다.");
+                    Swal.fire({
+                        icon: "warning",
+                        title: "경고",
+                        text: "일치하는 사용자를 찾을 수 없습니다.",
+                        confirmButtonText: "확인",
+                        confirmButtonColor: "#f89400",
+                    });                    
                 }
             })
             .catch((error) => {
                 console.error("아이디 찾기 오류:", error);
-                const errorMsg = error.response?.data?.message || "아이디 찾기 중 오류가 발생했습니다.";
-                alert(errorMsg);
+                Swal.fire({
+                    icon: "error",
+                    title: "오류",
+                    text: "아이디 찾기 중 오류가 발생했습니다.",
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                });
             });
     };
 

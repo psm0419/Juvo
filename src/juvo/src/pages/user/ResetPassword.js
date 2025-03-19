@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import '../../assets/css/user/ResetPassword.css';
+import Swal from "sweetalert2";
 
 function ResetPassword() {
     const { token } = useParams();
@@ -45,12 +46,28 @@ function ResetPassword() {
                 token,
                 newPassword,
             });
-            alert(response.data.message || "비밀번호가 성공적으로 변경되었습니다.");
-            navigate('/user/login');
-            setNewPassword("");
-            setConfirmPassword("");
+            Swal.fire({
+                icon: "success",
+                title: "성공",
+                text: "비밀번호가 성공적으로 변경되었습니다.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // "확인" 버튼을 누른 경우에만 실행   
+                    setNewPassword("");
+                    setConfirmPassword("");
+                    window.location.href = "/user/login";
+                }
+            });            
         } catch (error) {
-            setMessage(error.response?.data?.message || "비밀번호 변경에 실패했습니다.");
+            Swal.fire({
+                icon: "error",
+                title: "실패",
+                text: "비밀번호 변경에 실패하였습니다.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });            
         }
     };
 
