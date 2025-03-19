@@ -15,7 +15,7 @@ function AdminPrivateRoute({ children }) {
             title: "페이지 접속 불가",
             text: "관리자 권한이 필요합니다.",
         }).then(() => {
-            return <Navigate to="/user/login" replace />;
+            window.location.href = "/user/login";
         });
 
         return null; // ✅ Navigate가 비동기라서, 일단 null 반환

@@ -178,7 +178,7 @@ function MyPage() {
             Swal.fire({
                 icon: "error",
                 title: "앗...!",
-                text: "이 닉네임은 다른 사용자가 사용하고 있어요.", 
+                text: "다른 닉네임을 사용해 주세요.", 
             });
             ref.newNickname.current.focus();
             return;

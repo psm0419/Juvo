@@ -336,7 +336,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1050;
 }
 
 .modal-content {
@@ -415,7 +415,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1050;
 }
 
 .loading-container {
@@ -472,7 +472,7 @@
         padding: 10px 0;
         overflow: hidden;
         transition: left 0.3s ease; /* 슬라이드 애니메이션 */
-        z-index: 1000; /* 지도 위에 표시 */
+        z-index: 900; /* 지도 위에 표시 */
     }
 
     .map-sidebar.hidden {
@@ -496,7 +496,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 1001; /* 사이드바보다 위 */
+        z-index: 900; /* 사이드바보다 위 */
     }
 
     .map-sidebar-toggle.open {

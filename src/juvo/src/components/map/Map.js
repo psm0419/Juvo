@@ -499,7 +499,13 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 });
                 if (!response.ok) throw new Error("등록 실패");
                 const data = await response.json();
-                alert(data.message);
+                Swal.fire({
+                    icon: "success",
+                    title: "성공",
+                    text: "즐겨찾기로 등록 되었습니다.",
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                });
                 if (data.status === "success") {
                     setFavoriteStations((prev) => [...prev, uniId]);
                 }
@@ -1069,6 +1075,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                                     type="radio"
                                     name="blackType"
                                     value="1"
+                                    checked
                                     onChange={(e) => setSelectedBlackType(parseInt(e.target.value))}
                                 />
                                 용도 외 판매
