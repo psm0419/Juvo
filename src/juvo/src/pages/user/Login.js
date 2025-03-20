@@ -5,6 +5,7 @@ import Header from '../../components/header/Header';
 import axiosInstance from '../../util/AxiosConfig';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 function LoginInner() {
     const [id, setId] = useState('');
@@ -24,7 +25,12 @@ function LoginInner() {
             window.location.href = naverAuthUrl;
         } catch (error) {
             console.error('네이버 로그인 오류:', error);
-            alert('네이버 로그인 중 오류가 발생했습니다.');
+        Swal.fire({
+            icon:"error",
+            title: "네이버 로그인",
+            text: "네이버 로그인 중 오류가 발생했습니다.",
+            confirmButtonText: "확인",
+            confirmButtonColor: "#f89400",});
         }
     };
 
@@ -37,7 +43,12 @@ function LoginInner() {
             window.location.href = kakaoAuthUrl;
         } catch (error) {
             console.error('카카오 로그인 오류:', error);
-            alert('카카오 로그인 중 오류가 발생했습니다.');
+            Swal.fire({
+                icon:"error",
+                title: "네이버 로그인",
+                text: "카카오 로그인 중 오류가 발생했습니다.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",});
         }
     };
 
@@ -67,7 +78,18 @@ function LoginInner() {
                     localStorage.setItem('refreshToken', refreshToken);
                     localStorage.setItem('userType', userType);
                     window.dispatchEvent(new Event("storage"));
-                    alert(`${provider} 로그인 성공`);
+                    Swal.fire({
+                        icon:"success",
+                        title: `${provider} 로그인 성공`,
+                        text: "로그인을 성공했습니다 !",
+                        confirmButtonText: "확인",
+                        confirmButtonColor: "#f89400",}).then((result) => {
+                            if (result.isConfirmed) {
+                                // "확인" 버튼을 누른 경우에만 실행
+                                sessionStorage.setItem("redirectUrl", window.location.pathname);
+                                window.location.href = "/user/login"};
+                            });
+                    
 
                     const redirectUrl = sessionStorage.getItem('redirectUrl') || '/';
                     sessionStorage.removeItem('redirectUrl');
@@ -75,7 +97,18 @@ function LoginInner() {
                 }
             } catch (error) {
                 console.error(`${provider} 로그인 오류:`, error.response ? error.response.data : error.message);
-                alert(`${provider} 로그인 중 오류가 발생했습니다.`);
+                Swal.fire({
+                    icon:"error",
+                    title: `${provider} 로그인 오류`,
+                    text: "로그인 중 오류가 발생했습니다..",
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",}).then((result) => {
+                        if (result.isConfirmed) {
+                            // "확인" 버튼을 누른 경우에만 실행
+                            sessionStorage.setItem("redirectUrl", window.location.pathname);
+                            window.location.href = "/user/login"};
+                        });
+                
             }
         } else {
             console.warn(`${provider} Callback - No code parameter found`);
@@ -110,13 +143,34 @@ function LoginInner() {
                 const { accessToken, refreshToken, userType } = res.data;
 
                 if (accessToken === 'fail') {
-                    alert('구글 로그인 실패');
+                    Swal.fire({
+                        icon:"error",
+                        title: `구글로 로그인 `,
+                        text: "로그인을 실패했습니다..",
+                        confirmButtonText: "확인",
+                        confirmButtonColor: "#f89400",}).then((result) => {
+                            if (result.isConfirmed) {
+                                // "확인" 버튼을 누른 경우에만 실행
+                                sessionStorage.setItem("redirectUrl", window.location.pathname);
+                                window.location.href = "/user/login"};
+                            });
                 } else {
                     localStorage.setItem('accessToken', accessToken);
                     localStorage.setItem('refreshToken', refreshToken);
                     localStorage.setItem('userType', userType);
                     window.dispatchEvent(new Event("storage"));
-                    alert('구글 로그인 성공');
+                    Swal.fire({
+                        icon:"success",
+                        title: `구글로 로그인`,
+                        text: "로그인을 성공했습니다 !",
+                        confirmButtonText: "확인",
+                        confirmButtonColor: "#f89400",}).then((result) => {
+                            if (result.isConfirmed) {
+                                // "확인" 버튼을 누른 경우에만 실행
+                                sessionStorage.setItem("redirectUrl", window.location.pathname);
+                                window.location.href = "/user/login"};
+                            });
+                    
 
                     const redirectUrl = sessionStorage.getItem('redirectUrl') || '/';
                     sessionStorage.removeItem('redirectUrl');
@@ -124,12 +178,33 @@ function LoginInner() {
                 }
             } catch (error) {
                 console.error('구글 로그인 오류:', error);
-                alert('구글 로그인 중 오류가 발생했습니다.');
+                Swal.fire({
+                    icon:"error",
+                    title: `구글로 로그인 `,
+                    text: "로그인 중 오류가 발생했습니다..",
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",}).then((result) => {
+                        if (result.isConfirmed) {
+                            // "확인" 버튼을 누른 경우에만 실행
+                            sessionStorage.setItem("redirectUrl", window.location.pathname);
+                            window.location.href = "/user/login"};
+                        });
             }
         },
         onError: (error) => {
             console.error('구글 로그인 실패:', error);
-            alert('구글 로그인에 실패했습니다.');
+            Swal.fire({
+                icon:"error",
+                title: `구글로 로그인 `,
+                text: "로그인 중 오류가 발생했습니다..",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",}).then((result) => {
+                    if (result.isConfirmed) {
+                        // "확인" 버튼을 누른 경우에만 실행
+                        sessionStorage.setItem("redirectUrl", window.location.pathname);
+                        window.location.href = "/user/login"};
+                    });
+            //alert('구글 로그인에 실패했습니다.');
         },
         flow: 'auth-code',
         scope: 'openid profile email',
@@ -140,7 +215,17 @@ function LoginInner() {
 
     const handleLogin = async () => {
         if (!id || !pw) {
-            alert('아이디와 비밀번호를 입력해주세요.');
+            Swal.fire({
+                icon:"warning",
+                title: `로그인 실패 `,
+                text: "아이디와 비밀번호를 확인해주세요 !",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",}).then((result) => {
+                    if (result.isConfirmed) {
+                        // "확인" 버튼을 누른 경우에만 실행
+                        sessionStorage.setItem("redirectUrl", window.location.pathname);
+                        window.location.href = "/user/login"};
+                    });
             return;
         }
 
