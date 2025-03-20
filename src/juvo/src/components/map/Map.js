@@ -381,6 +381,9 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                                     ${station.OS_NM || "이름 없음"} <span>(${station.pollDivCd || "이름 없음"})</span>
                                 </div>
                                 <div class="info-window-button-container">
+                                    <button onclick="console.log('Name clicked for uniId: ${station.uniId}'); window.showDetail('${station.uniId}', ${coords.getLat()}, ${coords.getLng()})" class="info-window-button">
+                                        상세정보
+                                    </button>
                                     <button onclick="registerFavoriteStation('${station.uniId}')" class="info-window-button">
                                         즐겨찾기
                                     </button>
