@@ -40,7 +40,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const [searchOption, setSearchOption] = useState("0");
     const [isMarkerLoading, setIsMarkerLoading] = useState(false);
     const [isApiLoading, setIsApiLoading] = useState(false);
-    const [isSidebarVisible, setIsSidebarVisible] = useState(false); // 기본값 false로 설정 (닫힌 상태)
+    const [isSidebarVisible, setIsSidebarVisible] = useState(true); // 기본값 false로 설정 (닫힌 상태)
 
     const openReportModal = (uniId) => {
         setReportUniId(uniId);
