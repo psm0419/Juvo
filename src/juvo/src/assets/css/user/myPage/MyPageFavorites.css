@@ -104,6 +104,7 @@
 @media only screen and (max-width: 360px) {
     .favorites-container {
         padding: 20px; /* 패딩 줄이기 */
+        
     }
 
     .favorites-title {
