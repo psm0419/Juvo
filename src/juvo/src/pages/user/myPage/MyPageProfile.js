@@ -258,9 +258,9 @@ function MyPage() {
                         닉네임 변경
                     </button>
                 </div>
-
-                {/* 비밀번호 변경 모달 */}
-                <MyPageProfileModal
+            </div>
+             {/* 비밀번호 변경 모달 */}
+             <MyPageProfileModal
                     isOpen={showPwModal}
                     onClose={() => setShowPwModal(false)}
                     title="비밀번호 변경"
@@ -315,7 +315,6 @@ function MyPage() {
                         </span>
                     </div>
                 </MyPageProfileModal>
-            </div>
         </div>
     );
 }

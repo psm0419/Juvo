@@ -83,6 +83,7 @@
 /* 비밀번호/닉네임 변경 버튼 */
 .mp-change-pw-btn,
 .mp-change-nickname-btn {
+    
     flex: 1;
     padding: 14px;
     background-color: #f3b252 !important;
