@@ -39,6 +39,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
     const [searchOption, setSearchOption] = useState("0");
     const [isMarkerLoading, setIsMarkerLoading] = useState(false);
+    const [isApiLoading, setIsApiLoading] = useState(false);
     const [isSidebarVisible, setIsSidebarVisible] = useState(false); // 기본값 false로 설정 (닫힌 상태)
 
     const openReportModal = (uniId) => {
@@ -665,6 +666,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
     }, [lat, lng, activeTab]);
 
     const handleFetchStations = async () => {
+        setIsApiLoading(true);
         setIsDataLoaded(false);
         if (activeTab === "주유소") {
             try {
@@ -686,6 +688,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                     confirmButtonColor: "#f89400",
                 });
                 setIsDataLoaded(true);
+                setIsApiLoading(false);
                 return;
             }
             try {
@@ -704,6 +707,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                 setIsDataLoaded(true);
             }
         }
+        setIsApiLoading(false);
     };
 
     window.showDetail = (uniId, lat, lng) => {
@@ -943,7 +947,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                         <span>소요 시간: {routeInfo.time} 분</span>
                     </div>
                 )}
-                {isMarkerLoading && (
+                {(isMarkerLoading || isApiLoading) && (
                     <div className="loading-overlay">
                         <div className="loading-container">
                             <div className="loading-spinner"></div>
