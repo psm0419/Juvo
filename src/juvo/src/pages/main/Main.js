@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import CheapJuyuso from "../../components/main/CheapJuyuso";
 import AvgByRegion from '../../components/main/AvgByRegion';
 import AvgPriceChart from '../../components/main/AvgPriceChart';
+import Sale from '../../assets/image/Sale.png';
 import Membership from '../../assets/image/Membership.jpg';
 import mainbackground from '../../assets/image/mainbackground.mp4';
 import { Link } from 'react-router-dom';
@@ -225,7 +226,9 @@ function Main() {
 						</div>
 					</div>
 					<div className="mbottom bottom">
-						
+						<div className="sale">
+							<img src={Sale} alt="Sale" />
+						</div>
 					</div>
 					<div className="rbottom bottom cursor">
 						<div className="membership">

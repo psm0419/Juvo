@@ -257,14 +257,24 @@ h2 {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+.tstationosnm {
+    max-width: 100px;
+}
+
+.tstationbtn {
+    width: 70px;
+}
+
 .gasContainer td button:first-child {
     background-color: #6b7280;
     color: white;
+    margin: 3px;
 }
 
 .gasContainer td button:last-child {
     background-color: #9ca3af;
     color: white;
+    margin: 3px;
 }
 
 .gasContainer td button:first-child:hover {
@@ -325,7 +335,7 @@ h2 {
     .customerContainer th:first-child,
     .customerContainer td:first-child {
         max-width: 100px;
-        white-space: nowrap;
+        white-space: normal;
         padding: 1px;
     }
 
@@ -436,8 +446,8 @@ h2 {
         padding: 4px;
     }
 
-    .tstationosnm {
-        max-width: 108px;
+    .tstationbtn {
+        max-width: 55px;
     }
 
     .gasContainer th.address,

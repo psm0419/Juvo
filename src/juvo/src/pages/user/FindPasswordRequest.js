@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import '../../assets/css/user/FindPasswordRequest.css';
+import Swal from "sweetalert2";
 
 function FindPasswordRequest() {
     const navigate = useNavigate();
@@ -21,8 +22,18 @@ function FindPasswordRequest() {
         try {
             const response = await axios.post("/findPassword/request", form);
             if (response.data === true) {
-                alert("비밀번호 재설정 링크가 이메일로 전송되었습니다.");
-                navigate("/user/login");
+                Swal.fire({
+                    icon: "success",
+                    title: "성공",
+                    text: "비밀번호 재설정 링크가 이메일로 전송되었습니다.",
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // "확인" 버튼을 누른 경우에만 실행                        
+                        window.location.href = "/user/login";
+                    }
+                });                
             }
         } catch (error) {
             // 서버에서 전달된 에러 메시지 처리
@@ -40,8 +51,13 @@ function FindPasswordRequest() {
                     }
                 }
             }
-            
-            alert(errorMessage);
+            Swal.fire({
+                icon: "warning",
+                title: "경고",
+                text: "입력하신 정보와 일치하는 사용자를 찾을 수 없습니다.",
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });            
         }
     };
 

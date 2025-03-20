@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../axiosInstance/axioslnstance";
 import "../../../assets/css/detail/MembershipDetail.css";
+import Swal from "sweetalert2";
 
 function MembershipDetail() {
     const navigate = useNavigate();
+    const userType = localStorage.getItem("userType"); // "ADM" 또는 "CUS"
 
-    // 상태 선언
+    // 모든 훅은 컴포넌트 최상위에서 호출합니다.
+    const [loading, setLoading] = useState(true);
+    const [isSubscribed, setIsSubscribed] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         tel: "",
@@ -16,7 +20,7 @@ function MembershipDetail() {
         cardNumber: "",
         cvc: "",
         expiry: "",
-        createdAt: "", // createdAt 초기값 추가
+        createdAt: "",
     });
     const [validFields, setValidFields] = useState({
         name: null,
@@ -26,11 +30,10 @@ function MembershipDetail() {
         cardNumber: null,
         cvc: null,
         expiry: null,
-        createdAt: true, // createdAt은 자동 설정되므로 항상 유효
+        createdAt: true,
     });
     const [errorMessages, setErrorMessages] = useState({});
 
-    // 유효하지 않은 필드에 포커스를 위한 참조
     const refs = {
         name: useRef(null),
         tel: useRef(null),
@@ -41,7 +44,6 @@ function MembershipDetail() {
         expiry: useRef(null),
     };
 
-    // 유효성 검사를 위한 정규 표현식
     const REGEX = {
         NAME: /^[가-힣]{2,15}$/,
         TEL: /^01(0|1|2|6|9)[-\s]?\d{3,4}[-\s]?\d{4}$/,
@@ -50,84 +52,94 @@ function MembershipDetail() {
         EXPIRY: /^(0[1-9]|1[0-2])\/\d{2}$/,
     };
 
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            Swal.fire("로그인이 필요합니다!").then(() => {
+                navigate("/user/login");
+            });
+        }
+    }, [navigate]);
+
+    // 멤버십 가입 여부 체크
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+            axiosInstance
+                .get("/api/membershipCheck")
+                .then((res) => {
+                    if (res.data) {
+                        setIsSubscribed(true);
+                        if (userType === "CUS") {
+                            Swal.fire("이미 가입한 회원입니다.").then(() => {
+                                navigate("/mypage/membership");
+                            });
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.error("Membership check error:", error);
+                })
+                .finally(() => setLoading(false));
+        } else {
+            setLoading(false);
+        }
+    }, [navigate, userType]);
+
     // 실시간 유효성 검사
     useEffect(() => {
         const validateFields = () => {
             const newValidFields = {};
             const newErrorMessages = {};
 
-            if (formData.name.length === 0) {
-                newValidFields.name = null;
-                newErrorMessages.name = "";
-            } else if (REGEX.NAME.test(formData.name)) {
-                newValidFields.name = true;
-                newErrorMessages.name = "사용 가능한 이름입니다.";
-            } else {
-                newValidFields.name = false;
-                newErrorMessages.name = "2~15자 이내의 한글 이름만 가능합니다.";
-            }
+            newValidFields.address = formData.address.length === 0 ? null : true;
+            newErrorMessages.address =
+                formData.address.length === 0 ? "" : "";
 
-            if (formData.tel.length === 0) {
-                newValidFields.tel = null;
-                newErrorMessages.tel = "";
-            } else if (REGEX.TEL.test(formData.tel)) {
-                newValidFields.tel = true;
-                newErrorMessages.tel = "사용 가능한 전화번호입니다.";
-            } else {
-                newValidFields.tel = false;
-                newErrorMessages.tel = "유효한 전화번호 형식이 아닙니다. (예: 01012345678)";
-            }
+            newValidFields.detailAddress =
+                formData.detailAddress.length === 0 ? null : true;
+            newErrorMessages.detailAddress =
+                formData.detailAddress.length === 0 ? "" : "";
 
-            if (formData.address.length === 0) {
-                newValidFields.address = null;
-                newErrorMessages.address = "";
-            } else {
-                newValidFields.address = true;
-                newErrorMessages.address = "";
-            }
+            newValidFields.cardNumber =
+                formData.cardNumber.length === 0
+                    ? null
+                    : REGEX.CARD_NUMBER.test(formData.cardNumber)
+                        ? true
+                        : false;
+            newErrorMessages.cardNumber =
+                formData.cardNumber.length === 0
+                    ? ""
+                    : REGEX.CARD_NUMBER.test(formData.cardNumber)
+                        ? "유효한 카드번호입니다."
+                        : "16자리 숫자만 입력해주세요.";
 
-            if (formData.detailAddress.length === 0) {
-                newValidFields.detailAddress = null;
-                newErrorMessages.detailAddress = "";
-            } else {
-                newValidFields.detailAddress = true;
-                newErrorMessages.detailAddress = "";
-            }
+            newValidFields.cvc =
+                formData.cvc.length === 0
+                    ? null
+                    : REGEX.CVC.test(formData.cvc)
+                        ? true
+                        : false;
+            newErrorMessages.cvc =
+                formData.cvc.length === 0
+                    ? ""
+                    : REGEX.CVC.test(formData.cvc)
+                        ? "유효한 CVC입니다."
+                        : "3자리 숫자만 입력해주세요.";
 
-            if (formData.cardNumber.length === 0) {
-                newValidFields.cardNumber = null;
-                newErrorMessages.cardNumber = "";
-            } else if (REGEX.CARD_NUMBER.test(formData.cardNumber)) {
-                newValidFields.cardNumber = true;
-                newErrorMessages.cardNumber = "유효한 카드번호입니다.";
-            } else {
-                newValidFields.cardNumber = false;
-                newErrorMessages.cardNumber = "16자리 숫자만 입력해주세요.";
-            }
+            newValidFields.expiry =
+                formData.expiry.length === 0
+                    ? null
+                    : REGEX.EXPIRY.test(formData.expiry)
+                        ? true
+                        : false;
+            newErrorMessages.expiry =
+                formData.expiry.length === 0
+                    ? ""
+                    : REGEX.EXPIRY.test(formData.expiry)
+                        ? "유효한 유효기간입니다."
+                        : "MM/YY 형식으로 입력해주세요.";
 
-            if (formData.cvc.length === 0) {
-                newValidFields.cvc = null;
-                newErrorMessages.cvc = "";
-            } else if (REGEX.CVC.test(formData.cvc)) {
-                newValidFields.cvc = true;
-                newErrorMessages.cvc = "유효한 CVC입니다.";
-            } else {
-                newValidFields.cvc = false;
-                newErrorMessages.cvc = "3자리 숫자만 입력해주세요.";
-            }
-
-            if (formData.expiry.length === 0) {
-                newValidFields.expiry = null;
-                newErrorMessages.expiry = "";
-            } else if (REGEX.EXPIRY.test(formData.expiry)) {
-                newValidFields.expiry = true;
-                newErrorMessages.expiry = "유효한 유효기간입니다.";
-            } else {
-                newValidFields.expiry = false;
-                newErrorMessages.expiry = "MM/YY 형식으로 입력해주세요.";
-            }
-
-            // createdAt은 자동 설정되므로 항상 유효
             newValidFields.createdAt = true;
 
             setValidFields(newValidFields);
@@ -138,7 +150,7 @@ function MembershipDetail() {
         return () => clearTimeout(timeoutId);
     }, [formData]);
 
-    // 입력값 변경 핸들러
+    // 이벤트 핸들러들 (최상위에서 선언)
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -161,45 +173,6 @@ function MembershipDetail() {
         setFormData({ ...formData, expiry: value.slice(0, 5) });
     };
 
-    // 폼 제출 핸들러
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const isValid = Object.values(validFields).every(
-            (field) => field === true
-        ) && formData.cardCompany !== "";
-
-        if (!isValid) {
-            alert("입력한 정보를 다시 확인해주세요.");
-            focusInvalidField();
-            return;
-        }
-
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-            alert("로그인이 필요합니다.");
-            navigate("/user/login");
-            return;
-        }
-
-        // 현재 날짜를 연월일만 포함하도록 설정 (예: "2025-03-13")
-        const today = new Date();
-        const createdAt = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-        const updatedFormData = { ...formData, createdAt }; // formData에 createdAt 추가
-
-        try {
-            await axios.post("/api/membership", updatedFormData, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            alert("멤버십 가입이 완료되었습니다!");
-            navigate("/mypage/membership");
-        } catch (error) {
-            console.error("멤버십 가입 오류:", error);
-            alert("멤버십 가입에 실패했습니다. 다시 시도해주세요.");
-        }
-    };
-
-    // 유효하지 않은 필드에 포커스 이동
     const focusInvalidField = () => {
         if (!validFields.name) return refs.name.current.focus();
         if (!validFields.tel) return refs.tel.current.focus();
@@ -210,54 +183,68 @@ function MembershipDetail() {
         if (!validFields.expiry) return refs.expiry.current.focus();
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const isValid =
+            Object.values(validFields).every((field) => field === true) &&
+            formData.cardCompany !== "";
+
+            if (!isValid) {
+                Swal.fire({
+                    icon: "error",
+                    title: "다시 한 번 확인해주세요!",
+                    text: "입력한 정보를 다시 확인해주세요.",
+                }).then(() => {
+                    focusInvalidField(); // Swal.fire 후에 focusInvalidField 호출
+                });
+                return;
+            }
+
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                Swal.fire("로그인이 필요합니다!").then(() => {
+                    navigate("/user/login");
+                });
+                return;
+            }
+
+        const today = new Date();
+        const createdAt = `${today.getFullYear()}-${String(
+            today.getMonth() + 1
+        ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+        const updatedFormData = { ...formData, createdAt };
+
+        try {
+            await axiosInstance.post("/api/membership", updatedFormData);
+            // 멤버십 가입 성공 시 알림
+            Swal.fire({
+                title: "멤버십 가입 완료!",
+                icon: "success",
+                draggable: true, // 드래그 가능
+            }).then(() => {
+                navigate("/mypage/membership");
+            });
+        } catch (error) {
+            console.error("멤버십 가입 오류:", error);
+            // 멤버십 가입 실패 시 알림
+            Swal.fire({
+                icon: "error",
+                title: "다시 한 번 확인해주세요!",
+                text: "멤버십 가입에 실패했습니다. 다시 시도해주세요.",
+            });
+        }
+    };
+
+    // 조건부 렌더링 (모든 훅 호출 후 반환)
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div className="mbd-membership-detail-container">
             <h1 className="mbd-title">JUVO 멤버십 가입</h1>
             <form onSubmit={handleSubmit} className="mbd-membership-form">
-                <div className="mbd-form-group">
-                    <label className="mbd-label">이름</label>
-                    <input
-                        type="text"
-                        name="name"
-                        ref={refs.name}
-                        value={formData.name}
-                        className={`mbd-input ${formData.name.length > 0
-                            ? validFields.name
-                                ? "valid"
-                                : "invalid"
-                            : ""
-                            }`}
-                        onChange={handleChange}
-                    />
-                    <span
-                        className={`validation-msg ${validFields.name ? "valid" : "invalid"}`}
-                    >
-                        {errorMessages.name}
-                    </span>
-                </div>
-
-                <div className="mbd-form-group">
-                    <label className="mbd-label">전화번호</label>
-                    <input
-                        type="tel"
-                        name="tel"
-                        ref={refs.tel}
-                        value={formData.tel}
-                        className={`mbd-input ${formData.tel.length > 0
-                            ? validFields.tel
-                                ? "valid"
-                                : "invalid"
-                            : ""
-                            }`}
-                        onChange={handleChange}
-                    />
-                    <span
-                        className={`validation-msg ${validFields.tel ? "valid" : "invalid"}`}
-                    >
-                        {errorMessages.tel}
-                    </span>
-                </div>
-
+                {/* 주소 입력 */}
                 <div className="mbd-form-group">
                     <label className="mbd-label">카드 배송 받을 주소</label>
                     <input
@@ -266,20 +253,19 @@ function MembershipDetail() {
                         ref={refs.address}
                         value={formData.address}
                         className={`mbd-input ${formData.address.length > 0
-                            ? validFields.address
-                                ? "valid"
-                                : "invalid"
-                            : ""
+                                ? validFields.address
+                                    ? "valid"
+                                    : "invalid"
+                                : ""
                             }`}
                         onChange={handleChange}
                     />
-                    <span
-                        className={`validation-msg ${validFields.address ? "valid" : "invalid"}`}
-                    >
+                    <span className={`validation-msg ${validFields.address ? "valid" : "invalid"}`}>
                         {errorMessages.address || "주소를 입력해주세요."}
                     </span>
                 </div>
 
+                {/* 상세 주소 입력 */}
                 <div className="mbd-form-group">
                     <label className="mbd-label">상세 주소</label>
                     <input
@@ -288,20 +274,19 @@ function MembershipDetail() {
                         ref={refs.detailAddress}
                         value={formData.detailAddress}
                         className={`mbd-input ${formData.detailAddress.length > 0
-                            ? validFields.detailAddress
-                                ? "valid"
-                                : "invalid"
-                            : ""
+                                ? validFields.detailAddress
+                                    ? "valid"
+                                    : "invalid"
+                                : ""
                             }`}
                         onChange={handleChange}
                     />
-                    <span
-                        className={`validation-msg ${validFields.detailAddress ? "valid" : "invalid"}`}
-                    >
+                    <span className={`validation-msg ${validFields.detailAddress ? "valid" : "invalid"}`}>
                         {errorMessages.detailAddress || "상세 주소를 입력해주세요."}
                     </span>
                 </div>
 
+                {/* 카드사 선택 */}
                 <div className="mbd-form-group">
                     <label className="mbd-label">카드사 선택</label>
                     <select
@@ -322,6 +307,7 @@ function MembershipDetail() {
                     </select>
                 </div>
 
+                {/* 카드번호 입력 */}
                 <div className="mbd-form-group">
                     <label className="mbd-label">카드번호</label>
                     <input
@@ -330,21 +316,20 @@ function MembershipDetail() {
                         ref={refs.cardNumber}
                         value={formData.cardNumber}
                         className={`mbd-input ${formData.cardNumber.length > 0
-                            ? validFields.cardNumber
-                                ? "valid"
-                                : "invalid"
-                            : ""
+                                ? validFields.cardNumber
+                                    ? "valid"
+                                    : "invalid"
+                                : ""
                             }`}
                         onChange={handleCardNumberChange}
                         maxLength="16"
                     />
-                    <span
-                        className={`validation-msg ${validFields.cardNumber ? "valid" : "invalid"}`}
-                    >
+                    <span className={`validation-msg ${validFields.cardNumber ? "valid" : "invalid"}`}>
                         {errorMessages.cardNumber}
                     </span>
                 </div>
 
+                {/* CVC와 유효기간 입력 */}
                 <div className="mbd-form-row">
                     <div className="mbd-form-group mbd-small-input">
                         <label className="mbd-label">CVC</label>
@@ -354,21 +339,18 @@ function MembershipDetail() {
                             ref={refs.cvc}
                             value={formData.cvc}
                             className={`mbd-input ${formData.cvc.length > 0
-                                ? validFields.cvc
-                                    ? "valid"
-                                    : "invalid"
-                                : ""
+                                    ? validFields.cvc
+                                        ? "valid"
+                                        : "invalid"
+                                    : ""
                                 }`}
                             onChange={handleCvcChange}
                             maxLength="3"
                         />
-                        <span
-                            className={`validation-msg ${validFields.cvc ? "valid" : "invalid"}`}
-                        >
+                        <span className={`validation-msg ${validFields.cvc ? "valid" : "invalid"}`}>
                             {errorMessages.cvc}
                         </span>
                     </div>
-
                     <div className="mbd-form-group mbd-small-input">
                         <label className="mbd-label">유효기간 (MM/YY)</label>
                         <input
@@ -377,17 +359,15 @@ function MembershipDetail() {
                             ref={refs.expiry}
                             value={formData.expiry}
                             className={`mbd-input ${formData.expiry.length > 0
-                                ? validFields.expiry
-                                    ? "valid"
-                                    : "invalid"
-                                : ""
+                                    ? validFields.expiry
+                                        ? "valid"
+                                        : "invalid"
+                                    : ""
                                 }`}
                             onChange={handleExpiryChange}
                             maxLength="5"
                         />
-                        <span
-                            className={`validation-msg ${validFields.expiry ? "valid" : "invalid"}`}
-                        >
+                        <span className={`validation-msg ${validFields.expiry ? "valid" : "invalid"}`}>
                             {errorMessages.expiry}
                         </span>
                     </div>

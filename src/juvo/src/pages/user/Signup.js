@@ -2,10 +2,11 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../assets/css/user/Signup.css';
+import Swal from "sweetalert2";
 
 function Signup() {
     let navigate = useNavigate();
-    
+
     let [id, setId] = useState("");
     let [validId, setValidId] = useState(null);
     let [idMsg, setIdMsg] = useState("");
@@ -269,12 +270,18 @@ function Signup() {
             })
             .catch((error) => {
                 console.error("ID 중복 확인 오류:", error);
-                alert("오류가 발생했습니다. 다시 시도해주세요.");
+                Swal.fire({
+                    icon: "warning",
+                    title: "경고",
+                    text: 'ID 중복 확인 오류가 발생했습니다. 다시 시도해주세요.',
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                });
             });
     };
 
     const handleCheckDupEmail = () => {
-        axios.post("/user/checkDupEmail",  email , { headers: { "Content-Type": "text/plain" } }) // 텍스트 보내서 비교
+        axios.post("/user/checkDupEmail", email, { headers: { "Content-Type": "text/plain" } }) // 텍스트 보내서 비교
             .then((response) => {
                 console.log("서버 응답:", response.data); // 응답 확인
                 setCheckDupEmail(response.data);
@@ -282,7 +289,13 @@ function Signup() {
             })
             .catch((error) => {
                 console.error("이메일 중복 확인 오류:", error);
-                alert("오류가 발생했습니다. 다시 시도해주세요.");
+                Swal.fire({
+                    icon: "warning",
+                    title: "경고",
+                    text: '이메일 중복 확인 오류가 발생했습니다. 다시 시도해주세요.',
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                });
             });
     };
 
@@ -291,17 +304,32 @@ function Signup() {
         axios
             .post("/auth/email", { email }, { headers: { "Content-Type": "application/json" } })
             .then((response) => {
-                alert("이메일로 인증번호가 발송되었습니다.");
-                axiosAuthCode = response.data;
-                console.log("서버에서 받은 returnCode:", axiosAuthCode);
-
-                setAuthCode(axiosAuthCode);
-                setInputAuthCode(false);
-                setIsEmailAuth(false);
+                Swal.fire({
+                    icon: "success",
+                    title: "성공",
+                    text: '이메일로 인증번호가 발송되었습니다.',
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // "확인" 버튼을 누른 경우에만 실행   
+                        axiosAuthCode = response.data;
+                        console.log("서버에서 받은 returnCode:", axiosAuthCode);
+                        setAuthCode(axiosAuthCode);
+                        setInputAuthCode(false);
+                        setIsEmailAuth(false);
+                    }
+                });
             })
             .catch((error) => {
                 console.error("이메일 인증 오류:", error);
-                alert("이메일 인증 중 오류가 발생했습니다.");
+                Swal.fire({
+                    icon: "error",
+                    title: "실패",
+                    text: '이메일 인증 중 오류가 발생했습니다.',
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                });
             });
     };
 
@@ -309,12 +337,28 @@ function Signup() {
     const handleCheckAuthCode = () => {
         let inputCode = document.getElementById("checkAuthCode").value;
         if (inputCode == authCode) {
-            alert("인증번호가 일치합니다.");
-            setIsEmailAuth(true);
-            document.getElementById("checkAuthCode").hidden = true;
-            document.getElementById("checkAuthCode_btn").hidden = true;
+            Swal.fire({
+                icon: "success",
+                title: "성공",
+                text: '인증번호가 일치합니다.',
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // "확인" 버튼을 누른 경우에만 실행   
+                    setIsEmailAuth(true);
+                    document.getElementById("checkAuthCode").hidden = true;
+                    document.getElementById("checkAuthCode_btn").hidden = true;
+                }
+            });
         } else {
-            alert("인증번호를 다시 확인해주세요.");
+            Swal.fire({
+                icon: "warning",
+                title: "경고",
+                text: '인증번호를 다시 확인해주세요.',
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            });
         }
     };
 
@@ -327,16 +371,32 @@ function Signup() {
             })
             .catch((error) => {
                 console.error("닉네임 중복 확인 오류:", error);
-                alert("오류가 발생했습니다. 다시 시도해주세요.");
+                Swal.fire({
+                    icon: "error",
+                    title: "실패",
+                    text: '닉네임 중복 확인 오류. 다시 시도해주세요.',
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                });
             });
     };
 
     // 회원가입 핸들러
     const handleSignup = () => {
         if (!isValidSuccess()) {
-            alert("입력한 정보를 다시 확인해주세요.");
-            focusInvalidField();
-            return;
+            Swal.fire({
+                icon: "warning",
+                title: "경고",
+                text: '입력한 정보를 다시 확인해주세요.',
+                confirmButtonText: "확인",
+                confirmButtonColor: "#f89400",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // "확인" 버튼을 누른 경우에만 실행   
+                    focusInvalidField();
+                    return;
+                }
+            });            
         }
         axios.post(
             "/user/signup",
@@ -344,12 +404,28 @@ function Signup() {
             { headers: { "Content-Type": "application/json" } }
         )
             .then((response) => {
-                alert("회원가입이 완료되었습니다.");
-                navigate("/user/login");
+                Swal.fire({
+                    icon: "success",
+                    title: "성공",
+                    text: '회원가입이 완료되었습니다.',
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // "확인" 버튼을 누른 경우에만 실행   
+                        navigate("/user/login");
+                    }
+                });                
             })
             .catch((error) => {
                 console.error(error);
-                alert("회원가입 중 오류가 발생했습니다.");
+                Swal.fire({
+                    icon: "error",
+                    title: "실패",
+                    text: '회원가입 중 오류가 발생하였습니다.',
+                    confirmButtonText: "확인",
+                    confirmButtonColor: "#f89400",
+                });                
             });
     };
 
@@ -421,15 +497,14 @@ function Signup() {
                         type="text"
                         ref={ref.id}
                         value={id}
-                        className={`input-field ${
-                            id.length > 0
-                                ? checkDupId === true
-                                    ? 'valid'
-                                    : validId
+                        className={`input-field ${id.length > 0
+                            ? checkDupId === true
+                                ? 'valid'
+                                : validId
                                     ? 'pending'
                                     : 'invalid'
-                                : ''
-                        }`}
+                            : ''
+                            }`}
                         placeholder="아이디"
                         onChange={handleIdChange}
                     />
@@ -440,15 +515,14 @@ function Signup() {
                     )}
                 </div>
                 <span
-                    className={`validation-msg ${
-                        id.length > 0
-                            ? checkDupId === true
-                                ? 'valid'
-                                : validId
+                    className={`validation-msg ${id.length > 0
+                        ? checkDupId === true
+                            ? 'valid'
+                            : validId
                                 ? 'pending'
                                 : 'invalid'
-                            : ''
-                    }`}
+                        : ''
+                        }`}
                 >
                     {idMsg}
                 </span>
@@ -488,17 +562,16 @@ function Signup() {
                         type="text"
                         ref={ref.email}
                         value={email}
-                        className={`input-field ${
-                            email.length > 0
-                                ? isEmailAuth
-                                    ? 'valid'
-                                    : checkDupEmail === true
+                        className={`input-field ${email.length > 0
+                            ? isEmailAuth
+                                ? 'valid'
+                                : checkDupEmail === true
                                     ? 'pending'
                                     : validEmail
-                                    ? 'pending'
-                                    : 'invalid'
-                                : ''
-                        }`}
+                                        ? 'pending'
+                                        : 'invalid'
+                            : ''
+                            }`}
                         placeholder="이메일"
                         onChange={handleEmailChange}
                     />
@@ -514,17 +587,16 @@ function Signup() {
                     )}
                 </div>
                 <span
-                    className={`validation-msg ${
-                        email.length > 0
-                            ? isEmailAuth
-                                ? 'valid'
-                                : checkDupEmail === true
+                    className={`validation-msg ${email.length > 0
+                        ? isEmailAuth
+                            ? 'valid'
+                            : checkDupEmail === true
                                 ? 'pending'
                                 : validEmail
-                                ? 'pending'
-                                : 'invalid'
-                            : ''
-                    }`}
+                                    ? 'pending'
+                                    : 'invalid'
+                        : ''
+                        }`}
                 >
                     {emailMsg}
                 </span>
@@ -590,15 +662,14 @@ function Signup() {
                         type="text"
                         ref={ref.nickname}
                         value={nickname}
-                        className={`input-field ${
-                            nickname.length > 0
-                                ? checkDupNickname === true
-                                    ? 'valid'
-                                    : validNickname
+                        className={`input-field ${nickname.length > 0
+                            ? checkDupNickname === true
+                                ? 'valid'
+                                : validNickname
                                     ? 'pending'
                                     : 'invalid'
-                                : ''
-                        }`}
+                            : ''
+                            }`}
                         placeholder="사용할 닉네임"
                         onChange={handleNicknameChange}
                     />
@@ -609,15 +680,14 @@ function Signup() {
                     )}
                 </div>
                 <span
-                    className={`validation-msg ${
-                        nickname.length > 0
-                            ? checkDupNickname === true
-                                ? 'valid'
-                                : validNickname
+                    className={`validation-msg ${nickname.length > 0
+                        ? checkDupNickname === true
+                            ? 'valid'
+                            : validNickname
                                 ? 'pending'
                                 : 'invalid'
-                            : ''
-                    }`}
+                        : ''
+                        }`}
                 >
                     {nicknameMsg}
                 </span>

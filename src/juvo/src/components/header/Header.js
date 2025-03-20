@@ -1,15 +1,17 @@
 import '../../assets/css/header/Header.css';
 import Logo from '../../assets/image/Logo.png';
-import MembershipIcon from '../../assets/image/PremiumStar.png'; // 멤버십 표시용 이미지 추가
+import MembershipIcon from '../../assets/image/PremiumStar.png';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from "sweetalert2";
 
 function Header() {
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(false);
     const [userType, setUserType] = useState(null);
-    const [membership, setMembership] = useState(null); // membership 상태 추가
+    const [membership, setMembership] = useState(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false); // 모바일 메뉴 토글 상태
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
@@ -17,7 +19,7 @@ function Header() {
         setIsLogin(!!token);
         setUserType(type);
         if (token) {
-            fetchUserInfo(token); // 로그인 상태일 때 사용자 정보 가져오기
+            fetchUserInfo(token);
         }
     }, []);
 
@@ -28,12 +30,11 @@ function Header() {
             setIsLogin(!!token);
             setUserType(type);
             if (token) {
-                fetchUserInfo(token); // 스토리지 변경 시 사용자 정보 갱신
+                fetchUserInfo(token);
             } else {
-                setMembership(null); // 로그아웃 시 membership 초기화
+                setMembership(null);
             }
         };
-
         window.addEventListener("storage", handleStorageChange);
         return () => window.removeEventListener("storage", handleStorageChange);
     }, []);
@@ -43,9 +44,7 @@ function Header() {
             const response = await axios.get('/user/checkUserByToken', {
                 headers: { "Authorization": `Bearer ${token}` }
             });
-            
-            setMembership(response.data.membership); // 응답에서 membership 값 설정
-            console.log(membership);
+            setMembership(response.data.membership);
         } catch (error) {
             console.error("사용자 정보 조회 오류:", error);
             if (error.response?.status === 401) {
@@ -67,9 +66,16 @@ function Header() {
         localStorage.removeItem('userType');
         setIsLogin(false);
         setUserType(null);
-        setMembership(null); // 로그아웃 시 membership 초기화
-        alert('로그아웃 되었습니다.');
-        navigate('/');
+        setMembership(null);
+    
+        Swal.fire({
+            title: "로그아웃 되었습니다!",
+            icon: "success",
+            draggable: true,
+            confirmButtonText: "확인",
+        }).then(() => {
+            navigate('/');
+        });
     };
 
     const handleLogin = () => {
@@ -77,24 +83,42 @@ function Header() {
         navigate("/user/login");
     };
 
-    const handleMyPageClick = () => {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            alert('로그인이 필요합니다.');
+const handleMyPageClick = () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "로그인이 필요합니다!",
+            footer: '<a href="#">Why do I have this issue?</a>',
+            confirmButtonText: "확인",
+        }).then(() => {
             navigate('/login');
-            return;
-        }
-        navigate("/myPage/profile");
-    };
+        });
+        return;
+    }
+    navigate("/myPage/profile");
+};
 
-    const handleAdminClick = () => {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            alert('로그인이 필요합니다.');
-            navigate('user/login');
-            return;
-        }
-        navigate("/admin");
+const handleAdminClick = () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "로그인이 필요합니다!",
+            footer: '<a href="#">Why do I have this issue?</a>',
+            confirmButtonText: "확인",
+        }).then(() => {
+            navigate('/user/login');
+        });
+        return;
+    }
+    navigate("/admin");
+};
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
     };
 
     const menuItems = {
@@ -116,6 +140,13 @@ function Header() {
         ],
     };
 
+    // 모바일 여부 확인 (화면 너비 기준)
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 540);
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 540);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
     return (
         <div className="containerHD">
             <h1 className="logo">
@@ -123,7 +154,12 @@ function Header() {
                     <img src={Logo} alt="로고" />
                 </a>
             </h1>
-            <div className="nav">
+            {isMobile && (
+                <button className="hamburger" onClick={toggleMenu}>
+                    ☰
+                </button>
+            )}
+            <div className={`nav ${isMobile && isMenuOpen ? 'open' : ''}`}>
                 {Object.keys(menuItems).map((menu) => (
                     <div key={menu} className="nav-item">
                         <a>{menu}</a>
@@ -131,7 +167,7 @@ function Header() {
                 ))}
                 <div className="dropdown-container">
                     {Object.keys(menuItems).map((menu) => (
-                        <div key={menu} className="dropdown-column">
+                        <div key={menu} className="dropdown-column">                            
                             {menuItems[menu].map((item) => (
                                 <a
                                     key={item.name}
@@ -144,6 +180,24 @@ function Header() {
                         </div>
                     ))}
                 </div>
+                {isMobile && (
+                    <div className="mobile-submenu">
+                        {Object.keys(menuItems).map((menu) => (
+                            <div key={menu} className="mobile-submenu-section">
+                                <h3 style={{ margin: '10px 0 5px 0', fontSize: '1rem', color: '#374051' }}>{menu}</h3>
+                                {menuItems[menu].map((item) => (
+                                    <a
+                                        key={item.name}
+                                        href={item.path}
+                                        className="dropdown-item"
+                                    >
+                                        - {item.label}
+                                    </a>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
             <div className="btns">
                 {isLogin ? (

@@ -8,7 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1050;
 }
 
 .fuel-station-detail {
@@ -306,22 +306,24 @@
     background-color: #0d9ca4;
 }
 
-/* FuelStationDetail.css에 추가 */
+/* 모바일 환경 (540px 이하) */
 @media only screen and (max-width: 540px) {
     .fuel-station-detail-overlay {
         padding: 0;
     }
 
     .fuel-station-detail {
-        width: 90vw;
-        max-height: 80vh;
+        width: 90vw; /* 화면 너비의 90% */
+        max-height: 70vh; /* 모바일에서 세로 70% 제한 */
         padding: 15px;
         font-size: 12px;
+        border-radius: 8px 8px 0 0; /* 상단만 둥글게 */
     }
 
     .station-title {
         font-size: 16px;
         padding-right: 25px;
+        margin-bottom: 15px;
     }
 
     .close-btn {
@@ -332,6 +334,7 @@
 
     .section-title {
         font-size: 14px;
+        margin-bottom: 8px;
     }
 
     .price-item {
@@ -341,10 +344,6 @@
 
     .price-note {
         font-size: 10px;
-    }
-
-    .service-icons {
-        gap: 5px;
     }
 
     .service-item {
@@ -370,6 +369,7 @@
 
     .review-item {
         font-size: 12px;
+        margin-bottom: 10px;
     }
 
     .review-header {
@@ -411,9 +411,8 @@
         font-size: 12px;
     }
 
-    .review-actions button {
-        padding: 4px 8px;
-        font-size: 12px;
+    .button-container {
+        gap: 5px;
     }
 }
 
