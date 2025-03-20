@@ -82,7 +82,8 @@
 
 /* 비밀번호/닉네임 변경 버튼 */
 .mp-change-pw-btn,
-.mp-change-nickname-btn {
+.mp-change-nickname-btn,
+.mp-remove-user-btn {
     
     flex: 1;
     padding: 14px;
@@ -97,14 +98,20 @@
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-
+.mp-remove-user-btn {
+    background-color: #e74c3c !important; /* 빨간색 계열 */
+}
 .mp-change-pw-btn:hover,
 .mp-change-nickname-btn:hover {
     background-color: #f89400 !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
-
+.mp-remove-user-btn:hover {
+    background-color: #c0392b !important; /* 더 어두운 빨간색 */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
 /* 갤럭시 S24 기준 미디어 쿼리 (뷰포트 너비 360px 이하) */
 @media only screen and (max-width: 360px) {
     .mp-page {
@@ -168,8 +175,15 @@
     }
 
     .mp-change-pw-btn,
-    .mp-change-nickname-btn {
+    .mp-change-nickname-btn,
+    .mp-remove-user-btn {
         padding: 12px;
         font-size: 15px;
+    }
+
+    .mp-change-pw-btn:hover,
+    .mp-change-nickname-btn:hover,
+    .mp-remove-user-btn:hover {
+        transform: none; /* 작은 화면에서는 hover 효과 단순화 */
     }
 }

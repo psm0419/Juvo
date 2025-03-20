@@ -93,7 +93,7 @@ const handleMyPageClick = () => {
             footer: '<a href="#">Why do I have this issue?</a>',
             confirmButtonText: "확인",
         }).then(() => {
-            navigate('/login');
+            navigate('user/login');
         });
         return;
     }
