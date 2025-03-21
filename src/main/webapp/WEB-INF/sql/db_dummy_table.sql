@@ -74,9 +74,12 @@ INSERT INTO black_type (black_id, black_type) VALUES (4, '정량미달판매');
 
 -- 공지사항
 INSERT INTO NOTICE (NOTICE_ID, TITLE, CONTENT, CREATED_DATE)
-VALUES (NOTICE_SEQ.NEXTVAL, '사이트 폐업 예고', '본 사이트는 프로젝트를 위한 사이트 이므로 3월19일에 폐쇄될 예정입니다. ', SYSDATE);
+VALUES (NOTICE_SEQ.NEXTVAL, 'JUVO 사이트 오픈', '본 사이트는 프로젝트를 위한 사이트 이므로 3월21일에 오픈될 예정입니다. ', SYSDATE);
 
 INSERT INTO NOTICE (NOTICE_ID, TITLE, CONTENT, CREATED_DATE)
-VALUES (NOTICE_SEQ.NEXTVAL, '사이트 매매 합니다.', '본 사이트 JUVO는 매매 중 입니다.', SYSDATE);
+VALUES (NOTICE_SEQ.NEXTVAL, '멤버십 할인', ' 2025. 03. 21 부터 일주일간 JUVO 멤버십 할인 이벤트 진행합니다.', SYSDATE);
+
+INSERT INTO NOTICE (NOTICE_ID, TITLE, CONTENT, CREATED_DATE)
+VALUES (NOTICE_SEQ.NEXTVAL, '불법 주유소 공표', ' 불법 주유소 공표합니다.', SYSDATE);
 
 
