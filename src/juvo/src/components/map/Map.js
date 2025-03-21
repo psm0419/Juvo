@@ -1081,8 +1081,7 @@ const Map = ({ fetchFuelStations, stations, loading }) => {
                                 <input
                                     type="radio"
                                     name="blackType"
-                                    value="1"
-                                    checked
+                                    value="1"                                    
                                     onChange={(e) => setSelectedBlackType(parseInt(e.target.value))}
                                 />
                                 용도 외 판매
