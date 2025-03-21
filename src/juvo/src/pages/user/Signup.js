@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../assets/css/user/Signup.css';
 import Swal from "sweetalert2";
+import PrivacyConsent from "./PrivacyConsent";
 
 function Signup() {
     let navigate = useNavigate();
@@ -45,6 +46,7 @@ function Signup() {
     let [inputAuthCode, setInputAuthCode] = useState(true);
     let [authCode, setAuthCode] = useState("");
     let [isEmailAuth, setIsEmailAuth] = useState(null);
+    let [allConsentsChecked, setAllConsentsChecked] = useState(false);
 
     let axiosAuthCode;
 
@@ -240,6 +242,10 @@ function Signup() {
             ref.tel.current.focus();
             return false;
         }
+        if (!allConsentsChecked) {
+            // 동의 항목은 포커스 이동 대신 경고 메시지만 표시
+            return false;
+        }
         return true;
     };
 
@@ -257,7 +263,8 @@ function Signup() {
             validJumin &&
             validTel &&
             checkDupId === true &&
-            checkDupNickname === true
+            checkDupNickname === true &&
+            allConsentsChecked
         );
     }
 
@@ -487,6 +494,9 @@ function Signup() {
         setJuminMsg("");
     };
 
+    const handleConsentChange = (isAllChecked) => {
+        setAllConsentsChecked(isAllChecked);
+    };
     return (
         <div className="signup-container">
             <h1 className="signup-title">회원가입</h1>
@@ -692,7 +702,7 @@ function Signup() {
                     {nicknameMsg}
                 </span>
             </div>
-
+            <PrivacyConsent onConsentChange={handleConsentChange} />
             <button disabled={!isValidSuccess()} className="signup-button" onClick={handleSignup}>
                 회원가입
             </button>

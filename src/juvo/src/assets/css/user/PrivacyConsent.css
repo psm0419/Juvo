@@ -1,0 +1,165 @@
+.privacy-agree-container {
+    max-width: 460px;
+    margin: 40px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 전체 동의 스타일 */
+.privacy-agree-all {
+    padding: 15px 20px;
+    background: #ffffff;
+    border: 1px solid #e0e4e9;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.privacy-agree-all:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.privacy-agree-all__header {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: #2b3a55;
+    cursor: pointer;
+    position: relative;
+    padding: 5px 0;
+}
+
+.privacy-agree-all__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.privacy-agree-all--expanded .privacy-agree-all__content {
+    max-height: 300px; /* 하위 항목이 모두 보일 수 있는 높이 */
+}
+
+/* 개별 동의 스타일 */
+.privacy-agree {
+    padding: 10px 20px;
+    background: #fafbfc;
+    border: 1px solid #e8ecef;
+    border-radius: 8px;
+    margin: 8px 0 8px 0; /* 좌측 여백 제거 */
+    transition: all 0.3s ease;
+}
+
+.privacy-agree:hover {
+    background: #f5f7fa;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.privacy-agree__header {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #2b3a55;
+    cursor: pointer;
+    position: relative;
+    padding: 5px 0;
+}
+
+.privacy-agree__content {
+    max-height: 0;
+    overflow: hidden;
+    font-size: 13px;
+    color: #5a6a85;
+    display: flex;
+    align-items: center;
+    transition: max-height 0.3s ease;
+    padding-left: 24px; /* 상세 내용만 들여쓰기 */
+}
+
+.privacy-agree--expanded .privacy-agree__content {
+    max-height: 50px;
+}
+
+/* 체크박스 스타일 */
+.privacy-agree input[type="checkbox"],
+.privacy-agree-all input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    border: 2px solid #d1d9e6;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.privacy-agree input[type="checkbox"]:checked,
+.privacy-agree-all input[type="checkbox"]:checked {
+    background-color: #03c75a;
+    border-color: #03c75a;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+    background-size: 12px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* 라벨 스타일 */
+.privacy-agree label,
+.privacy-agree-all label {
+    cursor: pointer;
+    flex-grow: 1;
+    transition: color 0.3s ease;
+}
+
+.privacy-agree label:hover,
+.privacy-agree-all label:hover {
+    color: #1a73e8;
+}
+
+/* 화살표 스타일 */
+.arrow {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #2b3a55;
+    transition: transform 0.3s ease;
+    margin-left: 10px;
+}
+
+.privacy-agree-all--expanded .privacy-agree-all__header .arrow,
+.privacy-agree--expanded .privacy-agree__header .arrow {
+    transform: rotate(180deg);
+}
+
+/* 반응형 조정 */
+@media only screen and (max-width: 400px) {
+    .privacy-agree-container {
+        max-width: 100%;
+        margin: 20px 10px;
+    }
+    .privacy-agree,
+    .privacy-agree-all {
+        padding: 10px 15px;
+    }
+    .privacy-agree__header,
+    .privacy-agree-all__header {
+        font-size: 13px;
+    }
+    .privacy-agree__content {
+        font-size: 12px;
+    }
+    .privacy-agree input[type="checkbox"],
+    .privacy-agree-all input[type="checkbox"] {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+@media only screen and (min-width: 401px) and (max-width: 500px) {
+    .privacy-agree-container {
+        max-width: 90%;
+    }
+    .privacy-agree,
+    .privacy-agree-all {
+        padding: 12px 20px;
+    }
+}
