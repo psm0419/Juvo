@@ -54,7 +54,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
 		<property name="host" value="smtp.gmail.com" />
 		<property name="port" value="587" />
 		<property name="username" value="cording1kyu@gmail.com" />
-		<property name="password" value="ruok chmu ttfx nqtp" />
+		<property name="password" value="cnvk vqgs anbr jypl" />
 		<!-- 보안연결 SSL과 관련된 설정 -->
 		<property name="javaMailProperties">
 			<props>
