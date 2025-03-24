@@ -178,11 +178,11 @@ class TokenManager {
         const currentPath = window.location.pathname;
         if (this.shouldRedirectToLogin(currentPath) || forceRedirect) {
             
-            if (currentPath !== '/user/login') {
+            if (currentPath !== 'user/login') {
                 sessionStorage.setItem('redirectUrl', currentPath);
                 console.log('[디버깅] 리다이렉트 URL 저장:', currentPath);
             }
-            window.location.href = '/user/login';
+            window.location.href = 'user/login';
         }
 
         localStorage.removeItem('accessToken');
